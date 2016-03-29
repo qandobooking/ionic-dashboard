@@ -33,11 +33,7 @@ angular.module('app',
       StatusBar.styleDefault();
     }
 
-    /*
-    if($auth.isAuthenticated()){
-      $rootScope.$broadcast("app:isAlreadyLogged");
-    }
-    */
+    
     Entities.bootstrap();
 
 

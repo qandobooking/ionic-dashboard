@@ -37,7 +37,7 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
 
     
     svc.bootstrap = () => {
-        if ($auth.isAuthenticated) {
+        if ($auth.isAuthenticated()) {
             svc.loadCurrentUser()
         }
         /*
