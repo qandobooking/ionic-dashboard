@@ -7,10 +7,13 @@
 angular.module('app', 
   [
     'ionic', 
+    'angular-storage',
     'app.constants',
+    'app.permissions',
     'app.routing',
     'app.network',
-    
+
+
   ]
 
 )

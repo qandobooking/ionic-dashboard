@@ -62,7 +62,7 @@ angular.module('app.routing', ['ionic'])
       url: '/app',
       abstract: true,
       templateUrl: 'templates/menu.html',
-      controller: 'AppCtrl as AppCtrl'
+      controller: 'AppCtrl as AppCtrl',
     })
 
     .state('app.home', {
@@ -71,8 +71,27 @@ angular.module('app.routing', ['ionic'])
         'menuContent': {
           templateUrl: 'templates/home.html',
         }
+      },
+      data: {
+        permissions: {
+          only: ['hasCurrentShop'],
+          redirectTo: 'app.choose-shop',
+        }
       }
     })
+
+    .state('app.choose-shop', {
+      url: '/choose-shop',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/choose-shop.html',
+          controller : 'ChooseShopCtrl as ChooseShopCtrl',
+        }
+      }
+    })
+
+
+    
     
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {

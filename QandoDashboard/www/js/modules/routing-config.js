@@ -59,6 +59,20 @@
                 'menuContent': {
                     templateUrl: 'templates/home.html'
                 }
+            },
+            data: {
+                permissions: {
+                    only: ['hasCurrentShop'],
+                    redirectTo: 'app.choose-shop'
+                }
+            }
+        }).state('app.choose-shop', {
+            url: '/choose-shop',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/choose-shop.html',
+                    controller: 'ChooseShopCtrl as ChooseShopCtrl'
+                }
             }
         });
 
