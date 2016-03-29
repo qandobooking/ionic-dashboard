@@ -56,31 +56,66 @@ angular.module('app.routing', ['ionic'])
 
 .config(function($stateProvider, $urlRouterProvider){
 
+
+    const loggedAndWithShop = () => {
+      return {
+        only : ['logged', 'hasCurrentShop'],
+        redirectTo : function(){
+          //alert(1)
+          //console.log("aa", arguments)
+          return "app.login"
+        }
+      }
+    }
+
     $stateProvider
 
     .state('app', {
       url: '/app',
       abstract: true,
-      templateUrl: 'templates/menu.html',
+      template: '<div ui-view></div>',
       controller: 'AppCtrl as AppCtrl',
     })
 
-    .state('app.home', {
+    .state('app.login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller : 'LoginCtrl as LoginCtrl',
+      data: {
+        permissions: {
+          except: ['logged'],
+          redirectTo: 'app.logged.home',
+        }
+      }
+    })
+
+    .state('app.logged', {
+      url: '/logged',
+      templateUrl: 'templates/menu.html',
+      data : {
+        permissions : {
+          only : ['logged'],
+          redirectTo : 'app.login',
+        }
+      }
+    })
+
+    .state('app.logged.home', {
       url: '/home',
       views: {
         'menuContent': {
           templateUrl: 'templates/home.html',
         }
       },
-      data: {
-        permissions: {
-          only: ['hasCurrentShop'],
-          redirectTo: 'app.choose-shop',
+      data : {
+        permissions : {
+          only : ['hasCurrentShop'],
+          redirectTo : 'app.logged.choose-shop',
         }
       }
     })
 
-    .state('app.choose-shop', {
+    .state('app.logged.choose-shop', {
       url: '/choose-shop',
       views: {
         'menuContent': {
@@ -96,7 +131,7 @@ angular.module('app.routing', ['ionic'])
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
         var $state = $injector.get('$state');
-        $state.go('app.home');
+        $state.go('app.logged.home');
     });
 
 })

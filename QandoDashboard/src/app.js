@@ -9,10 +9,10 @@ angular.module('app',
     'ionic', 
     'angular-storage',
     'app.constants',
+    'app.satellizer',
     'app.permissions',
     'app.routing',
     'app.network',
-
 
   ]
 
