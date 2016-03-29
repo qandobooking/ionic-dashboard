@@ -13,6 +13,7 @@ angular.module('app.permissions', ['permission', 'satellizer']).run(function (Pe
   });
 
   PermissionStore.definePermission('logged', function (stateParams) {
+    console.log("loggeed check", $auth.isAuthenticated());
     if ($auth.isAuthenticated()) {
       return true;
     }

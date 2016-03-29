@@ -47,7 +47,7 @@
         // Can do things like svc.something.one(id).get() or svc.something.getList()
         // and get back restangularized objects.
 
-        /*svc.me = DataServiceRestangular.oneUrl("me");*/
+        svc.me = DataServiceRestangular.oneUrl("me");
 
         return svc;
     }

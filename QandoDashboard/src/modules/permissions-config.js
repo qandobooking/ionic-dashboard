@@ -16,6 +16,7 @@ angular
 
   PermissionStore
     .definePermission('logged', function (stateParams) {
+      console.log("loggeed check", $auth.isAuthenticated())
       if ($auth.isAuthenticated()) {
         return true; 
       }

@@ -7,6 +7,7 @@
 angular.module('app', 
   [
     'ionic', 
+    'restangular',
     'angular-storage',
     'app.constants',
     'app.satellizer',
@@ -18,7 +19,7 @@ angular.module('app',
 
 )
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $auth, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -31,6 +32,12 @@ angular.module('app',
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if($auth.isAuthenticated()){
+      $rootScope.$broadcast("app:isAlreadyLogged");
+    }
+
+
   });
 })
 

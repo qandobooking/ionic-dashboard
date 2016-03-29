@@ -7,29 +7,38 @@
   angular.module('app.routing', ['ionic']).run(function ($rootScope, $state, $ionicHistory) {
 
     //perform redirects based on login/logout here
-    /*
-    $rootScope.$on("app:logoutSuccess", function(){
-        $state.go("app.login");
-    })
-     $rootScope.$on("app:loginSuccess", function(){
-        $rootScope.logged = true;
-        
-        $ionicHistory.nextViewOptions({
-            historyRoot : true,
-            disableBack : true
-        })
-        if($rootScope.lastDeniedState){
-             $state.go($rootScope.lastDeniedState.name, 
-                $rootScope.lastDeniedStateParams);
-             $rootScope.lastDeniedState = null;
-            $rootScope.lastDeniedStateParams = null;
-            $rootScope.lastDeniedStateOptions = null;
-        } else {
-            $state.go('app.home');
-        }
-            
-        
+
+    $rootScope.$on("app:logoutSuccess", function () {
+      $state.go("app.login");
     });
+
+    $rootScope.$on("app:loginSuccess", userLogged);
+
+    function userLogged() {
+
+      $ionicHistory.nextViewOptions({
+        historyRoot: true,
+        disableBack: true
+      });
+      if ($rootScope.lastDeniedState) {
+
+        $state.go($rootScope.lastDeniedState.name, $rootScope.lastDeniedStateParams);
+
+        $rootScope.lastDeniedState = null;
+        $rootScope.lastDeniedStateParams = null;
+        $rootScope.lastDeniedStateOptions = null;
+      } else {
+        $state.go("app.logged.home");
+      }
+    }
+
+    $rootScope.$on('$stateChangePermissionDenied', function (event, toState, toParams, options) {
+      $rootScope.lastDeniedState = toState;
+      $rootScope.lastDeniedStateParams = toParams;
+      $rootScope.lastDeniedStateOptions = options;
+    });
+
+    /*
      $rootScope.$on("$stateChangeSuccess", function(evt, toState, toParams){
         $rootScope.currentState = toState;
         $rootScope.currentStateParams = toParams;
@@ -45,7 +54,6 @@
         return deniedMenu.indexOf($state.current.name) === -1;
     };
     */
-
   }).config(function ($stateProvider, $urlRouterProvider) {
 
     var loggedAndWithShop = function loggedAndWithShop() {
