@@ -1,8 +1,14 @@
-<ion-view view-title="Choose a shop">
+<ion-view view-title="Seleziona uno shop">
   <ion-content>
-    <h2>Choose here</h2>
-    <button class="button button-block" ng-click="ChooseShopCtrl.setCurrent()">
-        Choose
-    </button>
+    
+    <div class="list">
+        <div class="item item-button-right" ng-repeat="shop in ChooseShopCtrl.shops">
+            {{ shop.name }}
+            <button class="button button-positive button-clear" ng-click="ChooseShopCtrl.setCurrentShop(shop.id)">
+            <i class="icon ion-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    
   </ion-content>
 </ion-view>

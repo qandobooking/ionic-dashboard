@@ -1,10 +1,19 @@
 angular.module('app')
 .controller('ChooseShopCtrl', ChooseShopCtrl);
 
-function ChooseShopCtrl (Preferences, $state, $ionicHistory) {
+function ChooseShopCtrl (Preferences, $state, $ionicHistory, DataService) {
 
-  this.setCurrent = () => {
-    Preferences.setCurrentShopId(1);
+
+  DataService.shops
+  .getList()
+  .then(shops => {
+    console.log(shops);
+    this.shops = shops;
+  })
+    
+
+  this.setCurrentShop = (shop) => {
+    Preferences.setCurrentShopId(shopId);
     $ionicHistory.nextViewOptions({
             historyRoot : true,
             disableBack : true

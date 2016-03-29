@@ -19,7 +19,7 @@ angular.module('app',
 
 )
 
-.run(function($ionicPlatform, $auth, $rootScope) {
+.run(function($ionicPlatform, $auth, $rootScope, Entities) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -33,9 +33,12 @@ angular.module('app',
       StatusBar.styleDefault();
     }
 
+    /*
     if($auth.isAuthenticated()){
       $rootScope.$broadcast("app:isAlreadyLogged");
     }
+    */
+    Entities.bootstrap();
 
 
   });

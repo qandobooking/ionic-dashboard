@@ -99,10 +99,12 @@
         }
       },
       data: {
-        permissions: {
-          only: ['hasCurrentShop'],
-          redirectTo: 'app.logged.choose-shop'
+        /*
+        permissions : {
+          //only : ['hasCurrentShop'],
+          //redirectTo : 'app.logged.choose-shop',
         }
+        */
       }
     }).state('app.logged.choose-shop', {
       url: '/choose-shop',

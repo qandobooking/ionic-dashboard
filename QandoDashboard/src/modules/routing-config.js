@@ -116,10 +116,12 @@ angular.module('app.routing', ['ionic'])
         }
       },
       data : {
+        /*
         permissions : {
-          only : ['hasCurrentShop'],
-          redirectTo : 'app.logged.choose-shop',
+          //only : ['hasCurrentShop'],
+          //redirectTo : 'app.logged.choose-shop',
         }
+        */
       }
     })
 

@@ -8,7 +8,7 @@ angular.module('app.constants', [])
 
 .config(function(){})
 
-.constant('baseServerUrl', "http://localhost:8000")
+.constant('baseServerUrl', "http://localhost:8000/api/manage")
 
 
 

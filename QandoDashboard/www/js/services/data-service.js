@@ -7,7 +7,7 @@
 
     function DataServiceRestangular(Restangular, baseServerUrl) {
         return Restangular.withConfig(function (RestangularConfigurer) {
-            RestangularConfigurer.setBaseUrl(baseServerUrl + "/api/");
+            RestangularConfigurer.setBaseUrl(baseServerUrl);
 
             // Example configuration of httpFields
             RestangularConfigurer.setDefaultHttpFields({
@@ -48,6 +48,7 @@
         // and get back restangularized objects.
 
         svc.me = DataServiceRestangular.oneUrl("me");
+        svc.shops = DataServiceRestangular.service("shops");
 
         return svc;
     }
