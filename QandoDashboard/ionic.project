@@ -1,0 +1,14 @@
+{
+  "name": "QandoDashboard",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "babel",
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "src/**/*",
+    "!www/lib/**/*"
+  ]
+}
