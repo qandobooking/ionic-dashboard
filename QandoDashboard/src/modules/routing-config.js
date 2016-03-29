@@ -66,7 +66,7 @@ angular.module('app.routing', ['ionic'])
     })
 
     .state('app.home', {
-      url: '/search',
+      url: '/home',
       views: {
         'menuContent': {
           templateUrl: 'templates/home.html',

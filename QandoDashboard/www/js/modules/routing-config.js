@@ -54,7 +54,7 @@
             templateUrl: 'templates/menu.html',
             controller: 'AppCtrl as AppCtrl'
         }).state('app.home', {
-            url: '/search',
+            url: '/home',
             views: {
                 'menuContent': {
                     templateUrl: 'templates/home.html'
