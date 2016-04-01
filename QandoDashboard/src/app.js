@@ -11,7 +11,7 @@ angular.module('app',
     'angular-storage',
     'app.constants',
     'app.satellizer',
-    'app.permissions',
+    //'app.permissions',
     'app.routing',
     'app.network',
 

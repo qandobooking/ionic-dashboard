@@ -2,7 +2,7 @@
 
 angular.module('app').controller('AppCtrl', AppCtrl);
 
-function AppCtrl($scope, $ionicModal, $timeout, PermissionStore, DataService, $auth, $rootScope, Entities) {
+function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, Entities) {
 
   this.something = "Hello world";
   this.logged = function () {
@@ -14,7 +14,6 @@ function AppCtrl($scope, $ionicModal, $timeout, PermissionStore, DataService, $a
 
   this.logout = function () {
     $auth.logout();
-    PermissionStore.clearStore();
     $rootScope.$broadcast("app:logoutSuccess");
   };
 }

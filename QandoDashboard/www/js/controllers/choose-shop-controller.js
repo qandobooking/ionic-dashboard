@@ -11,7 +11,7 @@ function ChooseShopCtrl(Preferences, $state, $ionicHistory, DataService) {
   });
 
   this.setCurrentShop = function (shop) {
-    Preferences.setCurrentShopId(shopId);
+    Preferences.setCurrentShopId(shop.id);
     $ionicHistory.nextViewOptions({
       historyRoot: true,
       disableBack: true

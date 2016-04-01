@@ -36,7 +36,7 @@
         };
 
         svc.bootstrap = function () {
-            if ($auth.isAuthenticated) {
+            if ($auth.isAuthenticated()) {
                 svc.loadCurrentUser();
             }
             /*

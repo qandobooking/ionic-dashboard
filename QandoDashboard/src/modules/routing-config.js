@@ -4,7 +4,7 @@
 
 angular.module('app.routing', ['ionic'])
 
-.run(function($rootScope, $state, $ionicHistory){
+.run(function($rootScope, $state, $ionicHistory, Preferences, $auth){
 
     //perform redirects based on login/logout here
     
@@ -13,7 +13,15 @@ angular.module('app.routing', ['ionic'])
     })
 
     $rootScope.$on("app:loginSuccess", userLogged);
-    
+    function userLogged(){
+      $ionicHistory.nextViewOptions({
+            historyRoot : true,
+            disableBack : true
+      });
+      $state.go("app.logged.home")
+    }
+
+    /*
     function userLogged(){
         
         $ionicHistory.nextViewOptions({
@@ -33,11 +41,35 @@ angular.module('app.routing', ['ionic'])
         }
     }
 
-    $rootScope.$on('$stateChangePermissionDenied', 
-      function(event, toState, toParams, options) { 
-          $rootScope.lastDeniedState = toState;
-          $rootScope.lastDeniedStateParams = toParams;
-          $rootScope.lastDeniedStateOptions = options;
+    function setLastDeniedState(toState, toParams, options){
+        $rootScope.lastDeniedState = toState;
+        $rootScope.lastDeniedStateParams = toParams;
+        $rootScope.lastDeniedStateOptions = options;
+    };
+    */
+
+    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams, options){
+        console.log($auth.isAuthenticated())
+        if(toState.data){
+          if(toState.data.auth && !$auth.isAuthenticated()){
+            event.preventDefault(); 
+            $state.go("app.login");
+            return;
+          }
+
+          if(toState.data.guest && $auth.isAuthenticated()){
+            event.preventDefault(); 
+            $state.go("app.logged.home");
+            return;
+          }
+
+          if(toState.data.requiresShop && !Preferences.getCurrentShopId()){
+            event.preventDefault(); 
+            $state.go("app.logged.choose-shop");
+            return;
+          }
+
+        }
     });
 
     /*
@@ -90,10 +122,7 @@ angular.module('app.routing', ['ionic'])
       templateUrl: 'templates/login.html',
       controller : 'LoginCtrl as LoginCtrl',
       data: {
-        permissions: {
-          except: ['logged'],
-          redirectTo: 'app.logged.home',
-        }
+        guest : true
       }
     })
 
@@ -101,10 +130,7 @@ angular.module('app.routing', ['ionic'])
       url: '/logged',
       templateUrl: 'templates/menu.html',
       data : {
-        permissions : {
-          only : ['logged'],
-          redirectTo : 'app.login',
-        }
+        auth : true
       }
     })
 
@@ -116,12 +142,7 @@ angular.module('app.routing', ['ionic'])
         }
       },
       data : {
-        /*
-        permissions : {
-          //only : ['hasCurrentShop'],
-          //redirectTo : 'app.logged.choose-shop',
-        }
-        */
+        requiresShop : true
       }
     })
 

@@ -4,7 +4,7 @@
 
   "use strict";
 
-  angular.module('app.routing', ['ionic']).run(function ($rootScope, $state, $ionicHistory) {
+  angular.module('app.routing', ['ionic']).run(function ($rootScope, $state, $ionicHistory, Preferences, $auth) {
 
     //perform redirects based on login/logout here
 
@@ -13,29 +13,59 @@
     });
 
     $rootScope.$on("app:loginSuccess", userLogged);
-
     function userLogged() {
-
       $ionicHistory.nextViewOptions({
         historyRoot: true,
         disableBack: true
       });
-      if ($rootScope.lastDeniedState) {
-
-        $state.go($rootScope.lastDeniedState.name, $rootScope.lastDeniedStateParams);
-
-        $rootScope.lastDeniedState = null;
-        $rootScope.lastDeniedStateParams = null;
-        $rootScope.lastDeniedStateOptions = null;
-      } else {
-        $state.go("app.logged.home");
-      }
+      $state.go("app.logged.home");
     }
 
-    $rootScope.$on('$stateChangePermissionDenied', function (event, toState, toParams, options) {
-      $rootScope.lastDeniedState = toState;
-      $rootScope.lastDeniedStateParams = toParams;
-      $rootScope.lastDeniedStateOptions = options;
+    /*
+    function userLogged(){
+        
+        $ionicHistory.nextViewOptions({
+            historyRoot : true,
+            disableBack : true
+        })
+        if($rootScope.lastDeniedState){
+             $state.go($rootScope.lastDeniedState.name, 
+                $rootScope.lastDeniedStateParams);
+             $rootScope.lastDeniedState = null;
+            $rootScope.lastDeniedStateParams = null;
+            $rootScope.lastDeniedStateOptions = null;
+        } else {
+          $state.go("app.logged.home")
+        }
+    }
+     function setLastDeniedState(toState, toParams, options){
+        $rootScope.lastDeniedState = toState;
+        $rootScope.lastDeniedStateParams = toParams;
+        $rootScope.lastDeniedStateOptions = options;
+    };
+    */
+
+    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams, options) {
+      console.log($auth.isAuthenticated());
+      if (toState.data) {
+        if (toState.data.auth && !$auth.isAuthenticated()) {
+          event.preventDefault();
+          $state.go("app.login");
+          return;
+        }
+
+        if (toState.data.guest && $auth.isAuthenticated()) {
+          event.preventDefault();
+          $state.go("app.logged.home");
+          return;
+        }
+
+        if (toState.data.requiresShop && !Preferences.getCurrentShopId()) {
+          event.preventDefault();
+          $state.go("app.logged.choose-shop");
+          return;
+        }
+      }
     });
 
     /*
@@ -77,19 +107,13 @@
       templateUrl: 'templates/login.html',
       controller: 'LoginCtrl as LoginCtrl',
       data: {
-        permissions: {
-          except: ['logged'],
-          redirectTo: 'app.logged.home'
-        }
+        guest: true
       }
     }).state('app.logged', {
       url: '/logged',
       templateUrl: 'templates/menu.html',
       data: {
-        permissions: {
-          only: ['logged'],
-          redirectTo: 'app.login'
-        }
+        auth: true
       }
     }).state('app.logged.home', {
       url: '/home',
@@ -99,12 +123,7 @@
         }
       },
       data: {
-        /*
-        permissions : {
-          //only : ['hasCurrentShop'],
-          //redirectTo : 'app.logged.choose-shop',
-        }
-        */
+        requiresShop: true
       }
     }).state('app.logged.choose-shop', {
       url: '/choose-shop',
