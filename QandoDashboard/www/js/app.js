@@ -6,9 +6,8 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'restangular', 'angular-storage', 'app.constants', 'app.satellizer',
-//'app.permissions',
-'app.routing', 'app.network']).run(function ($ionicPlatform, $auth, $rootScope, Entities) {
+angular.module('app', ['ionic', 'restangular', 'satellizer', 'angular-storage', 'app.constants', 'app.satellizer', 'app.routing', 'app.network']).run(function ($ionicPlatform, $rootScope, Entities) {
+
   $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)

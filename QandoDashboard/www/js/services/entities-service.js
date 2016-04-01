@@ -8,9 +8,13 @@
     function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootScope) {
         var svc = {};
         var user = null;
+        var shop = null;
 
         svc.getUser = function () {
             return user;
+        };
+        svc.getShop = function () {
+            return shop;
         };
 
         $rootScope.$on("app:loginSuccess", function (evt, data) {
@@ -19,6 +23,7 @@
 
         $rootScope.$on("app:logoutSuccess", function (evt, data) {
             user = null;
+            shop = null;
         });
 
         svc.loadCurrentUser = function () {
@@ -28,23 +33,25 @@
         };
 
         svc.loadCurrentShop = function (shopId) {
-            var _this = this;
 
-            DataService.shops.one(shopId).get().then(function (shop) {
-                _this.shop = shop;
+            DataService.shops.one(shopId).get().then(function (s) {
+                shop = s;
             });
+        };
+
+        svc.setCurrentShop = function (s) {
+            shop = s;
         };
 
         svc.bootstrap = function () {
             if ($auth.isAuthenticated()) {
                 svc.loadCurrentUser();
             }
-            /*
-            const shopId = Preferences.getCurrentShopId();
+
+            var shopId = Preferences.getCurrentShopId();
             if (shopId) {
-                svc.loadCurrentShop(shopId)
+                svc.loadCurrentShop(shopId);
             }
-            */
         };
 
         svc.setEntity = function (key, value) {};

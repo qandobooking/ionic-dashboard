@@ -6,6 +6,7 @@ function AppCtrl ($scope, $ionicModal, $timeout, DataService, $auth, $rootScope,
   this.something = "Hello world";
   this.logged = () => $auth.isAuthenticated();
   this.user = () => Entities.getUser();
+  this.shop = () => Entities.getShop();
 
   this.logout = function(){
     $auth.logout()

@@ -2,7 +2,7 @@
 
 "use strict";
 
-angular.module('app.routing', ['ionic'])
+angular.module('app.routing', ['ionic', 'satellizer'])
 
 .run(function($rootScope, $state, $ionicHistory, Preferences, $auth){
 
@@ -47,7 +47,7 @@ angular.module('app.routing', ['ionic'])
         $rootScope.lastDeniedStateOptions = options;
     };
     */
-
+    
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams, options){
         console.log($auth.isAuthenticated())
         if(toState.data){
@@ -71,7 +71,7 @@ angular.module('app.routing', ['ionic'])
 
         }
     });
-
+    
     /*
 
     $rootScope.$on("$stateChangeSuccess", function(evt, toState, toParams){
@@ -96,24 +96,12 @@ angular.module('app.routing', ['ionic'])
 
 .config(function($stateProvider, $urlRouterProvider){
 
-
-    const loggedAndWithShop = () => {
-      return {
-        only : ['logged', 'hasCurrentShop'],
-        redirectTo : function(){
-          //alert(1)
-          //console.log("aa", arguments)
-          return "app.login"
-        }
-      }
-    }
-
     $stateProvider
-
+    
     .state('app', {
       url: '/app',
       abstract: true,
-      template: '<div ui-view></div>',
+      templateUrl : 'templates/app.html',
       controller: 'AppCtrl as AppCtrl',
     })
 
@@ -125,7 +113,7 @@ angular.module('app.routing', ['ionic'])
         guest : true
       }
     })
-
+    
     .state('app.logged', {
       url: '/logged',
       templateUrl: 'templates/menu.html',
@@ -156,14 +144,25 @@ angular.module('app.routing', ['ionic'])
       }
     })
 
+    .state('app.logged.shop', {
+      url: '/shop',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop.html',
+          controller : 'ShopCtrl as ShopCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
 
-    
-    
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
         var $state = $injector.get('$state');
         $state.go('app.logged.home');
     });
+     
 
 })
 

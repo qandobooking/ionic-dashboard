@@ -1,5 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
+  <ion-side-menu-content drag-content="false">
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
@@ -12,7 +12,7 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left" expose-aside-when="large">
+  <ion-side-menu side="left" xexpose-aside-when="large">
     <ion-header-bar class="bar-dark">
       <h1 class="title">Menu</h1>
     </ion-header-bar>
@@ -23,8 +23,8 @@
           <h2>{{ AppCtrl.user().email }}</h2>
           I'm a scientist.
         </div>
-        <div class="item item-positive item-button-right">
-          Shop name here
+        <div class="item item-positive item-button-right" ui-sref="app.logged.shop">
+          {{ AppCtrl.shop().name }}
         </div>
         <ion-item menu-close href="#/app/home">
           Dashboard

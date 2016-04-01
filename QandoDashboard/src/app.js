@@ -7,19 +7,22 @@
 angular.module('app', 
   [
     'ionic', 
+
     'restangular',
+    'satellizer',
     'angular-storage',
     'app.constants',
     'app.satellizer',
-    //'app.permissions',
     'app.routing',
     'app.network',
+    
 
   ]
 
 )
 
-.run(function($ionicPlatform, $auth, $rootScope, Entities) {
+.run(function($ionicPlatform,  $rootScope, Entities) {
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)

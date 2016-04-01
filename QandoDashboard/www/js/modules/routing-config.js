@@ -4,7 +4,7 @@
 
   "use strict";
 
-  angular.module('app.routing', ['ionic']).run(function ($rootScope, $state, $ionicHistory, Preferences, $auth) {
+  angular.module('app.routing', ['ionic', 'satellizer']).run(function ($rootScope, $state, $ionicHistory, Preferences, $auth) {
 
     //perform redirects based on login/logout here
 
@@ -86,21 +86,10 @@
     */
   }).config(function ($stateProvider, $urlRouterProvider) {
 
-    var loggedAndWithShop = function loggedAndWithShop() {
-      return {
-        only: ['logged', 'hasCurrentShop'],
-        redirectTo: function redirectTo() {
-          //alert(1)
-          //console.log("aa", arguments)
-          return "app.login";
-        }
-      };
-    };
-
     $stateProvider.state('app', {
       url: '/app',
       abstract: true,
-      template: '<div ui-view></div>',
+      templateUrl: 'templates/app.html',
       controller: 'AppCtrl as AppCtrl'
     }).state('app.login', {
       url: '/login',
@@ -132,6 +121,17 @@
           templateUrl: 'templates/choose-shop.html',
           controller: 'ChooseShopCtrl as ChooseShopCtrl'
         }
+      }
+    }).state('app.logged.shop', {
+      url: '/shop',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop.html',
+          controller: 'ShopCtrl as ShopCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
       }
     });
 

@@ -9,7 +9,7 @@ angular.module('app.satellizer', ['satellizer'])
   $authProvider.loginUrl = '/auth/';
   $authProvider.authToken = 'JWT';
 
-
+  
 });
 
 })();

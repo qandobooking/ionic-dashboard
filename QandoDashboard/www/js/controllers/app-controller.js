@@ -11,6 +11,9 @@ function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, 
   this.user = function () {
     return Entities.getUser();
   };
+  this.shop = function () {
+    return Entities.getShop();
+  };
 
   this.logout = function () {
     $auth.logout();

@@ -21,3 +21,34 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+g.period .range{
+    fill: teal;
+    opacity : 0.4;
+    stroke:black;
+
+}
+
+g.period .handle{
+    fill: #666;
+    opacity :1;
+}
+
+.timeAxis line,
+.timeAxis path {
+  fill: none;
+  stroke: #000;
+}
+
+.tick text {
+    font-size:10px;
+}
+
+
+
+.right-handle:hover, .left-handle:hover {
+    cursor:ew-resize;
+}
+
+.translate-handle:hover {
+    cursor:move;
+}

@@ -7,8 +7,10 @@ angular.module("app")
 function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootScope){
     var svc = {  }
     var user = null;
+    var shop = null;
 
     svc.getUser = () => user;
+    svc.getShop = () => shop;
 
     $rootScope.$on("app:loginSuccess", (evt, data) => {
       svc.loadCurrentUser();  
@@ -16,6 +18,7 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
 
     $rootScope.$on("app:logoutSuccess", (evt, data) => {
       user = null;
+      shop = null;
     });
 
     
@@ -28,11 +31,16 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
     }
 
     svc.loadCurrentShop = function(shopId) {
+
       DataService.shops.one(shopId)
       .get()
-      .then(shop => {
-          this.shop = shop;
+      .then(s => {
+          shop = s;
       })
+    };
+
+    svc.setCurrentShop = function(s){
+      shop = s;
     }
 
     
@@ -40,12 +48,12 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
         if ($auth.isAuthenticated()) {
             svc.loadCurrentUser()
         }
-        /*
+        
         const shopId = Preferences.getCurrentShopId();
         if (shopId) {
             svc.loadCurrentShop(shopId)
         }
-        */
+        
     }
 
 
