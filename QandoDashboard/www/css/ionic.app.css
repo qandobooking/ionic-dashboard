@@ -9732,12 +9732,12 @@ a.button {
   transition-duration: 0s; }
 
 g.period .range {
-  fill: teal;
-  opacity: 0.4;
+  fill: #387ef5;
+  opacity: 1;
   stroke: black; }
 
 g.period .handle {
-  fill: #666;
+  fill: #222;
   opacity: 1; }
 
 .timeAxis line,

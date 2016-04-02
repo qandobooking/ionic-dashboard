@@ -22,14 +22,14 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 g.period .range{
-    fill: teal;
-    opacity : 0.4;
+    fill: $positive;
+    opacity : 1;
     stroke:black;
 
 }
 
 g.period .handle{
-    fill: #666;
+    fill: #222;
     opacity :1;
 }
 
@@ -42,8 +42,6 @@ g.period .handle{
 .tick text {
     font-size:10px;
 }
-
-
 
 .right-handle:hover, .left-handle:hover {
     cursor:ew-resize;

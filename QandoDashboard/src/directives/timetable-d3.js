@@ -3,13 +3,12 @@ const defaultOptions = { onUpdate : () => {}, ranges:[] }
 function timeTableIt(el, options=defaultOptions){
 
   const w = el.clientWidth;
+  const formatter = d3.time.format("%H:%M");
     
   const svg = d3.select(el)
   .append("svg")
   .attr("width", w)
   .attr("height", 100);
-
-  const formatter = d3.time.format("%H:%M");
 
   const xScale = d3.time.scale()
   .domain([ moment({hour:0, minute:0}).toDate(), 
@@ -30,7 +29,6 @@ function timeTableIt(el, options=defaultOptions){
   .attr('class', 'timeAxis')
   .call(xAxis);
 
-
   const rangesContainer = svg.append('g')
   .attr("transform", function(d){
       return "translate(0, 30)";
@@ -45,12 +43,11 @@ function timeTableIt(el, options=defaultOptions){
     const delta = d3.event.dx;
     const t = d3.select(this);
     const num = t.attr('num');
-    const rangeGroup = svg.selectAll(".group-" + num);
-    _.each(rangeGroup[0], function(gg){
-      const e = d3.select(gg);
+    svg.selectAll(".group-" + num)
+    .each(function(gg){
+      const e = d3.select(this);
       e.attr('x', parseFloat(e.attr('x') || 0)+delta);
     });
-
     //calculate new start and use it on dragend
     t.attr("translate-start", xScale.invert(delta));
 
@@ -64,14 +61,13 @@ function timeTableIt(el, options=defaultOptions){
   const dragLeftHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
     const delta = d3.event.dx;
-    
     const t = d3.select(this);
+    const num = t.attr('num');
     t.attr("x", parseFloat(t.attr("x")) + delta);
     
-    const num = t.attr('num');
-    const rangeGroup = svg.selectAll(".range-group-" + num);
-    _.each(rangeGroup[0], function(gg){
-      const e = d3.select(gg);
+    svg.selectAll(".range-group-" + num)
+    .each(function(gg){
+      const e = d3.select(this);
       e.attr('x', parseFloat(e.attr('x') || 0)+delta);
       e.attr('width', parseFloat(e.attr('width'))-delta);
     });
@@ -85,20 +81,17 @@ function timeTableIt(el, options=defaultOptions){
       console.log("new-start-delta", t.attr("new-start-delta"));
   });
 
-
   //drag handler for right handle
   const dragRightHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
     const delta = d3.event.dx;
-    
     const t = d3.select(this);
+    const num = t.attr('num');
     t.attr("x", parseFloat(t.attr("x")) + delta);
     
-    const num = t.attr('num');
-    const rangeGroup = svg.selectAll(".range-group-" + num);
-    _.each(rangeGroup[0], function(gg){
-      const e = d3.select(gg);
-      //e.attr('x', parseFloat(e.attr('x') || 0) +delta);
+    svg.selectAll(".range-group-" + num)
+    .each(function(d){
+      const e = d3.select(this);
       e.attr('width', parseFloat(e.attr('width'))+delta);
     });
 
@@ -149,7 +142,7 @@ function timeTableIt(el, options=defaultOptions){
   .attr("class", function(d,i){
       return `range range-group-${i} group-${i}`;
   })
-  .attr('height', "50px")
+  .attr('height', 50)
   .attr('width', function(d){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
   })
@@ -168,7 +161,7 @@ function timeTableIt(el, options=defaultOptions){
   .attr('width', function(d){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
   })
-  .style('opacity', '0.2')
+  .style('opacity', 0)
   .call(dragTranslate);
 
   //left handle
