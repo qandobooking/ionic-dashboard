@@ -89,10 +89,11 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
   }
 
   
-  this.onDoubleTap = (el, day, idx) => {
+  this.onDoubleTap = (el, r, idx) => {
+    var day = r.weekday;
     var confirmPopup = $ionicPopup.confirm({
-     title: 'Consume Ice Cream',
-     template: 'Are you sure you want to eat this ice cream?'
+     title: 'Rimuovi intervallo',
+     template: `${this.weekDaysNames[r.weekday]} dalle ${r.start.format("HH:mm")} alle ${r.end.format("HH:mm")}`
    });
     confirmPopup.then(res => {
      if(res) {

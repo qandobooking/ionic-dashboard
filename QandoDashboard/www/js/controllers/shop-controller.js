@@ -77,10 +77,11 @@ function ShopCtrl($scope, Preferences, $state, $ionicHistory, DataService, Entit
         });
     };
 
-    this.onDoubleTap = function (el, day, idx) {
+    this.onDoubleTap = function (el, r, idx) {
+        var day = r.weekday;
         var confirmPopup = $ionicPopup.confirm({
-            title: 'Consume Ice Cream',
-            template: 'Are you sure you want to eat this ice cream?'
+            title: 'Rimuovi intervallo',
+            template: _this.weekDaysNames[r.weekday] + ' dalle ' + r.start.format("HH:mm") + ' alle ' + r.end.format("HH:mm")
         });
         confirmPopup.then(function (res) {
             if (res) {

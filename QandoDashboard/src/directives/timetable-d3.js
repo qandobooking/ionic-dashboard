@@ -234,10 +234,9 @@ function timeTableIt(el, options={}){
       .style('opacity', 0)
       .each(function(d, i){
         var el = d3.select(this);
-        el = angular.element(el[0]);
-        el.on('hold', function(t){
-          console.log("d",d, i);
-          options.onDoubleTap(el, d.weekday, i);
+        var ela = angular.element(el[0]);
+        ela.on('hold', function(t){
+          options.onDoubleTap(el, d, i);
         })
       })
       .call(dragTranslate);
