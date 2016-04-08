@@ -52,16 +52,20 @@ function ShopCtrl($scope, Preferences, $state, $ionicHistory, DataService, Entit
             }).then(function (savedRange) {
                 restangularItems[savedRange.id] = savedRange;
                 range.id = savedRange.id;
+                _this.redrawFunctions[range.weekday].setId(range, range.id);
             });
         }
     };
 
     this.addToDay = function (day) {
-        this.byWeekDay[day].push({
+        var newRange = {
             weekday: day,
             start: moment({ hour: 0 }),
             end: moment({ hour: 1 })
-        });
+        };
+
+        this.byWeekDay[day].push(newRange);
+        this.redrawFunctions[day].setRanges(this.byWeekDay[day]);
     };
 
     this.toggleEdit = function () {
@@ -73,14 +77,19 @@ function ShopCtrl($scope, Preferences, $state, $ionicHistory, DataService, Entit
         });
     };
 
-    this.onDoubleTap = function (el) {
+    this.onDoubleTap = function (el, day, idx) {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Consume Ice Cream',
             template: 'Are you sure you want to eat this ice cream?'
         });
         confirmPopup.then(function (res) {
             if (res) {
-                console.log('You are sure');
+                var candidate = _this.byWeekDay[day][idx];
+                DataService.getShopWeekWorkingHours(_this.shop.id).one(candidate.id).remove().then(function () {
+
+                    _this.byWeekDay[day].splice(idx, 1);
+                    _this.redrawFunctions[day].setRanges(_this.byWeekDay[day]);
+                });
             } else {
                 console.log('You are not sure');
             }

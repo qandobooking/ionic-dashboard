@@ -143,6 +143,12 @@ function timeTableIt(el) {
     }).attr('width', function (d, i) {
       //return xScale(d.end.toDate()) - xScale(d.start.toDate()) 
       return computedRanges[i].width;
+    }).attr("class", function (d, i) {
+      var out = "range range-group-" + i + " group-" + i;
+      if (!d.id) {
+        out += " range-unsaved";
+      }
+      return out;
     });
 
     //remove logic
@@ -169,8 +175,9 @@ function timeTableIt(el) {
       }).style('opacity', 0).each(function (d, i) {
         var el = d3.select(this);
         el = angular.element(el[0]);
-        el.on('doubletap', function (t) {
-          options.onDoubleTap(el);
+        el.on('hold', function (t) {
+          console.log("d", d, i);
+          options.onDoubleTap(el, d.weekday, i);
         });
       }).call(dragTranslate);
 
@@ -226,6 +233,19 @@ function timeTableIt(el) {
     setReadonly: function setReadonly(ro) {
       setTimeout(function () {
         options.readOnly = ro;
+        redraw();
+      }, 0);
+    },
+    setRanges: function setRanges(ranges) {
+      setTimeout(function () {
+        options.ranges = ranges;
+        redraw();
+      }, 0);
+    },
+    setId: function setId(range, id) {
+      setTimeout(function () {
+        range = _.find(options.ranges, range);
+        range.id = id;
         redraw();
       }, 0);
     }

@@ -59,6 +59,8 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
         .then(savedRange=>{
             restangularItems[savedRange.id] = savedRange;
             range.id = savedRange.id;
+            this.redrawFunctions[range.weekday]
+            .setId(range, range.id);
 
         })
     }
@@ -66,11 +68,16 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
   }
 
   this.addToDay = function(day){
-    this.byWeekDay[day].push({
+    var newRange = {
         weekday:day,
         start:moment({hour:0}),
         end:moment({hour:1}),
-    })
+    }
+
+    this.byWeekDay[day].push(newRange);
+    this.redrawFunctions[day]
+    .setRanges(this.byWeekDay[day]);
+
 
   }
 
@@ -82,14 +89,25 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
   }
 
   
-  this.onDoubleTap = function(el){
+  this.onDoubleTap = (el, day, idx) => {
     var confirmPopup = $ionicPopup.confirm({
      title: 'Consume Ice Cream',
      template: 'Are you sure you want to eat this ice cream?'
    });
-    confirmPopup.then(function(res) {
+    confirmPopup.then(res => {
      if(res) {
-       console.log('You are sure');
+       var candidate = this.byWeekDay[day][idx];
+       DataService.getShopWeekWorkingHours(this.shop.id)
+       .one(candidate.id).remove()
+       .then(()=>{
+
+        this.byWeekDay[day].splice(idx, 1);
+        this.redrawFunctions[day]
+        .setRanges(this.byWeekDay[day]);
+
+       })
+
+       
      } else {
        console.log('You are not sure');
      }

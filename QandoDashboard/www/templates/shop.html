@@ -10,13 +10,13 @@
         <div class="item item-stable item-button-right">
             {{ ::ShopCtrl.weekDaysNames[$index] }}
             <span ng-if="!ShopCtrl.readOnly" class="buttons">
-                <button  class="button button-clear" ng-click="ShopCtrl.addToDay($index)">Aggiungi</button>
+                <button  class="button button-clear" ng-click="ShopCtrl.addToDay(day)">Aggiungi</button>
             </span>
             
             
         </div>
         
-        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" on-double-tap="ShopCtrl.onDoubleTap" read-only="{{::ShopCtrl.readOnly}}" redraw="ShopCtrl.redrawFunctions[$index]" data-tap-disabled="true"></div>    
+        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" on-double-tap="ShopCtrl.onDoubleTap" read-only="{{::ShopCtrl.readOnly}}" redraw="ShopCtrl.redrawFunctions[day]" data-tap-disabled="true"></div>    
 
         
     </div>
