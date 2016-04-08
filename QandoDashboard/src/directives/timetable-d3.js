@@ -49,12 +49,14 @@ function timeTableIt(el, options=defaultOptions){
       const e = d3.select(this);
       e.attr('x', parseFloat(e.attr('x') || 0)+delta);
     });
+
+
   })
   .on("dragend", function(d){
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
-      const newStart = moment(xScale.invert(parseFloat(t.attr("x"))+xPadding));
+      const newStart = moment(xScale.invert(parseFloat(t.attr("x"))));
       const delta = range.start.diff(newStart);
       range.start = newStart;
       range.end = range.end.subtract(delta)
@@ -81,7 +83,7 @@ function timeTableIt(el, options=defaultOptions){
     const t = d3.select(this);
     const num = t.attr('num');
     const range = options.ranges[num];
-    range.start = moment(xScale.invert(parseFloat(t.attr("x"))+xPadding));
+    range.start = moment(xScale.invert(parseFloat(t.attr("x"))));
     options.onUpdate(range);
       
   });
@@ -107,7 +109,7 @@ function timeTableIt(el, options=defaultOptions){
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
-      range.end = moment(xScale.invert(parseFloat(t.attr("x")) +parseFloat(t.attr("width"))  +xPadding));
+      range.end = moment(xScale.invert(parseFloat(t.attr("x")) +parseFloat(t.attr("width"))));
       options.onUpdate(range);
   });
 
@@ -130,18 +132,14 @@ function timeTableIt(el, options=defaultOptions){
   .attr("class", function(d,i){
       return "rectangle-container group-"+i;
   })
-  .attr("transform", function(d){
-      return "translate("+ xScale(d.start.toDate()) +", 0)";
-  });
+  
 
   const controlsContainer = enterG
   .append('g')
   .attr("class", function(d,i){
       return "controls-container group-"+i;
   })
-  .attr("transform", function(d){
-      return "translate("+ xScale(d.start.toDate()) +", 0)";
-  });
+  
   
   //main rectangle
   rectangleContainer
@@ -150,6 +148,9 @@ function timeTableIt(el, options=defaultOptions){
       return `range range-group-${i} group-${i}`;
   })
   .attr('height', 50)
+  .attr("x", function(d){
+     return xScale(d.start.toDate());
+  })
   .attr('width', function(d){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
   })
@@ -163,7 +164,9 @@ function timeTableIt(el, options=defaultOptions){
   .attr("class", function(d,i){
     return `handle translate-handle group-${i} range-group-${i}`;
   })
-  .attr('x', 0)
+  .attr("x", function(d){
+     return xScale(d.start.toDate());
+  })
   .attr('height', 50)
   .attr('width', function(d){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
@@ -182,7 +185,9 @@ function timeTableIt(el, options=defaultOptions){
   })
   .attr('height', 60)
   .attr('width', 4)
-  .attr('x', 0)
+  .attr("x", function(d){
+     return xScale(d.start.toDate());
+  })
   .attr('y', -5)
   .call(dragLeftHandle);
   
@@ -198,7 +203,7 @@ function timeTableIt(el, options=defaultOptions){
   .attr('height', 60)
   .attr('width', 4)
   .attr('x', function(d){
-      return xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
+      return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
   })
   .attr('y', -5)
   .call(dragRightHandle)

@@ -3,7 +3,7 @@ angular.module('app')
 
 function ShopCtrl (Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils) {
 
-  var responsesById;
+  var restangularItems;
   this.weekDays = TimeUtils.getWeekDays();
   this.weekDaysNames = TimeUtils.getWeekDaysNames();
 
@@ -14,7 +14,7 @@ function ShopCtrl (Preferences, $state, $ionicHistory, DataService, Entities, Ti
     .getList()
     .then(weekWorkingHours => {
         
-        responsesById = _.keyBy(weekWorkingHours, 'id');
+        restangularItems = _.keyBy(weekWorkingHours, 'id');
 
         const moments = _.map(weekWorkingHours.plain(), w => {
             return {
@@ -38,7 +38,15 @@ function ShopCtrl (Preferences, $state, $ionicHistory, DataService, Entities, Ti
 
 
   this.onRangeUpdate = function(range){
-    console.log(range)
+    console.log(range);
+
+    const restangularItem = restangularItems[range.id];
+    restangularItem.start_time = range.start.format("HH:mm");
+    restangularItem.end_time = range.end.format("HH:mm");
+    console.log(restangularItem.start_time);
+    console.log(restangularItem.end_time);
+    restangularItem.save();
+
   }
 
 

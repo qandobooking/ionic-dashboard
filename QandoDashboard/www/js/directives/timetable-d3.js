@@ -41,7 +41,7 @@ function timeTableIt(el) {
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
-    var newStart = moment(xScale.invert(parseFloat(t.attr("x")) + xPadding));
+    var newStart = moment(xScale.invert(parseFloat(t.attr("x"))));
     var delta = range.start.diff(newStart);
     range.start = newStart;
     range.end = range.end.subtract(delta);
@@ -64,7 +64,7 @@ function timeTableIt(el) {
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
-    range.start = moment(xScale.invert(parseFloat(t.attr("x")) + xPadding));
+    range.start = moment(xScale.invert(parseFloat(t.attr("x"))));
     options.onUpdate(range);
   });
 
@@ -83,7 +83,7 @@ function timeTableIt(el) {
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
-    range.end = moment(xScale.invert(parseFloat(t.attr("x")) + parseFloat(t.attr("width")) + xPadding));
+    range.end = moment(xScale.invert(parseFloat(t.attr("x")) + parseFloat(t.attr("width"))));
     options.onUpdate(range);
   });
 
@@ -97,20 +97,18 @@ function timeTableIt(el) {
     return 'rectangle-container-' + i;
   }).attr("class", function (d, i) {
     return "rectangle-container group-" + i;
-  }).attr("transform", function (d) {
-    return "translate(" + xScale(d.start.toDate()) + ", 0)";
   });
 
   var controlsContainer = enterG.append('g').attr("class", function (d, i) {
     return "controls-container group-" + i;
-  }).attr("transform", function (d) {
-    return "translate(" + xScale(d.start.toDate()) + ", 0)";
   });
 
   //main rectangle
   rectangleContainer.append('rect').attr("class", function (d, i) {
     return "range range-group-" + i + " group-" + i;
-  }).attr('height', 50).attr('width', function (d) {
+  }).attr('height', 50).attr("x", function (d) {
+    return xScale(d.start.toDate());
+  }).attr('width', function (d) {
     return xScale(d.end.toDate()) - xScale(d.start.toDate());
   });
 
@@ -119,7 +117,9 @@ function timeTableIt(el) {
     return i;
   }).attr("class", function (d, i) {
     return "handle translate-handle group-" + i + " range-group-" + i;
-  }).attr('x', 0).attr('height', 50).attr('width', function (d) {
+  }).attr("x", function (d) {
+    return xScale(d.start.toDate());
+  }).attr('height', 50).attr('width', function (d) {
     return xScale(d.end.toDate()) - xScale(d.start.toDate());
   }).style('opacity', 0).call(dragTranslate);
 
@@ -128,7 +128,9 @@ function timeTableIt(el) {
     return i;
   }).attr("class", function (d, i) {
     return "handle left-handle group-" + i;
-  }).attr('height', 60).attr('width', 4).attr('x', 0).attr('y', -5).call(dragLeftHandle);
+  }).attr('height', 60).attr('width', 4).attr("x", function (d) {
+    return xScale(d.start.toDate());
+  }).attr('y', -5).call(dragLeftHandle);
 
   //right handle
   controlsContainer.append('rect').attr("num", function (d, i) {
@@ -136,7 +138,7 @@ function timeTableIt(el) {
   }).attr("class", function (d, i) {
     return "handle right-handle group-" + i;
   }).attr('height', 60).attr('width', 4).attr('x', function (d) {
-    return xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4;
+    return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4;
   }).attr('y', -5).call(dragRightHandle);
 
   //enter logic ends here
