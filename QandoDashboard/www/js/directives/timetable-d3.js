@@ -60,12 +60,12 @@ function timeTableIt(el) {
       e.attr('x', parseFloat(e.attr('x') || 0) + delta);
       e.attr('width', parseFloat(e.attr('width')) - delta);
     });
-
-    //calculate new start and use it on dragend
-    t.attr("new-start-delta", xScale.invert(delta));
   }).on("dragend", function (d) {
     var t = d3.select(this);
-    console.log("new-start-delta", t.attr("new-start-delta"));
+    var num = t.attr('num');
+    var range = options.ranges[num];
+    range.start = moment(xScale.invert(parseFloat(t.attr("x")) + xPadding));
+    options.onUpdate(range);
   });
 
   //drag handler for right handle
@@ -79,12 +79,12 @@ function timeTableIt(el) {
       var e = d3.select(this);
       e.attr('width', parseFloat(e.attr('width')) + delta);
     });
-
-    //calculate new start and use it on dragend
-    t.attr("new-end-delta", xScale.invert(delta));
   }).on("dragend", function (d) {
     var t = d3.select(this);
-    console.log("new-end-delta", t.attr("new-end-delta"));
+    var num = t.attr('num');
+    var range = options.ranges[num];
+    range.end = moment(xScale.invert(parseFloat(t.attr("x")) + parseFloat(t.attr("width")) + xPadding));
+    options.onUpdate(range);
   });
 
   //data binding happens here
