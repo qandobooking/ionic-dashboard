@@ -20,11 +20,11 @@
       <ion-list>
         <div class="item  item-avatar item-positive">
           <img src="img/ionic.png">
-          <h2>{{ AppCtrl.user().email }}</h2>
+          <h2>{{ AppCtrl.user.email }}</h2>
           I'm a scientist.
         </div>
-        <div class="item item-positive item-button-right" ui-sref="app.logged.shop">
-          {{ AppCtrl.shop().name }}
+        <div menu-close class="item item-positive item-button-right" ui-sref="app.logged.shop">
+          {{ AppCtrl.shop.name }}
         </div>
         <ion-item menu-close href="#/app/home">
           Dashboard

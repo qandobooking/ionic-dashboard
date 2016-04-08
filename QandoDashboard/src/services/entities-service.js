@@ -4,21 +4,23 @@
 angular.module("app")
 .factory('Entities', Entities);
 
-function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootScope){
+function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $rootScope){
     var svc = {  }
-    var user = null;
-    var shop = null;
+    var user = $q.defer();
+    var shop = $q.defer();
 
-    svc.getUser = () => user;
-    svc.getShop = () => shop;
+    svc.getUser = () => user.promise;
+    svc.getShop = () => shop.promise;
 
     $rootScope.$on("app:loginSuccess", (evt, data) => {
       svc.loadCurrentUser();  
     });
 
     $rootScope.$on("app:logoutSuccess", (evt, data) => {
-      user = null;
-      shop = null;
+      user = $q.defer();
+      shop = $q.defer();
+      $rootScope.$broadcast('Entities:userChanged', null)
+      $rootScope.$broadcast('Entities:shopChanged', null)
     });
 
     
@@ -26,7 +28,8 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
       DataService.me
       .get()
       .then(u => {
-          user = u;
+          user.resolve(u);
+          $rootScope.$broadcast('Entities:userChanged', u)
       })
     }
 
@@ -35,12 +38,14 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
       DataService.shops.one(shopId)
       .get()
       .then(s => {
-          shop = s;
+          shop.resolve(s);
+          $rootScope.$broadcast('Entities:shopChanged', s)
       })
     };
 
     svc.setCurrentShop = function(s){
-      shop = s;
+      shop = $q.when(s);
+      $rootScope.$broadcast('Entities:shopChanged', s)
     }
 
     
@@ -55,11 +60,7 @@ function Entities(baseServerUrl, Preferences, store, $auth, DataService, $rootSc
         }
         
     }
-
-
-    svc.setEntity = (key, value) => {
-
-    }
+ 
     
 
 

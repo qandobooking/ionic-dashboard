@@ -8,10 +8,11 @@ function timeTableIt(el) {
 
   var w = el.clientWidth;
   var formatter = d3.time.format("%H:%M");
+  var xPadding = 25;
 
   var svg = d3.select(el).append("svg").attr("width", w).attr("height", 100);
 
-  var xScale = d3.time.scale().domain([moment({ hour: 0, minute: 0 }).toDate(), moment({ hour: 24, minute: 0 }).toDate()]).range([25, w - 25]);
+  var xScale = d3.time.scale().domain([moment({ hour: 0, minute: 0 }).toDate(), moment({ hour: 24, minute: 0 }).toDate()]).range([xPadding, w - xPadding]);
 
   //top axis
   var xAxis = d3.svg.axis().scale(xScale).orient('top').ticks(24).tickFormat(formatter);
@@ -36,11 +37,15 @@ function timeTableIt(el) {
       var e = d3.select(this);
       e.attr('x', parseFloat(e.attr('x') || 0) + delta);
     });
-    //calculate new start and use it on dragend
-    t.attr("translate-start", xScale.invert(delta));
   }).on("dragend", function (d) {
     var t = d3.select(this);
-    console.log("translate start", t.attr("translate-start"));
+    var num = t.attr('num');
+    var range = options.ranges[num];
+    var newStart = moment(xScale.invert(parseFloat(t.attr("x")) + xPadding));
+    var delta = range.start.diff(newStart);
+    range.start = newStart;
+    range.end = range.end.subtract(delta);
+    options.onUpdate(range);
   });
 
   //drag handler for left handle

@@ -41,7 +41,7 @@ function DataServiceRestangular(Restangular, baseServerUrl){
 angular.module("app")
 .factory('DataService', DataService);
 
-function DataService(DataServiceRestangular){
+function DataService(DataServiceRestangular, Preferences){
     var svc = {};
     // Example restangular service. See also modules/config/network-config
     // for global restangular config.
@@ -50,6 +50,11 @@ function DataService(DataServiceRestangular){
     
     svc.me = DataServiceRestangular.oneUrl("me");
     svc.shops = DataServiceRestangular.service("shops");
+
+    svc.getShopWeekWorkingHours = function(shopId){
+        return DataServiceRestangular.service("weekworkinghours", DataServiceRestangular.one('shops', shopId));
+    }
+    
 
     return svc;
 }
