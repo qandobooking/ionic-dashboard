@@ -5,7 +5,7 @@
         <div class="item item-stable">
             {{ ShopCtrl.weekDaysNames[$index] }}
         </div>
-        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" data-tap-disabled="true"></div>    
+        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" on-double-tap="ShopCtrl.onDoubleTap" data-tap-disabled="true"></div>    
     </div>
     
     

@@ -1,6 +1,6 @@
 "use strict";
 
-var defaultOptions = { onUpdate: function onUpdate() {}, ranges: [] };
+var defaultOptions = { onUpdate: function onUpdate() {}, ranges: [], onDoubleTap: function onDoubleTap() {} };
 
 function timeTableIt(el) {
   var options = arguments.length <= 1 || arguments[1] === undefined ? defaultOptions : arguments[1];
@@ -43,6 +43,9 @@ function timeTableIt(el) {
     var range = options.ranges[num];
     var newStart = moment(xScale.invert(parseFloat(t.attr("x"))));
     var delta = range.start.diff(newStart);
+    if (newStart.isSame(range.start)) {
+      return;
+    }
     range.start = newStart;
     range.end = range.end.subtract(delta);
     options.onUpdate(range);
@@ -121,7 +124,13 @@ function timeTableIt(el) {
     return xScale(d.start.toDate());
   }).attr('height', 50).attr('width', function (d) {
     return xScale(d.end.toDate()) - xScale(d.start.toDate());
-  }).style('opacity', 0).call(dragTranslate);
+  }).style('opacity', 0).call(function (d) {
+    var el = angular.element(d[0]);
+    el.on('doubletap', function (t) {
+      console.error(t);
+      options.onDoubleTap(el);
+    });
+  }).call(dragTranslate);
 
   //left handle
   controlsContainer.append('rect').attr("num", function (d, i) {

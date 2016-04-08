@@ -44,7 +44,8 @@
         };
 
         svc.setCurrentShop = function (s) {
-            shop = $q.when(s);
+            shop = $q.defer();
+            shop.resolve(s);
             $rootScope.$broadcast('Entities:shopChanged', s);
         };
 

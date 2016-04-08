@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ShopCtrl', ShopCtrl);
 
-function ShopCtrl (Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils) {
+function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils, $ionicPopover) {
 
   var restangularItems;
   this.weekDays = TimeUtils.getWeekDays();
@@ -49,13 +49,16 @@ function ShopCtrl (Preferences, $state, $ionicHistory, DataService, Entities, Ti
 
   }
 
+  var template = '<ion-popover-view><ion-header-bar> <h1 class="title">My Popover Title</h1> </ion-header-bar> <ion-content> Hello! </ion-content></ion-popover-view>';
 
+  var popover = $ionicPopover.fromTemplate(template, {
+    scope: $scope
+  });
 
+  this.onDoubleTap = function(el){
+    popover.show(el);
+  }
 
-  this.testWorkingHours = [
-    { start: moment({ hour:0, minute:0 }), end: moment({ hour:12, minute:0 })},
-    { start: moment({ hour:13, minute:0 }), end: moment({ hour:24, minute:0 })},
-  ]
   
   
 }

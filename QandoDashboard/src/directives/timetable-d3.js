@@ -1,4 +1,4 @@
-const defaultOptions = { onUpdate : () => {}, ranges:[] }
+const defaultOptions = { onUpdate : () => {}, ranges:[], onDoubleTap : () => {} }
 
 function timeTableIt(el, options=defaultOptions){
 
@@ -51,6 +51,7 @@ function timeTableIt(el, options=defaultOptions){
     });
 
 
+
   })
   .on("dragend", function(d){
       const t = d3.select(this);
@@ -58,6 +59,9 @@ function timeTableIt(el, options=defaultOptions){
       const range = options.ranges[num];
       const newStart = moment(xScale.invert(parseFloat(t.attr("x"))));
       const delta = range.start.diff(newStart);
+      if(newStart.isSame(range.start)){
+        return;
+      }
       range.start = newStart;
       range.end = range.end.subtract(delta)
       options.onUpdate(range);
@@ -154,6 +158,7 @@ function timeTableIt(el, options=defaultOptions){
   .attr('width', function(d){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
   })
+
   
   //translate handle
   controlsContainer
@@ -172,6 +177,13 @@ function timeTableIt(el, options=defaultOptions){
     return xScale(d.end.toDate()) - xScale(d.start.toDate())  
   })
   .style('opacity', 0)
+  .call(function(d){
+    var el = angular.element(d[0]);
+    el.on('doubletap', function(t){
+      console.error(t);
+      options.onDoubleTap(el);
+    })
+  })
   .call(dragTranslate);
 
   //left handle
