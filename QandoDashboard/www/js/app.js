@@ -22,4 +22,8 @@ angular.module('app', ['ionic', 'restangular', 'satellizer', 'angular-storage', 
 
     Entities.bootstrap();
   });
-}).config(function ($stateProvider, $urlRouterProvider) {});
+}).config(function ($stateProvider, $urlRouterProvider, $logProvider, $compileProvider) {
+  //$logProvider.debugEnabled(false);
+  //$compileProvider.debugInfoEnabled(false);
+
+});

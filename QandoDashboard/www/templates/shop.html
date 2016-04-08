@@ -1,11 +1,24 @@
 <ion-view view-title="{{ ShopCtrl.shop.name }}">
+    
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="ShopCtrl.toggleEdit()">Modifica</button>    
+    </ion-nav-buttons>
   <ion-content>
+    
 
-    <div ng-repeat="day in ShopCtrl.weekDays" ng-if="ShopCtrl.byWeekDay">
-        <div class="item item-stable">
-            {{ ShopCtrl.weekDaysNames[$index] }}
+    <div ng-repeat="day in ShopCtrl.weekDays track by $index" ng-if="ShopCtrl.byWeekDay">
+        <div class="item item-stable item-button-right">
+            {{ ::ShopCtrl.weekDaysNames[$index] }}
+            <span ng-if="!ShopCtrl.readOnly" class="buttons">
+                <button  class="button button-clear" ng-click="ShopCtrl.addToDay($index)">Aggiungi</button>
+            </span>
+            
+            
         </div>
-        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" on-double-tap="ShopCtrl.onDoubleTap" data-tap-disabled="true"></div>    
+        
+        <div time-table ranges="ShopCtrl.byWeekDay[day]" on-update="ShopCtrl.onRangeUpdate" on-double-tap="ShopCtrl.onDoubleTap" read-only="{{::ShopCtrl.readOnly}}" redraw="ShopCtrl.redrawFunctions[$index]" data-tap-disabled="true"></div>    
+
+        
     </div>
     
     

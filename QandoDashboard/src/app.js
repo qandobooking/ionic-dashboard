@@ -43,7 +43,8 @@ angular.module('app',
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-  
+.config(function($stateProvider, $urlRouterProvider, $logProvider, $compileProvider) {
+  //$logProvider.debugEnabled(false);
+  //$compileProvider.debugInfoEnabled(false);
   
 });

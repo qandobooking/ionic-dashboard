@@ -1,11 +1,13 @@
 angular.module('app')
 .controller('ShopCtrl', ShopCtrl);
 
-function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils, $ionicPopover) {
+function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils, $ionicPopup, $timeout) {
 
   var restangularItems;
   this.weekDays = TimeUtils.getWeekDays();
   this.weekDaysNames = TimeUtils.getWeekDaysNames();
+  this.readOnly = true;
+  this.redrawFunctions = {};
 
   Entities
   .getShop().then(s => { 
@@ -37,26 +39,61 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
   });
 
 
-  this.onRangeUpdate = function(range){
-    console.log(range);
-
+  this.onRangeUpdate = (range) => {
     const restangularItem = restangularItems[range.id];
-    restangularItem.start_time = range.start.format("HH:mm");
-    restangularItem.end_time = range.end.format("HH:mm");
-    console.log(restangularItem.start_time);
-    console.log(restangularItem.end_time);
-    restangularItem.save();
+    if(range.id){
+        restangularItem.start_time = range.start.format("HH:mm");
+        restangularItem.end_time = range.end.format("HH:mm");
+        console.log(restangularItem.start_time);
+        console.log(restangularItem.end_time);
+        restangularItem.save();
+    } else {
+
+        
+        DataService.getShopWeekWorkingHours(this.shop.id)
+        .post({
+            start_time : range.start.format("HH:mm"),
+            end_time : range.end.format("HH:mm"),
+            weekday : range.weekday
+        })
+        .then(savedRange=>{
+            restangularItems[savedRange.id] = savedRange;
+            range.id = savedRange.id;
+
+        })
+    }
 
   }
 
-  var template = '<ion-popover-view><ion-header-bar> <h1 class="title">My Popover Title</h1> </ion-header-bar> <ion-content> Hello! </ion-content></ion-popover-view>';
+  this.addToDay = function(day){
+    this.byWeekDay[day].push({
+        weekday:day,
+        start:moment({hour:0}),
+        end:moment({hour:1}),
+    })
 
-  var popover = $ionicPopover.fromTemplate(template, {
-    scope: $scope
-  });
+  }
 
+  this.toggleEdit = function(){
+    this.readOnly = !this.readOnly;    
+    _.each(this.redrawFunctions, it => {
+        it.setReadonly(this.readOnly);   
+    })
+  }
+
+  
   this.onDoubleTap = function(el){
-    popover.show(el);
+    var confirmPopup = $ionicPopup.confirm({
+     title: 'Consume Ice Cream',
+     template: 'Are you sure you want to eat this ice cream?'
+   });
+    confirmPopup.then(function(res) {
+     if(res) {
+       console.log('You are sure');
+     } else {
+       console.log('You are not sure');
+     }
+   });
   }
 
   

@@ -4,7 +4,7 @@ angular.module('app')
 function LoginCtrl ($auth, $rootScope) {
 
 
-    this.credentials = { email:null, password:null };
+    this.credentials = { email:'bianchimro@gmail.com', password:'admin123'};
     this.login = () => {
         $auth.login(this.credentials)
         .then(function(response) {

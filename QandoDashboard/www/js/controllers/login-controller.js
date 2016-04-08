@@ -5,7 +5,7 @@ angular.module('app').controller('LoginCtrl', LoginCtrl);
 function LoginCtrl($auth, $rootScope) {
     var _this = this;
 
-    this.credentials = { email: null, password: null };
+    this.credentials = { email: 'bianchimro@gmail.com', password: 'admin123' };
     this.login = function () {
         $auth.login(_this.credentials).then(function (response) {
             // Redirect user here after a successful log in.

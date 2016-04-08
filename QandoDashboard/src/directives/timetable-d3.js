@@ -1,43 +1,42 @@
-const defaultOptions = { onUpdate : () => {}, ranges:[], onDoubleTap : () => {} }
+const defaultOptions = { 
+  onUpdate : () => {}, ranges:[], onDoubleTap : () => {},
+  readOnly : true 
+}
 
-function timeTableIt(el, options=defaultOptions){
+function timeTableIt(el, options={}){
 
-  const w = el.clientWidth;
   const formatter = d3.time.format("%H:%M");
   const xPadding = 25;
-    
-  const svg = d3.select(el)
-  .append("svg")
-  .attr("width", w)
-  .attr("height", 100);
+  
+
+  options = Object.assign({}, defaultOptions, options);
+  
+  const d3el = d3.select(el)
+  const svg = d3el
+    .append("svg");
 
   const xScale = d3.time.scale()
   .domain([ moment({hour:0, minute:0}).toDate(), 
-    moment({hour:24, minute:0}).toDate() ])
-  .range([ xPadding, w-xPadding ])
+      moment({hour:24, minute:0}).toDate() ]);
 
   //top axis
   const xAxis = d3.svg.axis()
-  .scale(xScale)
-  .orient('top')
-  .ticks(24)
-  .tickFormat(formatter);
+    .scale(xScale)
+    .orient('top')
+    .ticks(24)
+    .tickFormat(formatter);
 
   const timeAxis = svg.append('g')
-  .attr("transform", function(d){
-      return "translate(0, 30)";
-  })
-  .attr('class', 'timeAxis')
-  .call(xAxis);
+    .attr("transform", function(d){
+        return "translate(0, 30)";
+    })
+    .attr('class', 'timeAxis')
 
   const rangesContainer = svg.append('g')
   .attr("transform", function(d){
       return "translate(0, 30)";
   });
 
-  //#TODO :USE ME FOR SNAPPING  
-  const oneHour = xScale(moment({minutes:5}).toDate())
-  
   //drag handler for translate handle
   const dragTranslate = d3.behavior.drag()
   .on("drag", function(d,i) {
@@ -49,9 +48,6 @@ function timeTableIt(el, options=defaultOptions){
       const e = d3.select(this);
       e.attr('x', parseFloat(e.attr('x') || 0)+delta);
     });
-
-
-
   })
   .on("dragend", function(d){
       const t = d3.select(this);
@@ -117,116 +113,212 @@ function timeTableIt(el, options=defaultOptions){
       options.onUpdate(range);
   });
 
-  //data binding happens here
-  const periodContainer = rangesContainer
-  .selectAll('g.period')
-  .data(options.ranges);
-
-  //enter logic
-  const enterG = periodContainer
-  .enter()
-  .append('g')
-  .attr('class', 'period');
-
-  const rectangleContainer = enterG
-  .append('g')
-  .attr('id', function(d, i){
-    return 'rectangle-container-' + i;
-  })
-  .attr("class", function(d,i){
-      return "rectangle-container group-"+i;
-  })
+  //#TODO :USE ME FOR SNAPPING  
+  const oneHour = xScale(moment({minutes:5}).toDate())
+    
   
 
-  const controlsContainer = enterG
-  .append('g')
-  .attr("class", function(d,i){
-      return "controls-container group-"+i;
-  })
-  
-  
-  //main rectangle
-  rectangleContainer
-  .append('rect')
-  .attr("class", function(d,i){
-      return `range range-group-${i} group-${i}`;
-  })
-  .attr('height', 50)
-  .attr("x", function(d){
-     return xScale(d.start.toDate());
-  })
-  .attr('width', function(d){
-    return xScale(d.end.toDate()) - xScale(d.start.toDate())  
-  })
+  function redraw(){
+    
+    const w = el.clientWidth;
 
-  
-  //translate handle
-  controlsContainer
-  .append('rect')
-  .attr("num", function(d,i){
-    return i;
-  })
-  .attr("class", function(d,i){
-    return `handle translate-handle group-${i} range-group-${i}`;
-  })
-  .attr("x", function(d){
-     return xScale(d.start.toDate());
-  })
-  .attr('height', 50)
-  .attr('width', function(d){
-    return xScale(d.end.toDate()) - xScale(d.start.toDate())  
-  })
-  .style('opacity', 0)
-  .call(function(d){
-    var el = angular.element(d[0]);
-    el.on('doubletap', function(t){
-      console.error(t);
-      options.onDoubleTap(el);
+    svg
+    .attr("width", w)
+    .attr("height", 100);
+    
+    //rangesContainer.selectAll("*").remove();
+    xScale 
+    .range([ xPadding, w-xPadding ]);
+
+    const computedRanges = _.map(options.ranges, d => {
+      d.x = xScale(d.start.toDate());
+      d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
+      //#TODO: this is a fix for negative widths, these data should not exist
+      d.width = d.width < 0 ? 0 : d.width;  
+      return d
     })
-  })
-  .call(dragTranslate);
 
-  //left handle
-  controlsContainer
-  .append('rect')
-  .attr("num", function(d,i){
-    return i;
-  })
-  .attr("class", function(d,i){
-      return "handle left-handle group-"+i;
-  })
-  .attr('height', 60)
-  .attr('width', 4)
-  .attr("x", function(d){
-     return xScale(d.start.toDate());
-  })
-  .attr('y', -5)
-  .call(dragLeftHandle);
+    timeAxis
+    .call(xAxis);
+
+    
+    //data binding happens here
+    const periodContainer = rangesContainer
+    .selectAll('g.period')
+    .data(options.ranges);
+
+    const periodControlContainer = rangesContainer
+    .selectAll('g.handlex')
+    .data(options.ranges);
+
+    //enter logic
+    const enterG = periodContainer
+    .enter()
+    .append('g')
+    .attr('class', 'period');
+
+    //main rectangle
+    enterG
+    .append('rect')
+    .attr("class", function(d,i){
+        let out = `range range-group-${i} group-${i}`;
+        if(!d.id){
+          out += " range-unsaved"
+        }
+        return out
+    })
+    .attr('height', 50)
+    .attr("x", function(d, i){
+       //return xScale(d.start.toDate());
+       return computedRanges[i].x;
+    })
+    .attr('width', function(d, i){
+      //return xScale(d.end.toDate()) - xScale(d.start.toDate())  
+      return computedRanges[i].width;
+    });
+
+    //update logic
+    periodContainer
+    .select('.range')
+    .attr("x", function(d, i){
+       return computedRanges[i].x;
+    })
+    .attr('width', function(d, i){
+      //return xScale(d.end.toDate()) - xScale(d.start.toDate())  
+      return computedRanges[i].width;
+    });
+
+    //remove logic
+    periodContainer
+    .exit()
+    .remove()
+    
   
-  //right handle
-  controlsContainer
-  .append('rect')
-  .attr("num", function(d,i){
-    return i;
-  })
-  .attr("class", function(d,i){
-      return "handle right-handle group-"+i;
-  })
-  .attr('height', 60)
-  .attr('width', 4)
-  .attr('x', function(d){
-      return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
-  })
-  .attr('y', -5)
-  .call(dragRightHandle)
+    
 
-  //enter logic ends here
+    if (!options.readOnly) {
+      //translate handle
+      //controlsContainer
+      //data binding happens here
+      
+      //enter logic
+      const enterG2 = periodControlContainer
+      .enter()
+      .append('g')
+      .attr('class', 'handlex');
 
-  //#TODO: add update logic ? (or simply redraw ...)
+      enterG2
+      .append('rect')
+      .attr("num", function(d,i){
+        return i;
+      })
+      .attr("class", function(d,i){
+        return `handle translate-handle group-${i} range-group-${i}`;
+      })
+      .attr("x", function(d, i){
+        //return xScale(d.start.toDate());
+        return computedRanges[i].x;
+      })
+      .attr('height', 50)
+      .attr('width', function(d, i){
+        //return xScale(d.end.toDate()) - xScale(d.start.toDate())  
+        return computedRanges[i].width;
+      })
+      .style('opacity', 0)
+      .each(function(d, i){
+        var el = d3.select(this);
+        el = angular.element(el[0]);
+        el.on('doubletap', function(t){
+          options.onDoubleTap(el);
+        })
+      })
+      .call(dragTranslate);
 
-  //remove logic
-  periodContainer
-  .exit()
-  .remove()
+      //left handle
+      //controlsContainer
+      enterG2
+      .append('rect')
+      .attr("num", function(d,i){
+        return i;
+      })
+      .attr("class", function(d,i){
+          return "handle left-handle group-"+i;
+      })
+      .attr('height', 60)
+      .attr('width', 4)
+      .attr("x", function(d, i){
+        //return xScale(d.start.toDate());
+        return computedRanges[i].x;
+      })
+      .attr('y', -5)
+      .call(dragLeftHandle);
+      
+      //right handle
+      //controlsContainer
+      enterG2
+      .append('rect')
+      .attr("num", function(d,i){
+        return i;
+      })
+      .attr("class", function(d,i){
+          return "handle right-handle group-"+i;
+      })
+      .attr('height', 60)
+      .attr('width', 4)
+      .attr('x', function(d, i){
+        //return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
+        return computedRanges[i].x + computedRanges[i].width;
+      })
+      .attr('y', -5)
+      .call(dragRightHandle)
+      
+      //update logic
+      periodControlContainer
+      .select('.translate-handle')
+      .attr("x", function(d, i){
+        return computedRanges[i].x;
+      })
+      .attr('width', function(d, i){
+        return computedRanges[i].width;
+      });
+
+      periodControlContainer
+      .select('.left-handle')
+      .attr("x", function(d, i){
+        return computedRanges[i].x;
+      })
+
+      periodControlContainer
+      .select('.right-handle')
+      .attr("x", function(d, i){
+        return computedRanges[i].x;
+      })
+      .attr('x', function(d, i){
+        return computedRanges[i].x + computedRanges[i].width;
+      });
+      //remove logic
+      periodControlContainer.exit().remove();
+
+    } else {
+      periodControlContainer.remove()
+    }
+    
+  
+  }
+
+  redraw();
+
+  return {
+    redraw : redraw,
+    setReadonly : function(ro){
+      setTimeout(function(){
+        options.readOnly = ro;
+        redraw();  
+      }, 0);
+      
+    }
+  }
+
+
 
 }

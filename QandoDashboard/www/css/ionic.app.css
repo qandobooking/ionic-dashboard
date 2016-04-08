@@ -9736,6 +9736,9 @@ g.period .range {
   opacity: 1;
   stroke: black; }
 
+g.period .range.range-unsaved {
+  fill: #ef473a; }
+
 g.period .handle {
   fill: #222;
   opacity: 1; }
