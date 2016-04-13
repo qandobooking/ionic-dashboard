@@ -19,6 +19,10 @@
             return wdays;
         };
 
+        svc.getMonthsByName = function () {
+            return moment.months();
+        };
+
         return svc;
     }
 })();

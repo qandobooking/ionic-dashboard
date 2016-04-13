@@ -1,0 +1,24 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title">{{ day|momentDateFormat : 'DD MMMM YYYY' }}</h1>
+  </ion-header-bar>
+  <ion-content >
+
+    <div class="item item-stable item-button-right">
+        &nbsp;
+        <span class="buttons">
+            <button  class="button button-clear" ng-click="addToDay(day)">Aggiungi</button>
+        </span>
+            
+            
+        </div>
+    
+    <div ng-if="ranges" on-update="onRangeUpdate" time-table ranges="ranges"  data-tap-disabled="true" on-double-tap="onDoubleTap" read-only="false" redraw="g.redrawFunction"></div>
+
+  </ion-content>
+  <ion-footer-bar class="bar-dark">
+    <!--<button class="button button-dark" ng-click="cancelEdit()">Annulla</button>-->
+    <h2 class="title"></h2>
+    <button class="button button-dark" ng-click="hideModal()">Chiudi</button>
+  </ion-footer-bar>
+</ion-modal-view>

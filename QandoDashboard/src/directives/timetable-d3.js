@@ -1,5 +1,5 @@
 const defaultOptions = { 
-  onUpdate : () => {}, ranges:[], onDoubleTap : () => {},
+  onUpdate : () => {},  onDoubleTap : () => {},
   readOnly : true,
   minStep : 10
 }
@@ -9,8 +9,14 @@ function timeTableIt(el, options={}){
   const formatter = d3.time.format("%H:%M");
   const xPadding = 25;
   var w, computedRanges, oneHour;
+  angular.forEach(defaultOptions, (v, k) => {
+    if (options[k] === undefined){
+      options[k] = defaultOptions[k]
+    }
+  })
+  console.log("opts", options)
+  //options = Object.assign({}, defaultOptions, options);
   
-  options = Object.assign({}, defaultOptions, options);
   
   const d3el = d3.select(el)
   const svg = d3el
@@ -418,6 +424,9 @@ function timeTableIt(el, options={}){
 
   return {
     redraw : redraw,
+    getRanges : function(){
+      return options.ranges
+    },
     setReadonly : function(ro){
       setTimeout(function(){
         options.readOnly = ro;

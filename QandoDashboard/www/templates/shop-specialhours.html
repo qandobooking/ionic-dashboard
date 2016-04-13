@@ -1,12 +1,31 @@
-<ion-view view-title="">
+<ion-view view-title="Orari straordinari">
     
     
   <ion-content>
-        
+    <label class="item item-input item-button-right">
+      <span class="input-label">Nuovo giorno</span>
+      <input type="date" ng-model="ShopSpecialHoursCtrl.modalDate"/>
+      
+    </label>
+    <button class="button button-positive" ng-disabled="!ShopSpecialHoursCtrl.modalDate" ng-click="ShopSpecialHoursCtrl.openDate()">
+            OK
+        </button>
+    
 
-    
-    
-    
+
+    <div ng-repeat="(month, v) in ShopSpecialHoursCtrl.byMonthAndDate">
+        <div class="item item-divider item-positive">
+            {{ month }}
+
+        </div>
+        <div class="item tem-body" ng-repeat="(day, ranges) in v" ng-click="ShopSpecialHoursCtrl.openModal(day, ranges)">
+            <h2 class="title positive">{{ day|momentDateFormat : 'DD MMMM' }}</h2>
+            
+            <span ng-repeat="range in ranges">
+                {{ range.start.format('HH:mm') }} - {{ range.end.format('HH:mm') }}<br ng-if="!$last"></span> 
+            
+        </div>
+    </div>
     
     
 

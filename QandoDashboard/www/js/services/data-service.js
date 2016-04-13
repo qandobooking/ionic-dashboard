@@ -54,6 +54,10 @@
             return DataServiceRestangular.service("weekworkinghours", DataServiceRestangular.one('shops', shopId));
         };
 
+        svc.getShopSpecialWeekWorkingHours = function (shopId) {
+            return DataServiceRestangular.service("specialworkinghours", DataServiceRestangular.one('shops', shopId));
+        };
+
         return svc;
     }
 })();

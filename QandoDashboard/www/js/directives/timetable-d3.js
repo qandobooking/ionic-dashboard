@@ -1,7 +1,7 @@
 "use strict";
 
 var defaultOptions = {
-  onUpdate: function onUpdate() {}, ranges: [], onDoubleTap: function onDoubleTap() {},
+  onUpdate: function onUpdate() {}, onDoubleTap: function onDoubleTap() {},
   readOnly: true,
   minStep: 10
 };
@@ -13,8 +13,13 @@ function timeTableIt(el) {
   var formatter = d3.time.format("%H:%M");
   var xPadding = 25;
   var w, computedRanges, oneHour;
-
-  options = Object.assign({}, defaultOptions, options);
+  angular.forEach(defaultOptions, function (v, k) {
+    if (options[k] === undefined) {
+      options[k] = defaultOptions[k];
+    }
+  });
+  console.log("opts", options);
+  //options = Object.assign({}, defaultOptions, options);
 
   var d3el = d3.select(el);
   var svg = d3el.append("svg").style("transform", "translate3d(0,0,0)");
@@ -320,6 +325,9 @@ function timeTableIt(el) {
 
   return {
     redraw: redraw,
+    getRanges: function getRanges() {
+      return options.ranges;
+    },
     setReadonly: function setReadonly(ro) {
       setTimeout(function () {
         options.readOnly = ro;
