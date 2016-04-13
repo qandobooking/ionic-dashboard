@@ -24,16 +24,19 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 g.period .range{
     fill: $positive;
     opacity : 1;
-    stroke:black;
+    stroke : none;
 
 }
 
 g.period .range.range-unsaved{
     fill: $assertive;
+    stroke : none;
     
 }
 
-
+.handle.right-handle, .handle.left-handle{
+    fill:$energized;
+}
 
 
 

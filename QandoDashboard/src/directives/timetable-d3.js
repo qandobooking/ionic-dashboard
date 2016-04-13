@@ -1,19 +1,21 @@
 const defaultOptions = { 
   onUpdate : () => {}, ranges:[], onDoubleTap : () => {},
-  readOnly : true 
+  readOnly : true,
+  minStep : 10
 }
 
 function timeTableIt(el, options={}){
 
   const formatter = d3.time.format("%H:%M");
   const xPadding = 25;
+  var w, computedRanges, oneHour;
   
-
   options = Object.assign({}, defaultOptions, options);
   
   const d3el = d3.select(el)
   const svg = d3el
-    .append("svg");
+    .append("svg")
+    .style("transform", "translate3d(0,0,0)");
 
   const xScale = d3.time.scale()
   .domain([ moment({hour:0, minute:0}).toDate(), 
@@ -40,19 +42,61 @@ function timeTableIt(el, options={}){
   //drag handler for translate handle
   const dragTranslate = d3.behavior.drag()
   .on("drag", function(d,i) {
+
     const delta = d3.event.dx;
+    
     const t = d3.select(this);
     const num = t.attr('num');
+    const width = parseFloat(t.attr("width"));
+
+    let x = parseFloat(t.attr('x')||0) + delta;
+    let dragDate = moment(xScale.invert(x))
+    let mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
+    let xx = moment({hour:dragDate.hour(), minute:mins})
+    let newx = xScale(xx);
+
+    const nxx = newx + width;
+    
+    _.each(computedRanges, (rr, i2) => {
+      if(nxx >= rr.x && i2 != i && computedRanges[i].x <= rr.x){
+        newx = rr.x - width;
+      }
+    })
+    _.each(computedRanges, (rr, i2) => {
+      if(newx <= rr.x + rr.width && i2 != i && computedRanges[i].x >= rr.x + rr.width){
+        newx = rr.x + rr.width;
+      }
+    })
+
+    let oldx = computedRanges[i].x;
+    let deltar = newx - oldx;
+    
+    if(d3.event.dx <= 0 && deltar > 0) {
+      return
+    }
+    if(nxx > w - xPadding) {
+      return
+    }
+
+    computedRanges[i].x = newx;
+    
     svg.selectAll(".group-" + num)
     .each(function(gg){
       const e = d3.select(this);
-      e.attr('x', parseFloat(e.attr('x') || 0)+delta);
+      const newX = parseFloat(e.attr('x') || 0) + deltar;
+      e
+      //.transition()
+      //.ease('elastic')
+      .attr('x', newX);
     });
+
   })
-  .on("dragend", function(d){
+  .on("dragend", function(d, i){
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
+
+      
       const newStart = moment(xScale.invert(parseFloat(t.attr("x"))));
       const delta = range.start.diff(newStart);
       if(newStart.isSame(range.start)){
@@ -66,46 +110,96 @@ function timeTableIt(el, options={}){
   //drag handler for left handle
   const dragLeftHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
-    const delta = d3.event.dx;
+    
+    let x = d3.event.x;
+    x = Math.max(x, xPadding);
+    x = Math.min(x, w - xPadding);
+
+    let dragDate = moment(xScale.invert(x))
+    let mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
+    let xx = moment({hour:dragDate.hour(), minute:mins})
+    let newx = xScale(xx);
+    
     const t = d3.select(this);
     const num = t.attr('num');
-    t.attr("x", parseFloat(t.attr("x")) + delta);
+
+    let stop = false;
+    _.each(computedRanges, (rr, i2) => {
+      if((newx <= rr.x + rr.width && i2 != i && computedRanges[i].x >= rr.x + rr.width)){
+        newx = rr.x + rr.width;
+        return
+      }
+    })
+    
+    
+    let oldx = computedRanges[i].x;
+    computedRanges[i].x = newx;
+    computedRanges[i].width = - computedRanges[i].x + oldx + computedRanges[i].width;
+    t
+    //.transition().ease('elastic')
+    .attr("x", computedRanges[i].x);
     
     svg.selectAll(".range-group-" + num)
     .each(function(gg){
       const e = d3.select(this);
-      e.attr('x', parseFloat(e.attr('x') || 0)+delta);
-      e.attr('width', parseFloat(e.attr('width'))-delta);
+      e
+      //.transition()
+      //.ease('elastic')
+      .attr('x', computedRanges[i].x)
+      .attr('width', computedRanges[i].width);
     });
     
   })
-  .on("dragend", function(d){
+  .on("dragend", function(d, i){
     const t = d3.select(this);
     const num = t.attr('num');
     const range = options.ranges[num];
     range.start = moment(xScale.invert(parseFloat(t.attr("x"))));
     options.onUpdate(range);
-      
   });
 
   //drag handler for right handle
   const dragRightHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
-    const delta = d3.event.dx;
+
+    let x = d3.event.x;
+    x = Math.max(x, xPadding);
+    if x >= w - xPadding){
+      return
+    }
+     
+
+    let dragDate = moment(xScale.invert(x))
+    let mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
+    let xx = moment({hour:dragDate.hour(), minute:mins})
+    let newx = xScale(xx);
+
+    
     const t = d3.select(this);
     const num = t.attr('num');
-    t.attr("x", parseFloat(t.attr("x")) + delta);
+    
+    let stop = false;
+    _.each(computedRanges, (rr, i2) => {
+      if(newx >= rr.x && i2 != i && computedRanges[i].x <= rr.x){
+        newx = rr.x;
+      }
+    })
+
+    computedRanges[i].width = newx - computedRanges[i].x;
+    t
+    //.transition().ease('elastic')
+    .attr("x", newx - parseFloat(t.attr('width')));
     
     svg.selectAll(".range-group-" + num)
     .each(function(d){
       const e = d3.select(this);
-      e.attr('width', parseFloat(e.attr('width'))+delta);
+      e
+      //.transition().ease('elastic')
+      .attr('width', computedRanges[i].width);
     });
-
-    
     
   })
-  .on("dragend", function(d){
+  .on("dragend", function(d, i){
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
@@ -113,14 +207,12 @@ function timeTableIt(el, options={}){
       options.onUpdate(range);
   });
 
-  //#TODO :USE ME FOR SNAPPING  
-  const oneHour = xScale(moment({minutes:5}).toDate())
-    
   
 
   function redraw(){
     
-    const w = el.clientWidth;
+    w = el.clientWidth;
+
 
     svg
     .attr("width", w)
@@ -130,7 +222,9 @@ function timeTableIt(el, options={}){
     xScale 
     .range([ xPadding, w-xPadding ]);
 
-    const computedRanges = _.map(options.ranges, d => {
+    oneHour = xScale(moment({minutes:30}).toDate())
+
+    computedRanges = _.map(options.ranges, d => {
       d.x = xScale(d.start.toDate());
       d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
       //#TODO: this is a fix for negative widths, these data should not exist
@@ -178,6 +272,7 @@ function timeTableIt(el, options={}){
     });
 
     //update logic
+     
     periodContainer
     .select('.range')
     .attr("x", function(d, i){
@@ -236,7 +331,7 @@ function timeTableIt(el, options={}){
         var el = d3.select(this);
         var ela = angular.element(el[0]);
         ela.on('hold', function(t){
-          options.onDoubleTap(el, d, i);
+          options.onDoubleTap(ela, d, i);
         })
       })
       .call(dragTranslate);
@@ -252,13 +347,17 @@ function timeTableIt(el, options={}){
           return "handle left-handle group-"+i;
       })
       .attr('height', 60)
-      .attr('width', 4)
+      .attr('width', 12)
+      .attr('opacity', 0)
       .attr("x", function(d, i){
         //return xScale(d.start.toDate());
         return computedRanges[i].x;
       })
       .attr('y', -5)
-      .call(dragLeftHandle);
+      .call(dragLeftHandle)
+      .transition()
+      .attr('opacity', 1)
+
       
       //right handle
       //controlsContainer
@@ -271,15 +370,19 @@ function timeTableIt(el, options={}){
           return "handle right-handle group-"+i;
       })
       .attr('height', 60)
-      .attr('width', 4)
+      .attr('width', 12)
+      .attr('opacity', 0)
       .attr('x', function(d, i){
         //return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
-        return computedRanges[i].x + computedRanges[i].width;
+        return computedRanges[i].x + computedRanges[i].width - 12;
       })
       .attr('y', -5)
       .call(dragRightHandle)
+      .transition()
+      .attr('opacity', 1)
       
       //update logic
+      
       periodControlContainer
       .select('.translate-handle')
       .attr("x", function(d, i){
@@ -297,12 +400,10 @@ function timeTableIt(el, options={}){
 
       periodControlContainer
       .select('.right-handle')
-      .attr("x", function(d, i){
-        return computedRanges[i].x;
-      })
       .attr('x', function(d, i){
-        return computedRanges[i].x + computedRanges[i].width;
+        return computedRanges[i].x + computedRanges[i].width - 12;
       });
+      
       //remove logic
       periodControlContainer.exit().remove();
 

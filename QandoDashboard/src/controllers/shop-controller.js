@@ -89,8 +89,9 @@ function ShopCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Enti
   }
 
   
-  this.onDoubleTap = (el, r, idx) => {
+  this.onDoubleTap = (el,  r, idx) => {
     var day = r.weekday;
+    
     var confirmPopup = $ionicPopup.confirm({
      title: 'Rimuovi intervallo',
      template: `${this.weekDaysNames[r.weekday]} dalle ${r.start.format("HH:mm")} alle ${r.end.format("HH:mm")}`
