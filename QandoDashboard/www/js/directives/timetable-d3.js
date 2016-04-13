@@ -121,11 +121,16 @@ function timeTableIt(el) {
     var oldx = computedRanges[i].x;
     computedRanges[i].x = newx;
     computedRanges[i].width = -computedRanges[i].x + oldx + computedRanges[i].width;
-    t.transition().ease('elastic').attr("x", computedRanges[i].x);
+    t
+    //.transition().ease('elastic')
+    .attr("x", computedRanges[i].x);
 
     svg.selectAll(".range-group-" + num).each(function (gg) {
       var e = d3.select(this);
-      e.transition().ease('elastic').attr('x', computedRanges[i].x).attr('width', computedRanges[i].width);
+      e
+      //.transition()
+      //.ease('elastic')
+      .attr('x', computedRanges[i].x).attr('width', computedRanges[i].width);
     });
   }).on("dragend", function (d, i) {
     var t = d3.select(this);
@@ -140,15 +145,14 @@ function timeTableIt(el) {
 
     var x = d3.event.x;
     x = Math.max(x, xPadding);
+    if (x >= w - xPadding) {
+      return;
+    }
 
     var dragDate = moment(xScale.invert(x));
     var mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
     var xx = moment({ hour: dragDate.hour(), minute: mins });
     var newx = xScale(xx);
-
-    if (newx >= w - xPadding) {
-      return;
-    }
 
     var t = d3.select(this);
     var num = t.attr('num');
@@ -156,16 +160,20 @@ function timeTableIt(el) {
     var stop = false;
     _.each(computedRanges, function (rr, i2) {
       if (newx >= rr.x && i2 != i && computedRanges[i].x <= rr.x) {
-        newx = rr.x - 1;
+        newx = rr.x;
       }
     });
 
     computedRanges[i].width = newx - computedRanges[i].x;
-    t.transition().ease('elastic').attr("x", newx - parseFloat(t.attr('width')));
+    t
+    //.transition().ease('elastic')
+    .attr("x", newx - parseFloat(t.attr('width')));
 
     svg.selectAll(".range-group-" + num).each(function (d) {
       var e = d3.select(this);
-      e.transition().ease('elastic').attr('width', computedRanges[i].width);
+      e
+      //.transition().ease('elastic')
+      .attr('width', computedRanges[i].width);
     });
   }).on("dragend", function (d, i) {
     var t = d3.select(this);

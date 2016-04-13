@@ -144,6 +144,17 @@
       data: {
         requiresShop: true
       }
+    }).state('app.logged.shop-specialhours', {
+      url: '/shop-specialhours',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop-specialhours.html',
+          controller: 'ShopSpecialHoursCtrl as ShopSpecialHoursCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
     });
 
     // if none of the above states are matched, use this as the fallback

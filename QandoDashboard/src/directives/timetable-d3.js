@@ -164,7 +164,7 @@ function timeTableIt(el, options={}){
 
     let x = d3.event.x;
     x = Math.max(x, xPadding);
-    if x >= w - xPadding){
+    if (x >= w - xPadding){
       return
     }
      
