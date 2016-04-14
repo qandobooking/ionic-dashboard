@@ -9,8 +9,9 @@
     var directive = {
       link,
       scope: {
-        ranges: '=',
-        onToggle : '=',
+        closingDays: '=',
+        onDayToggled : '=',
+        year : '@',
       },
       restrict: 'E',
       templateUrl: 'templates/directives/year-grid.html'
@@ -18,20 +19,23 @@
     return directive;
 
     function link(scope, element, attrs) {
+      const MONTH_CHUNK_SIZE = 3;
+
+      const useYear = typeof scope.year !== 'undefined';
+      const year = useYear ? parseInt(scope.year) : 4;
+
       scope.monthsNames = moment.months();
 
-      const days = [moment('0004-09-26')];
-
-      const monthsChunked = _.chunk(_.range(12), 3);
+      const monthsChunked = _.chunk(_.range(12), MONTH_CHUNK_SIZE);
       scope.monthsAndDaysChunked = monthsChunked.map(months => {
         return months.map(month => {
-          const THE_YEAR = 4; // TODO: From scope
-          const allDaysOfMonth = listDaysOfMonth(THE_YEAR, month).map(date => {
-            const m = moment({ year: THE_YEAR, month, date });
-            const selected = _.findIndex(days, d => m.isSame(d, 'day')) >= 0;
+          const allDaysOfMonth = listDaysOfMonth(year, month).map(date => {
+            const m = moment({ year, month, date });
+            const selected = _.findIndex(scope.closingDays, d => m.isSame(d, 'day')) >= 0;
             return {
-              day: date,
-              selected
+              date,
+              month,
+              selected,
             };
           });
           let daysChunked = _.chunk(allDaysOfMonth, 7);
@@ -39,6 +43,14 @@
           return { month, daysChunked };
         });
       });
+
+      scope.onDayCellToggled = function(dayCell) {
+        const { date, month, selected } = dayCell;
+        const m = moment({ year, month, date });
+        scope.onDayToggled(m, !selected);
+        // Update UI object
+        dayCell.selected = !dayCell.selected;
+      };
 
       // List of all day of month using current year in scope
       function listDaysOfMonth(year, month) {

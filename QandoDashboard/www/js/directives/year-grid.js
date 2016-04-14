@@ -9,8 +9,9 @@
     var directive = {
       link: link,
       scope: {
-        ranges: '=',
-        onToggle: '='
+        closingDays: '=',
+        onDayToggled: '=',
+        year: '@'
       },
       restrict: 'E',
       templateUrl: 'templates/directives/year-grid.html'
@@ -18,21 +19,24 @@
     return directive;
 
     function link(scope, element, attrs) {
+      var MONTH_CHUNK_SIZE = 3;
+
+      var useYear = typeof scope.year !== 'undefined';
+      var year = useYear ? parseInt(scope.year) : 4;
+
       scope.monthsNames = moment.months();
 
-      var days = [moment('0004-09-26')];
-
-      var monthsChunked = _.chunk(_.range(12), 3);
+      var monthsChunked = _.chunk(_.range(12), MONTH_CHUNK_SIZE);
       scope.monthsAndDaysChunked = monthsChunked.map(function (months) {
         return months.map(function (month) {
-          var THE_YEAR = 4; // TODO: From scope
-          var allDaysOfMonth = listDaysOfMonth(THE_YEAR, month).map(function (date) {
-            var m = moment({ year: THE_YEAR, month: month, date: date });
-            var selected = _.findIndex(days, function (d) {
+          var allDaysOfMonth = listDaysOfMonth(year, month).map(function (date) {
+            var m = moment({ year: year, month: month, date: date });
+            var selected = _.findIndex(scope.closingDays, function (d) {
               return m.isSame(d, 'day');
             }) >= 0;
             return {
-              day: date,
+              date: date,
+              month: month,
               selected: selected
             };
           });
@@ -41,6 +45,17 @@
           return { month: month, daysChunked: daysChunked };
         });
       });
+
+      scope.onDayCellToggled = function (dayCell) {
+        var date = dayCell.date;
+        var month = dayCell.month;
+        var selected = dayCell.selected;
+
+        var m = moment({ year: year, month: month, date: date });
+        scope.onDayToggled(m, !selected);
+        // Update UI object
+        dayCell.selected = !dayCell.selected;
+      };
 
       // List of all day of month using current year in scope
       function listDaysOfMonth(year, month) {

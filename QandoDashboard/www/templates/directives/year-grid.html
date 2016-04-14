@@ -6,9 +6,10 @@
 
       <!-- Days month grid -->
       <div class="" ng-repeat="days in daysAndMonth.daysChunked">
-        <div class="year-grid-month-box" ng-repeat="dayGridded in days track by $index">
+        <div class="year-grid-month-box" ng-repeat="dayCell in days track by $index">
           <span class="year-grid-day-cell"
-                ng-class="{ 'year-grid-day-cell-selected': dayGridded.selected }">{{ dayGridded.day }}<span>
+                ng-click="onDayCellToggled(dayCell)"
+                ng-class="{ 'year-grid-day-cell-selected': dayCell.selected }">{{ dayCell.date }}<span>
         </div>
         <div class="clearfix"></div>
       </div>
