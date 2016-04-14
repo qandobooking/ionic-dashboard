@@ -1,0 +1,41 @@
+<ion-view view-title="{{ ShopEditCtrl.shop.name }}">
+
+
+  <ion-content>
+
+  <form ng-submit="ShopEditCtrl.updateShop()"
+          class="validate-form padding" name="form" novalidate
+          server-errors="ShopEditCtrl.serverErrors" validate-form>
+
+        <span validate-field="name">
+        <validate-label class="item item-input">
+          <span class="input-label">Nome</span>
+          <input type="text"
+                 name="name"
+                 ng-model="ShopEditCtrl.shop.name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <span validate-field="domain_name">
+        <validate-label class="item item-input">
+          <span class="input-label">Dominio</span>
+          <input type="text"
+                 name="domain_name"
+                 ng-model="ShopEditCtrl.shop.domain_name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <div class="item item-with-button">
+          <button class="button button-block icon ion-person-add dark-button"
+                  ng-disabled="form.$invalid"
+                  type="submit">Salva</button>
+        </div>
+    </form>
+  </ion-content>
+</ion-view>
