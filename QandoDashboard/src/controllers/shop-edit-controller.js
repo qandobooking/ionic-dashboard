@@ -1,16 +1,25 @@
 angular.module('app')
-.controller('ShopEditCtrl', ShoEditpCtrl);
+.controller('ShopEditCtrl', ShopEditCtrl);
 
-function ShopCtrl ($scope, Entities, DataService, $timeout) {
+function ShopEditCtrl ($scope, Entities, DataService, $timeout) {
 
   Entities
   .getShop().then(s => {
     this.shop=s;
-
-    //DataService.getShopWeekWorkingHours(s.id).
   });
 
-  //this.updateShop
+  this.serverErrors = {};
+
+  this.updateShop = function() {
+    this.shop.save().then(() => {
+      this.serverErrors = {};
+      console.log('OK!')
+    })
+    .catch((error) => {
+      this.serverErrors.params = error.data;
+      console.log(this.serverErrors);
+    });
+  };
 }
 
 

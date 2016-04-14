@@ -5,7 +5,7 @@
     .module('validate-form')
     .directive('validateErrors', validateErrors);
 
-  function validateErrors() {
+  function validateErrors($sce) {
     var directive = {
       link,
       scope: true,
@@ -13,7 +13,7 @@
       restrict: 'E',
       transclude: true,
       replace: true,
-      templateUrl: `
+      template: `
         <span>
           <div ng-show="(formField.$touched || form.$submitted) && formField.$invalid"
                ng-messages="formField.$error"
@@ -40,6 +40,14 @@
       scope.serverError = function() {
         var paramsErrors = validateFormCtrl.getServerParamsErrors();
         var serverError = paramsErrors[fieldName];
+        if (_.isArray(serverError)) {
+          //serverError = $compile('<h1>yeah!</h1>');
+          //serverError = $sce.trustAsHtml('<h1>Yeah!</h1>');
+          //serverError = _.map(serverError, error => (
+            //`<p>${error}</p>`
+          //));
+          //console.log(serverError);
+        }
         var showServerError = scope.formField.$error['remote'];
         return showServerError ? serverError : null;
       };

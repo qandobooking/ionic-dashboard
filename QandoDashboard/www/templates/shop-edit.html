@@ -1,59 +1,41 @@
-<ion-view view-title="{{ ShopCtrl.shop.name }}">
-    
-    
+<ion-view view-title="{{ ShopEditCtrl.shop.name }}">
+
+
   <ion-content>
-    
-    <div class="list card">
-        <div class="item item-positive item-button-right">
-            Dati shop
-            <button class="button button-clear button-light">
-                Modifica
-            </button>
-        </div>
-        <div class="item">
-            <div class="row">
-                <div class="positive col col-25">Nome</div>
-                <div class="col">{{ ShopCtrl.shop.name }} </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="row">
-                <div class="positive col col-25">Dominio</div>
-                <div class="col">{{ ShopCtrl.shop.name }} </div>
-            </div>
-        </div>
-        
-    </div>
 
-    <div class="card">
-        <div class="item item-positive">
-            Gestione orari
-        </div>
+  <form ng-submit="ShopEditCtrl.updateShop()"
+          class="validate-form padding" name="form" novalidate
+          server-errors="ShopEditCtrl.serverErrors" validate-form>
 
-        <div class="item item-button-right" ui-sref="app.logged.shop-weekhours">
-            Orari apertura
-            <button class="button button-icon ion-chevron-right"></button>
-        </div>
-        <div class="item item-button-right">
-            Giorni chiusura
-            <button class="button button-icon ion-chevron-right"></button>
-        </div>
-        <div class="item item-button-right" ui-sref="app.logged.shop-specialhours">
-            Orari straordinari
-            <button class="button button-icon ion-chevron-right"></button>
-        </div>
-        <div class="item item-button-right">
-            Chiusure straordinarie
-            <button class="button button-icon ion-chevron-right"></button>
-        </div>
-        
-    </div>
+        <span validate-field="name">
+        <validate-label class="item item-input">
+          <span class="input-label">Nome</span>
+          <input type="text"
+                 name="name"
+                 ng-model="ShopEditCtrl.shop.name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
 
-    
-    
-    
-    
-    
+        <span validate-field="domain_name">
+        <validate-label class="item item-input">
+          <span class="input-label">Dominio</span>
+          <input type="text"
+                 name="domain_name"
+                 ng-model="ShopEditCtrl.shop.domain_name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
 
+        <div class="item item-with-button">
+          <button class="button button-block icon ion-person-add dark-button"
+                  ng-disabled="form.$invalid"
+                  type="submit">Salva</button>
+        </div>
+    </form>
   </ion-content>
 </ion-view>
