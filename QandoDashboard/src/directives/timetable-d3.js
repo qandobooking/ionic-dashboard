@@ -110,6 +110,8 @@ function timeTableIt(el, options={}){
       }
       range.start = newStart;
       range.end = range.end.subtract(delta)
+      //redraw() updates labels, etc. #TODO: check performance
+      redraw()
       options.onUpdate(range);
   });
 
@@ -161,7 +163,10 @@ function timeTableIt(el, options={}){
     const num = t.attr('num');
     const range = options.ranges[num];
     range.start = moment(xScale.invert(parseFloat(t.attr("x"))));
+    //redraw() updates labels, etc. #TODO: check performance
+    redraw()
     options.onUpdate(range);
+
   });
 
   //drag handler for right handle
@@ -210,7 +215,10 @@ function timeTableIt(el, options={}){
       const num = t.attr('num');
       const range = options.ranges[num];
       range.end = moment(xScale.invert(parseFloat(t.attr("x")) +parseFloat(t.attr("width"))));
+      //redraw() updates labels, etc. #TODO: check performance
+      redraw()
       options.onUpdate(range);
+
   });
 
   
@@ -268,6 +276,7 @@ function timeTableIt(el, options={}){
         return out
     })
     .attr('height', 50)
+    //#TODO: THIS IS DUPLICATED. UPDATE IS ENOUGH
     .attr("x", function(d, i){
        //return xScale(d.start.toDate());
        return computedRanges[i].x;
@@ -277,6 +286,20 @@ function timeTableIt(el, options={}){
       return computedRanges[i].width;
     });
 
+
+    enterG
+    .append('text')
+    .attr("class", function(d,i){
+        let out = `label label-left group-${i}`;
+        return out
+    })
+    enterG
+    .append('text')
+    .attr("class", function(d,i){
+        let out = `label label-right group-${i}`;
+        return out
+    })
+    
     //update logic
      
     periodContainer
@@ -295,6 +318,32 @@ function timeTableIt(el, options={}){
         }
         return out
     });
+
+    periodContainer
+    .select('.label-left')
+    .attr("x", function(d, i){
+       //return xScale(d.start.toDate());
+       return computedRanges[i].x;
+    })
+    .attr("y", 65)
+    .text(function(d, i){
+      //return xScale(d.end.toDate()) - xScale(d.start.toDate())  
+      return d.start.format('HH:mm')
+    })
+
+    periodContainer
+    .select('.label-right')
+    .attr("x", function(d, i){
+       //return xScale(d.start.toDate());
+       return computedRanges[i].x + computedRanges[i].width;
+    })
+    .attr("y", 65)
+    .text(function(d, i){
+      //return xScale(d.end.toDate()) - xScale(d.start.toDate())  
+      return d.end.format('HH:mm')
+    })
+
+
 
     //remove logic
     periodContainer

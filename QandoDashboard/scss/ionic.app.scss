@@ -62,3 +62,12 @@ g.period .handle{
 .translate-handle:hover {
     cursor:move;
 }
+
+text.label{
+    fill:$dark;
+    font-size:10px;
+}
+
+text.label-right{
+    text-anchor:end;
+}
