@@ -22,8 +22,13 @@ angular.module('app', ['ionic', 'restangular', 'satellizer', 'angular-storage', 
 
     Entities.bootstrap();
   });
-}).config(function ($stateProvider, $urlRouterProvider, $logProvider, $compileProvider) {
+}).config(function ($stateProvider, $urlRouterProvider, $logProvider, $compileProvider, validateFormProvider) {
   //$logProvider.debugEnabled(false);
   //$compileProvider.debugInfoEnabled(false);
-
+  console.log(validateFormProvider);
+  validateFormProvider.setOptions({
+    errorsTemplateUrl: 'templates/default-forms-errors.html',
+    serverErrorsTemplateUrl: 'templates/server-errors.html'
+  });
+  //const tpl = <div class="form-error" ng-message="required">Il campo è richiesto</div>
 });

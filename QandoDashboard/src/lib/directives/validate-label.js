@@ -5,7 +5,7 @@
     .module('validate-form')
     .directive('validateLabel', validateLabel);
 
-  function validateLabel() {
+  function validateLabel(validateForm) {
     var directive = {
       link,
       scope: true,
@@ -15,7 +15,7 @@
       replace: true,
       template: `
         <label ng-transclude
-               ng-class="{ 'has-error' : hasError() }">
+               ng-class="errorClass()">
         </label>
       `
     };
@@ -27,9 +27,9 @@
       var formFieldName = validateFieldCtrl.getValidateField();
       var formField =formCtrl[formFieldName]
 
-      scope.hasError = function() {
-        return (formField.$invalid) &&
-               (formField.$touched || formCtrl.$submitted);
+      scope.errorClass = function() {
+        return (formField.$invalid &&
+               (formField.$touched || formCtrl.$submitted)) ? validateForm.labelErrorClass : '';
       };
     }
   }

@@ -5,7 +5,7 @@
     .module('validate-form')
     .directive('validateErrors', validateErrors);
 
-  function validateErrors($sce) {
+  function validateErrors(validateForm, $compile) {
     var directive = {
       link,
       scope: true,
@@ -14,16 +14,22 @@
       transclude: true,
       replace: true,
       template: `
-        <span>
+        <div>
           <div ng-show="(formField.$touched || form.$submitted) && formField.$invalid"
                ng-messages="formField.$error"
-               class="form-errors">
+               ng-class="formErrorsClass">
               <span ng-transclude></span>
+              <div ng-if="errorsTemplateUrl">
+                <div ng-messages-include="{{errorsTemplateUrl}}">
+                </div>
+              </div>
           </div>
-          <div class="form-errors" ng-show="serverError()">
-            <div class="form-error">{{ serverError() }}</div>
+          <div ng-class="formErrorsClass" ng-if="hasServerError()">
+            <div ng-include="serverErrorsTemplateUrl">
+            </div>
+             
           </div>
-        </span>
+        </div>
       `
     };
     return directive;
@@ -37,20 +43,30 @@
       scope.form = formCtrl;
       scope.formField = formCtrl[fieldName];
 
-      scope.serverError = function() {
+      scope.formErrorClass = validateForm.formErrorClass;
+      scope.formErrorsClass = validateForm.formErrorsClass;
+      scope.errorsTemplateUrl = validateForm.errorsTemplateUrl;
+      scope.serverErrorsTemplateUrl = validateForm.serverErrorsTemplateUrl;
+
+      
+      scope.getServerError = function(){
         var paramsErrors = validateFormCtrl.getServerParamsErrors();
         var serverError = paramsErrors[fieldName];
-        if (_.isArray(serverError)) {
-          //serverError = $compile('<h1>yeah!</h1>');
-          //serverError = $sce.trustAsHtml('<h1>Yeah!</h1>');
-          //serverError = _.map(serverError, error => (
-            //`<p>${error}</p>`
-          //));
-          //console.log(serverError);
-        }
+        return serverError;
+
+      }
+
+      scope.hasServerError = function(){
+        var paramsErrors = validateFormCtrl.getServerParamsErrors();
+        var serverError = paramsErrors[fieldName];
         var showServerError = scope.formField.$error['remote'];
-        return showServerError ? serverError : null;
-      };
+        return showServerError && serverError;
+      }
+
+      
+
+
+      
     }
   }
 })();
