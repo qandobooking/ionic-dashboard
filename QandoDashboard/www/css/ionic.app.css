@@ -9767,3 +9767,15 @@ text.label {
 
 text.label-right {
   text-anchor: end; }
+
+.year-grid .year-grid-month-box {
+  float: left;
+  width: calc(100% / 7); }
+
+.year-grid .year-grid-day-cell {
+  font-size: 11px;
+  padding: 2px; }
+
+.year-grid .year-grid-day-cell-selected {
+  background-color: red;
+  border-radius: 100%; }

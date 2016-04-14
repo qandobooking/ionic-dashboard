@@ -166,6 +166,17 @@
       data: {
         requiresShop: true
       }
+    }).state('app.logged.shop-closingdays', {
+      url: '/shop-closingdays',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop-closingdays.html',
+          controller: 'ShopClosingDaysCtrl as ShopClosingDaysCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
     });
 
     // if none of the above states are matched, use this as the fallback
