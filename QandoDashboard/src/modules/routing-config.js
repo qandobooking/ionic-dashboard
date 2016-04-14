@@ -157,6 +157,19 @@ angular.module('app.routing', ['ionic', 'satellizer'])
       }
     })
 
+    .state('app.logged.shop-edit', {
+      url: '/shop-edit',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop-edit.html',
+          controller : 'ShopEditCtrl as ShopEditCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
     .state('app.logged.shop-weekhours', {
       url: '/shop-weekhours',
       views: {
