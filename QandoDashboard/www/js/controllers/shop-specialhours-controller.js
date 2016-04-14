@@ -6,6 +6,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $timeo
   var _this = this;
 
   var restangularItems = {};
+  var vm = this;
 
   Entities.getShop().then(function (s) {
     _this.shop = s;
@@ -162,7 +163,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $timeo
   */
 
   $scope.$on('$destroy', function () {
-    this.modal.remove();
+    _this.modal.remove();
   });
 
   $scope.addToDay = function (day) {

@@ -4,6 +4,7 @@ angular.module('app')
 function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $timeout, $ionicPopup) {
 
   let restangularItems={};
+  var vm = this;
  
 
   Entities
@@ -182,7 +183,7 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
   }
   */
 
-  $scope.$on('$destroy', function() {
+  $scope.$on('$destroy', () => {
     this.modal.remove();
   });
 
