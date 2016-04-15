@@ -13,6 +13,7 @@ function AppCtrl ($scope, $ionicModal, $timeout, DataService, $auth, $rootScope,
   $rootScope.$on('Entities:userChanged', (evt, user) => {
     this.user = user;
   })
+
   
   
 

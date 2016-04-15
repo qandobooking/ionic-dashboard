@@ -5,13 +5,13 @@
     .module('app')
     .directive('yearGrid', yearGrid);
 
-  function yearGrid(validateForm, $compile) {
+  function yearGrid(validateForm, $compile, $window) {
     var directive = {
       link,
       scope: {
         closingDays: '=',
         onDayToggled : '=',
-        year : '@',
+        year : '=',
       },
       restrict: 'E',
       templateUrl: 'templates/directives/year-grid.html'
@@ -19,7 +19,8 @@
     return directive;
 
     function link(scope, element, attrs) {
-      const MONTH_CHUNK_SIZE = 3;
+      
+      const MONTH_CHUNK_SIZE = $window.innerWidth >= 420 ? 3 : 2;
 
       const useYear = typeof scope.year !== 'undefined';
       const year = useYear ? parseInt(scope.year) : 4;

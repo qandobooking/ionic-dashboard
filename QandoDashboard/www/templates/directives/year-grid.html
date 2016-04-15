@@ -2,14 +2,16 @@
   <div class="row" ng-repeat="mChunked in monthsAndDaysChunked">
     <div class="col" ng-repeat="daysAndMonth in mChunked">
 
-      {{ monthsNames[daysAndMonth.month] }}
+      <div class="item item-divider item-positive">
+        {{ monthsNames[daysAndMonth.month] }}
+      </div>
 
       <!-- Days month grid -->
       <div class="" ng-repeat="days in daysAndMonth.daysChunked">
         <div class="year-grid-month-box" ng-repeat="dayCell in days track by $index">
-          <span class="year-grid-day-cell"
+          <div class="year-grid-day-cell"
                 ng-click="onDayCellToggled(dayCell)"
-                ng-class="{ 'year-grid-day-cell-selected': dayCell.selected }">{{ dayCell.date }}<span>
+                ng-class="{ 'year-grid-day-cell-selected': dayCell.selected }">{{ dayCell.date }}</div>
         </div>
         <div class="clearfix"></div>
       </div>

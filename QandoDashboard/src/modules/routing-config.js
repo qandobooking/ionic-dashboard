@@ -209,6 +209,19 @@ angular.module('app.routing', ['ionic', 'satellizer'])
       }
     })
 
+    .state('app.logged.shop-special-closingdays', {
+      url: '/shop-special-closingdays?year',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/shop-special-closingdays.html',
+          controller : 'ShopSpecialClosingDaysCtrl as ShopSpecialClosingDaysCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
         var $state = $injector.get('$state');

@@ -76,13 +76,16 @@ text.label-right{
   .year-grid-month-box {
     float: left;
     width: calc(100% / 7);
+    
   }
   .year-grid-day-cell {
+    text-align:center;
     font-size: 11px;
     padding: 2px;
   }
   .year-grid-day-cell-selected {
-    background-color: red;
-    border-radius: 100%;
+    background-color: $positive;
+    color: #fff;
+    
   }
 }
