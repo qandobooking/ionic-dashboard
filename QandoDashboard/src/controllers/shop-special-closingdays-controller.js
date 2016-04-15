@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ShopSpecialClosingDaysCtrl', ShopSpecialClosingDaysCtrl);
 
-function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entities, DataService) {
+function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entities, DataService, $rootScope) {
 
   this.year = $stateParams.year === undefined ? moment().year() : parseInt($stateParams.year);
   var restangularItems = {};
@@ -23,14 +23,15 @@ function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entiti
 
   });
 
-  
   this.toPrevYear = () => {
+    $ionicHistory.currentView($ionicHistory.backView());
     $state.go('app.logged.shop-special-closingdays', {
         year:this.year - 1
     }, { location:'replace'})
   }
 
   this.toNextYear = () => {
+    $ionicHistory.currentView($ionicHistory.backView());
     $state.go('app.logged.shop-special-closingdays', {
         year:this.year + 1
     }, { location:'replace'})

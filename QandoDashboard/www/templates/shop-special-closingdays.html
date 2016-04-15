@@ -1,10 +1,4 @@
-<ion-view view-title="Chiusure straordinarie " hide-back-button="true">
-
-  <ion-nav-buttons side="primary">
-      <button class="button" ng-click="ShopSpecialClosingDaysCtrl.goBack()">
-        <i class="icon ion-ios-arrow-back"></i> {{ShopSpecialClosingDaysCtrl.shop.name}}
-      </button>
-    </ion-nav-buttons>
+<ion-view view-title="Chiusure straordinarie " xhide-back-button="true">
 
   <div class="bar bar-subheader">
       <button class="button button-clear" ng-click="ShopSpecialClosingDaysCtrl.toPrevYear()">
@@ -18,7 +12,6 @@
       </button>
   </div>
   <ion-content class="has-header has-subheader">
-      
     <year-grid closing-days="ShopSpecialClosingDaysCtrl.closingDays" on-day-toggled="ShopSpecialClosingDaysCtrl.onDayToggled" year="ShopSpecialClosingDaysCtrl.year" ng-if="ShopSpecialClosingDaysCtrl.closingDays"></year-grid>
   </ion-content>
 </ion-view>
