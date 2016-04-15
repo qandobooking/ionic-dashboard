@@ -124,6 +124,7 @@
       }
     }).state('app.logged.shop', {
       url: '/shop',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/shop.html',

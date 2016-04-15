@@ -1,15 +1,45 @@
 angular.module('app')
 .controller('ShopClosingDaysCtrl', ShopClosingDaysCtrl);
 
-function ShopClosingDaysCtrl () {
+function ShopClosingDaysCtrl (Entities,  DataService) {
 
-  this.closingDays = [
-    moment('0004-09-29')
-  ];
+  var restangularItems = {};
 
-  this.onDayToggled = function (d, selected) {
-    console.log(d.format());
-    console.log(selected);
+  Entities
+  .getShop()
+  .then(s => {
+    this.shop=s;
+    DataService
+    .getShopClosingDays(s.id)
+    .getList({'fixed' : true })
+    .then(response => {
+        this.closingDays = response.map(item=>{
+            restangularItems[item.date] = item;
+            return moment(item.date)
+        })
+    })
+
+  });
+
+  this.onDayToggled = (d, selected) => {
+    let date = d.format("YYYY-MM-DD");
+    if (selected){
+        const item = { fixed : true, date : date }
+        DataService
+        .getShopClosingDays(this.shop.id)
+        .post(item)
+        .then(savedItem => {
+            restangularItems[date] = savedItem;
+        })
+
+    } else {
+        const oldItem = restangularItems[date];
+        oldItem
+        .remove()
+        .then(() => {
+            delete restangularItems[date]
+        })
+    }
   };
 }
 

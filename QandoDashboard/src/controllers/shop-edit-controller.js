@@ -1,19 +1,20 @@
 angular.module('app')
 .controller('ShopEditCtrl', ShopEditCtrl);
 
-function ShopEditCtrl ($scope, Entities, DataService, $timeout) {
+function ShopEditCtrl ($scope, Entities, DataService, $timeout, $state) {
 
   Entities
   .getShop().then(s => {
-    this.shop=s;
+    this.shop=s.clone();
   });
 
   this.serverErrors = {};
 
-  this.updateShop = function() {
-    this.shop.save().then(() => {
+  this.updateShop = () => {
+    this.shop.save().then( savedShop => {
       this.serverErrors = {};
-      console.log('OK!')
+      Entities.setCurrentShop(savedShop)
+      $state.go("app.logged.shop", {shopId:savedShop.id})
     })
     .catch((error) => {
       this.serverErrors.params = error.data;

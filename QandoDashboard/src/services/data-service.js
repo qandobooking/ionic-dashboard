@@ -58,6 +58,13 @@ function DataService(DataServiceRestangular, Preferences){
     svc.getShopSpecialWeekWorkingHours = function(shopId){
         return DataServiceRestangular.service("specialworkinghours", DataServiceRestangular.one('shops', shopId));
     }
+
+    svc.getShopClosingDays = function(shopId){
+        return DataServiceRestangular.service("closingdays", DataServiceRestangular.one('shops', shopId));
+    }
+
+
+    
     
 
     return svc;

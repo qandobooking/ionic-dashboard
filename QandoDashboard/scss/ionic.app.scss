@@ -76,7 +76,7 @@ text.label-right{
   .year-grid-month-box {
     float: left;
     width: calc(100% / 7);
-    
+
   }
   .year-grid-day-cell {
     text-align:center;
@@ -88,4 +88,17 @@ text.label-right{
     color: #fff;
     
   }
+}
+
+
+.item.item-with-button {
+ padding: 0px;
+ button {
+   border-radius: 0px;
+   margin: 0px;
+ }
+}
+
+.label-has-error > span{
+  color : $assertive !important;
 }

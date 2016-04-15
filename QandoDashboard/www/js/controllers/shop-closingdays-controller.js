@@ -2,12 +2,33 @@
 
 angular.module('app').controller('ShopClosingDaysCtrl', ShopClosingDaysCtrl);
 
-function ShopClosingDaysCtrl() {
+function ShopClosingDaysCtrl(Entities, DataService) {
+    var _this = this;
 
-  this.closingDays = [moment('0004-09-29')];
+    var restangularItems = {};
 
-  this.onDayToggled = function (d, selected) {
-    console.log(d.format());
-    console.log(selected);
-  };
+    Entities.getShop().then(function (s) {
+        _this.shop = s;
+        DataService.getShopClosingDays(s.id).getList({ 'fixed': true }).then(function (response) {
+            _this.closingDays = response.map(function (item) {
+                restangularItems[item.date] = item;
+                return moment(item.date);
+            });
+        });
+    });
+
+    this.onDayToggled = function (d, selected) {
+        var date = d.format("YYYY-MM-DD");
+        if (selected) {
+            var item = { fixed: true, date: date };
+            DataService.getShopClosingDays(_this.shop.id).post(item).then(function (savedItem) {
+                restangularItems[date] = savedItem;
+            });
+        } else {
+            var oldItem = restangularItems[date];
+            oldItem.remove().then(function () {
+                delete restangularItems[date];
+            });
+        }
+    };
 }

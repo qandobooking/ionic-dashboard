@@ -146,6 +146,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.shop', {
       url: '/shop',
+      cache : false,
       views: {
         'menuContent': {
           templateUrl: 'templates/shop.html',

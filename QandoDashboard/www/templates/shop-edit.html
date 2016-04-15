@@ -1,10 +1,11 @@
 <ion-view view-title="{{ ShopEditCtrl.shop.name }}">
 
 
-  <ion-content>
+  <ion-content class="padding">
 
+  
   <form ng-submit="ShopEditCtrl.updateShop()"
-          class="validate-form padding" name="form" novalidate
+          class="validate-form" name="form" novalidate
           server-errors="ShopEditCtrl.serverErrors" validate-form>
 
         <span validate-field="name">
@@ -32,10 +33,11 @@
         </span>
 
         <div class="item item-with-button">
-          <button class="button button-block icon ion-person-add dark-button"
+          <button class="button button-block icon button-balanced"
                   ng-disabled="form.$invalid"
                   type="submit">Salva</button>
         </div>
     </form>
+    
   </ion-content>
 </ion-view>

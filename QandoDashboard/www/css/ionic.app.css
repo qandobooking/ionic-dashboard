@@ -9780,3 +9780,12 @@ text.label-right {
 .year-grid .year-grid-day-cell-selected {
   background-color: #387ef5;
   color: #fff; }
+
+.item.item-with-button {
+  padding: 0px; }
+  .item.item-with-button button {
+    border-radius: 0px;
+    margin: 0px; }
+
+.label-has-error > span {
+  color: #ef473a !important; }
