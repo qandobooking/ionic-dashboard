@@ -73,10 +73,20 @@ text.label-right{
 }
 
 .year-grid {
+  .week-legend-item {
+    float: left;
+    width: calc(100% / 7);
+  }
+  .week-item-cell {
+    text-align:center;
+    font-size: 11px;
+    color: grey;
+    padding: 2px;
+  }
+
   .year-grid-month-box {
     float: left;
     width: calc(100% / 7);
-
   }
   .year-grid-day-cell {
     text-align:center;
@@ -86,7 +96,6 @@ text.label-right{
   .year-grid-day-cell-selected {
     background-color: $positive;
     color: #fff;
-    
   }
 }
 

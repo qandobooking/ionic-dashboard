@@ -19,18 +19,24 @@
     return directive;
 
     function link(scope, element, attrs) {
-      
+
       const MONTH_CHUNK_SIZE = $window.innerWidth >= 420 ? 3 : 2;
 
-      const useYear = typeof scope.year !== 'undefined';
-      const year = useYear ? parseInt(scope.year) : 4;
+      scope.useYear = typeof scope.year !== 'undefined';
+      const year = scope.useYear ? parseInt(scope.year) : 4;
 
       scope.monthsNames = moment.months();
 
       const monthsChunked = _.chunk(_.range(12), MONTH_CHUNK_SIZE);
       scope.monthsAndDaysChunked = monthsChunked.map(months => {
         return months.map(month => {
-          const allDaysOfMonth = listDaysOfMonth(year, month).map(date => {
+          let allDaysOfMonth = listDaysOfMonth(year, month);
+          // Shift by weekday
+          if (scope.useYear) {
+            allDaysOfMonth = shiftedByWeekday(year, month, allDaysOfMonth);
+          }
+          // Map into UI util objects
+          allDaysOfMonth = allDaysOfMonth.map(date => {
             const m = moment({ year, month, date });
             const selected = _.findIndex(scope.closingDays, d => m.isSame(d, 'day')) >= 0;
             return {
@@ -39,6 +45,7 @@
               selected,
             };
           });
+          // Chunk by week
           let daysChunked = _.chunk(allDaysOfMonth, 7);
           daysChunked[daysChunked.length - 1] = fillForWeekList(_.last(daysChunked));
           return { month, daysChunked };
@@ -63,6 +70,13 @@
       function fillForWeekList(days) {
         const nullDiffFilled = _.fill(_.range(7 - days.length), null);
         return _.concat(days, nullDiffFilled);
+      }
+
+      // Shift days by weekday
+      function shiftedByWeekday(year, month, days) {
+        const firstDayOfMonth = moment({ year, month, date: days[0] });
+        const nullShiftFilled = _.fill(_.range(firstDayOfMonth.isoWeekday() - 1), null);
+        return _.concat(nullShiftFilled, days);
       }
 
     };

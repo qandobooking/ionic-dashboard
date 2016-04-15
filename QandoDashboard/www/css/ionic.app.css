@@ -9768,6 +9768,16 @@ text.label {
 text.label-right {
   text-anchor: end; }
 
+.year-grid .week-legend-item {
+  float: left;
+  width: calc(100% / 7); }
+
+.year-grid .week-item-cell {
+  text-align: center;
+  font-size: 11px;
+  color: grey;
+  padding: 2px; }
+
 .year-grid .year-grid-month-box {
   float: left;
   width: calc(100% / 7); }

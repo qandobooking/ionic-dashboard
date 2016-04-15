@@ -6,6 +6,31 @@
         {{ monthsNames[daysAndMonth.month] }}
       </div>
 
+      <div ng-if="useYear">
+        <div class="week-legend-item">
+          <div class="week-item-cell">L</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">M</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">M</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">G</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">V</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">S</div>
+        </div>
+        <div class="week-legend-item">
+          <div class="week-item-cell">D</div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+
       <!-- Days month grid -->
       <div class="" ng-repeat="days in daysAndMonth.daysChunked">
         <div class="year-grid-month-box" ng-repeat="dayCell in days track by $index">
