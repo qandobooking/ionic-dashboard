@@ -1,5 +1,12 @@
-<ion-view view-title="{{ ShopCtrl.shop.name }}">
-    
+<ion-view  >
+    <ion-nav-title>
+      {{ ShopCtrl.shop.name }}
+    </ion-nav-title>
+  <ion-nav-buttons side="secondary">
+      <button class="button" ui-sref="app.logged.choose-shop">
+        Cambia shop
+      </button>
+    </ion-nav-buttons>  
     
   <ion-content>
     
