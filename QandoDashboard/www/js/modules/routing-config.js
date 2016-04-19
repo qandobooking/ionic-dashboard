@@ -189,6 +189,17 @@
       data: {
         requiresShop: true
       }
+    }).state('app.logged.services', {
+      url: '/services',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/services.html',
+          controller: 'ServicesCtrl as ServicesCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
     });
 
     // if none of the above states are matched, use this as the fallback

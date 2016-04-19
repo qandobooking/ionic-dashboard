@@ -1,0 +1,14 @@
+<ion-view view-title="Servizi" >
+
+  <ion-content class="">
+    <ion-list>
+      <ion-item ng-repeat="service in ServicesCtrl.services" class="item-button-right">
+        <h2>{{ service.name }}</h2>
+        <p>{{ service.calculated_duration }}</p>
+        <a class="button button-positive button-clear" ui-sref="app.logged.home">
+          <i class="icon ion-chevron-right"></i>
+        </a>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
