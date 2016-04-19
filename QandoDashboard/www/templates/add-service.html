@@ -1,28 +1,43 @@
 <ion-view view-title="Servizi" >
 
   <ion-content class="">
-    <form ng-submit="AddServiceCtrl.addShop()"
+    <form ng-submit="AddServiceCtrl.addService()"
           class="validate-form" name="form" novalidate
           server-errors="AddServiceCtrl.serverErrors" validate-form>
 
-        <span validate-field="name">
+        <span validate-field="service_name">
         <validate-label class="item item-input">
           <span class="input-label">Nome</span>
           <input type="text"
-                 name="name"
-                 ng-model="AddServiceCtrl.newService.name"
+                 name="service_name"
+                 ng-model="AddServiceCtrl.newService.service_name"
                  required />
         </validate-label>
         <validate-errors >
         </validate-errors>
         </span>
 
-        <span validate-field="duration">
+        <span validate-field="resource_type">
+        <validate-label class="item item-input item-select">
+           <div class="input-label">
+            Tipo Risorsa
+          </div>
+          <select name="resource_type"
+                 ng-options="item as item.name for item in AddServiceCtrl.resourceTypes track by item.id"
+                 ng-model="AddServiceCtrl.newService.resource_type"
+                 required>
+          </select>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <span validate-field="service_duration">
         <validate-label class="item item-input">
           <span class="input-label">Durata</span>
           <input type="text"
-                 name="duration"
-                 ng-model="AddServiceCtrl.newService.duration"
+                 name="service_duration"
+                 ng-model="AddServiceCtrl.newService.service_duration"
                  required />
         </validate-label>
         <validate-errors >
