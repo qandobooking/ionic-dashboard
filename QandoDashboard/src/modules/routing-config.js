@@ -236,6 +236,19 @@ angular.module('app.routing', ['ionic', 'satellizer'])
       }
     })
 
+    .state('app.logged.add-service', {
+      url: '/services/add',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/add-service.html',
+          controller : 'AddServiceCtrl as AddServiceCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
         var $state = $injector.get('$state');

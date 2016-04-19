@@ -1,0 +1,39 @@
+<ion-view view-title="Servizi" >
+
+  <ion-content class="">
+    <form ng-submit="AddServiceCtrl.addShop()"
+          class="validate-form" name="form" novalidate
+          server-errors="AddServiceCtrl.serverErrors" validate-form>
+
+        <span validate-field="name">
+        <validate-label class="item item-input">
+          <span class="input-label">Nome</span>
+          <input type="text"
+                 name="name"
+                 ng-model="AddServiceCtrl.newService.name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <span validate-field="duration">
+        <validate-label class="item item-input">
+          <span class="input-label">Durata</span>
+          <input type="text"
+                 name="duration"
+                 ng-model="AddServiceCtrl.newService.duration"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <div class="item item-with-button">
+          <button class="button button-block icon button-balanced"
+                  ng-disabled="form.$invalid"
+                  type="submit">Salva</button>
+        </div>
+    </form>
+  </ion-content>
+</ion-view>

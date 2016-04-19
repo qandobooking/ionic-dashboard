@@ -12,7 +12,6 @@ function ServicesCtrl (Entities, DataService) {
     .getList()
     .then(response => {
       this.services = response.plain();
-      console.log(this.services);
     })
   });
 }
