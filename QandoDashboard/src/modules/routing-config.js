@@ -264,6 +264,33 @@ angular.module('app.routing', ['ionic', 'satellizer'])
     })
 
 
+    .state('app.logged.resource-types', {
+      url: '/resource-types',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/resource-types.html',
+          controller : 'ResourceTypesCtrl as ResourceTypesCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
+    .state('app.logged.resource-type', {
+      url: '/resource-types/:resourceTypeId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/resource-type.html',
+          controller : 'ResourceTypeCtrl as ResourceTypeCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
+
 
 
     // if none of the above states are matched, use this as the fallback

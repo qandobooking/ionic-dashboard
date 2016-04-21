@@ -7,12 +7,17 @@
 
   <ion-content class="">
     <ion-list>
-      <ion-item ng-repeat="service in ServicesCtrl.services" class="item-button-right" ui-sref="app.logged.service-detail({ serviceId:service.id })">
-        <h2>{{ service.name }}</h2>
-        <p><span class="positive">Durata</span>: {{ service.calculated_duration }}</p>
-        <a class="button button-positive button-clear" ui-sref="app.logged.home">
+      <ion-item ng-repeat="service in ServicesCtrl.services" ui-sref="app.logged.service-detail({ serviceId:service.id })">
+        {{ service.name }}
+        <p>
+        <span class="positive">Durata</span>: {{ service.calculated_duration }}
+        </p>
+        <!--<button class="button button-positive button-clear" ui-sref="app.logged.service-detail({ serviceId:service.id })">
           <i class="icon ion-chevron-right"></i>
-        </a>
+        </button>
+      -->
+      <ion-option-button class="button-assertive" ng-click="ServicesCtrl.dropService(service)">Elimina</ion-option-button>
+
       </ion-item>
     </ion-list>
   </ion-content>

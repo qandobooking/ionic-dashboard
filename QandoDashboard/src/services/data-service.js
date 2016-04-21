@@ -55,6 +55,10 @@ function DataService(DataServiceRestangular, Preferences){
         return DataServiceRestangular.service("resourcetypes", DataServiceRestangular.one('shops', shopId));
     }
 
+    svc.getResources = function(shopId){
+        return DataServiceRestangular.service("resources", DataServiceRestangular.one('shops', shopId));
+    }
+
     svc.getServices = function(shopId){
         return DataServiceRestangular.service("services", DataServiceRestangular.one('shops', shopId));
     }

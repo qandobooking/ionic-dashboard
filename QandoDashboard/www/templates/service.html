@@ -1,0 +1,66 @@
+<ion-view view-title="Servizi" >
+
+  <ion-content class="">
+    <form ng-submit="ServiceCtrl.saveService()"
+          class="validate-form" name="form" novalidate
+          server-errors="ServiceCtrl.serverErrors" validate-form>
+
+        <span validate-field="service_name">
+        <validate-label class="item item-input">
+          <span class="input-label">Nome</span>
+          <input type="text"
+                 name="service_name"
+                 ng-model="ServiceCtrl.service.service_name"
+                 required />
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <span validate-field="resource_type">
+        <validate-label class="item item-input item-select">
+           <div class="input-label">
+            Tipo Risorsa
+          </div>
+          <select name="resource_type"
+                 ng-options="item as item.name for item in ServiceCtrl.resourceTypes track by item.id"
+                 ng-model="ServiceCtrl.service.resource_type"
+                 required>
+          </select>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        
+
+        <span validate-field="service_duration">
+        
+        <validate-label label-as-div class="item item-input item-button-right">
+          
+          <span class="input-label">Durata</span>
+          <input type="text"  style="background-color:#fff"
+                 name="service_duration" 
+                 ng-model="ServiceCtrl.service.service_duration"
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker 
+                 time ng-model="ServiceCtrl.serviceTime" ng-change="ServiceCtrl.setServiceDuration()"
+                 >
+          </button>
+          
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        
+        </span>
+
+        
+
+        <div class="item item-with-button">
+          <button class="button button-block icon button-balanced"
+                  ng-disabled="form.$invalid"
+                  type="submit">Salva</button>
+        </div>
+    </form>
+  </ion-content>
+</ion-view>
