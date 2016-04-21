@@ -191,6 +191,7 @@
       }
     }).state('app.logged.services', {
       url: '/services',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/services.html',
@@ -206,6 +207,17 @@
         'menuContent': {
           templateUrl: 'templates/add-service.html',
           controller: 'AddServiceCtrl as AddServiceCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
+    }).state('app.logged.service-detail', {
+      url: '/service/:serviceId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/service.html',
+          controller: 'ServiceCtrl as ServiceCtrl'
         }
       },
       data: {

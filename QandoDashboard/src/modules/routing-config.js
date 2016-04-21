@@ -225,6 +225,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.services', {
       url: '/services',
+      cache : false,
       views: {
         'menuContent': {
           templateUrl: 'templates/services.html',
@@ -248,6 +249,22 @@ angular.module('app.routing', ['ionic', 'satellizer'])
         requiresShop : true
       }
     })
+
+    .state('app.logged.service-detail', {
+      url: '/service/:serviceId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/service.html',
+          controller : 'ServiceCtrl as ServiceCtrl',
+        }
+      },
+      data : {
+        requiresShop : true
+      }
+    })
+
+
+
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {

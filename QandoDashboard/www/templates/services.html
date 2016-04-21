@@ -7,9 +7,9 @@
 
   <ion-content class="">
     <ion-list>
-      <ion-item ng-repeat="service in ServicesCtrl.services" class="item-button-right">
+      <ion-item ng-repeat="service in ServicesCtrl.services" class="item-button-right" ui-sref="app.logged.service-detail({ serviceId:service.id })">
         <h2>{{ service.name }}</h2>
-        <p>{{ service.calculated_duration }}</p>
+        <p><span class="positive">Durata</span>: {{ service.calculated_duration }}</p>
         <a class="button button-positive button-clear" ui-sref="app.logged.home">
           <i class="icon ion-chevron-right"></i>
         </a>

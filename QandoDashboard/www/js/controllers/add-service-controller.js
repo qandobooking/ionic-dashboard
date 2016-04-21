@@ -27,6 +27,6 @@ function AddServiceCtrl(Entities, DataService, $state) {
   };
 
   this.setServiceDuration = function () {
-    _this.newService.service_duration = moment(_this.serviceTime).format('HH:mm');
+    _this.newService.service_duration = moment(_this.serviceTime).format('HH:mm:ss');
   };
 }
