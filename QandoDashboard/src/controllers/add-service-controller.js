@@ -4,6 +4,7 @@ angular.module('app')
 function AddServiceCtrl (Entities, DataService, $state) {
 
   this.newService = {};
+  this.serviceTime = moment({hours:1}).toDate();
 
   Entities
   .getShop()
@@ -32,6 +33,11 @@ function AddServiceCtrl (Entities, DataService, $state) {
         $state.go('app.logged.services');
       });
   };
+
+  this.setServiceDuration = () => {
+    this.newService.service_duration = moment(this.serviceTime).format('HH:mm')
+    
+  }
 }
 
 

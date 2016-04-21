@@ -13,11 +13,19 @@
       restrict: 'E',
       transclude: true,
       replace: true,
-      template: `
+      template: function(tElement, attrs){
+        return attrs.labelAsDiv !== undefined ?
+        `
+        <div ng-transclude
+               ng-class="errorClass()">
+        </div>
+        ` : 
+        `
         <label ng-transclude
                ng-class="errorClass()">
         </label>
-      `
+        `
+      }
     };
     return directive;
 

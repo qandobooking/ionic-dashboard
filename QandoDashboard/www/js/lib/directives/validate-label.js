@@ -13,7 +13,9 @@
       restrict: 'E',
       transclude: true,
       replace: true,
-      template: '\n        <label ng-transclude\n               ng-class="errorClass()">\n        </label>\n      '
+      template: function template(tElement, attrs) {
+        return attrs.labelAsDiv !== undefined ? '\n        <div ng-transclude\n               ng-class="errorClass()">\n        </div>\n        ' : '\n        <label ng-transclude\n               ng-class="errorClass()">\n        </label>\n        ';
+      }
     };
     return directive;
 

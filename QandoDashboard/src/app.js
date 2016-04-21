@@ -7,7 +7,6 @@
 angular.module('app', 
   [
     'ionic', 
-
     'restangular',
     'satellizer',
     'angular-storage',
@@ -16,8 +15,7 @@ angular.module('app',
     'app.satellizer',
     'app.routing',
     'app.network',
-    
-
+    'ion-datetime-picker',
   ]
 
 )

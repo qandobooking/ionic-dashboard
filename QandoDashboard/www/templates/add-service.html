@@ -32,17 +32,29 @@
         </validate-errors>
         </span>
 
+        
+
         <span validate-field="service_duration">
-        <validate-label class="item item-input">
+        
+        <validate-label label-as-div class="item item-input item-button-right">
+          
           <span class="input-label">Durata</span>
-          <input type="text"
-                 name="service_duration"
+          <input type="text"  style="background-color:#fff"
+                 name="service_duration" 
                  ng-model="AddServiceCtrl.newService.service_duration"
-                 required />
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker 
+                 time ng-model="AddServiceCtrl.serviceTime" ng-change="AddServiceCtrl.setServiceDuration()"
+                 >
+          </button>
+          
         </validate-label>
         <validate-errors >
         </validate-errors>
+        
         </span>
+
+        
 
         <div class="item item-with-button">
           <button class="button button-block icon button-balanced"

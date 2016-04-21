@@ -6,6 +6,7 @@ function AddServiceCtrl(Entities, DataService, $state) {
   var _this = this;
 
   this.newService = {};
+  this.serviceTime = moment({ hours: 1 }).toDate();
 
   Entities.getShop().then(function (s) {
     _this.shop = s;
@@ -23,5 +24,9 @@ function AddServiceCtrl(Entities, DataService, $state) {
     DataService.getSimpleServices(_this.shop.id).post(newServiceForPost).then(function () {
       $state.go('app.logged.services');
     });
+  };
+
+  this.setServiceDuration = function () {
+    _this.newService.service_duration = moment(_this.serviceTime).format('HH:mm');
   };
 }
