@@ -266,6 +266,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.resource-types', {
       url: '/resource-types',
+      cache : false,
       views: {
         'menuContent': {
           templateUrl: 'templates/resource-types.html',

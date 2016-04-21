@@ -16,7 +16,7 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
     })
     .then(response =>{
       DataService.getResources(s.id)
-      .getList()
+      .getList({ resource_type : $stateParams.resourceTypeId })
       .then(resources => {
         this.resources = resources;
       })

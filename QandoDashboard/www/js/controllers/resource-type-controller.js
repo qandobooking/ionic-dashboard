@@ -11,7 +11,7 @@ function ResourceTypeCtrl(Entities, DataService, $ionicPopup, $stateParams, $sco
       _this.resourceType = response;
       return response;
     }).then(function (response) {
-      DataService.getResources(s.id).getList().then(function (resources) {
+      DataService.getResources(s.id).getList({ resource_type: $stateParams.resourceTypeId }).then(function (resources) {
         _this.resources = resources;
       });
     });
