@@ -7,7 +7,15 @@
     -->
   </ion-nav-buttons>
 
-  <ion-content class="">
+  <div class="bar bar-dark bar-subheader">
+    <div class="button-bar">
+      <a class="button" ng-class="{'active':BookingsCtrl.bookingStatus == 'pending'}" ng-click="BookingsCtrl.toBookings('pending')">In attesa</a>
+      <a class="button" ng-class="{'active':BookingsCtrl.bookingStatus == 'confirmed'}" ng-click="BookingsCtrl.toBookings('confirmed')">Confermati</a>
+      <a class="button">Archivio</a>
+    </div>
+  </div>
+
+  <ion-content class="has-header has-subheader">
     <ion-list>
       <ion-item class="item" ng-repeat="booking in BookingsCtrl.bookings" ui-sref="app.logged.booking-detail({ bookingId:booking.id, bookingStatus:BookingsCtrl. bookingStatus })">
         {{ booking.service.name }}
