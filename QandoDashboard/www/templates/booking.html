@@ -1,0 +1,39 @@
+<ion-view view-title="Dettaglio appuntamento" >
+  <ion-content class="">
+    <!--{{ BookingCtrl.booking }}-->
+    <div class="item">
+      <div class="row">
+        <div class="col col-25">Servizio</div>
+        <div class="col">{{ BookingCtrl.booking.service.name }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="row">
+        <div class="col col-25">Inizio</div>
+        <div class="col">{{ BookingCtrl.booking.start|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }}</div>
+      </div>
+      
+    </div>
+    <div class="item">
+      <div class="row">
+        <div class="col col-25">Fine</div>
+        <div class="col">{{ BookingCtrl.booking.end|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }}</div>
+      </div>
+    </div>
+
+    <!-- controls here -->
+    <div class="item item-divider item-positive">
+      Azioni
+    </div>
+    <div class="item item-button-right" ng-if="BookingCtrl.booking.reachable_states.indexOf('deny') !== -1">
+      Conferma
+      <p>Conferma l'appuntamento ...</p>
+      <button class="button button-balanced" ng-click="BookingCtrl.action('confirm')">Conferma</button>
+    </div>
+    <div class="item item-button-right" ng-if="BookingCtrl.booking.reachable_states.indexOf('deny') !== -1">
+      Nega
+      <p>Nega l'appuntamento ...</p>
+      <button class="button button-assertive">Nega</button>
+    </div>
+  </ion-content>
+</ion-view>

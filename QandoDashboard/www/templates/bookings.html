@@ -1,0 +1,31 @@
+<ion-view view-title="Appuntamenti" >
+
+  <ion-nav-buttons side="right">
+    <!--
+    <button class="button button-clear"
+      ng-click="BookingsCtrl.editResourceType()">Aggiungi</button>    
+    -->
+  </ion-nav-buttons>
+
+  <ion-content class="">
+    <ion-list>
+      <ion-item class="item" ng-repeat="booking in BookingsCtrl.bookings" ui-sref="app.logged.booking-detail({ bookingId:booking.id, bookingStatus:BookingsCtrl. bookingStatus })">
+        {{ booking.service.name }}
+        <p>
+          {{ booking.user.email }} <br>
+          {{ booking.start|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }} - {{ booking.end|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }}
+        </p>
+        <p class="positive">
+          {{ booking.status }}
+        </p>
+        
+        
+        <!--<button class="button button-positive button-clear" ui-sref="app.logged.service-detail({ serviceId:service.id })">
+          <i class="icon ion-chevron-right"></i>
+        </button>
+        -->
+
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

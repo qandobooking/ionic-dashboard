@@ -246,6 +246,33 @@
       data: {
         requiresShop: true
       }
+    }).state('app.logged.bookings', {
+      url: '/bookings/:bookingStatus',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/bookings.html',
+          controller: 'BookingsCtrl as BookingsCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
+    }).state('app.logged.booking-detail', {
+      url: '/booking-detail/:bookingId',
+      params: {
+        bookingStatus: null
+      },
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/booking.html',
+          controller: 'BookingCtrl as BookingCtrl'
+        }
+      },
+      data: {
+        requiresShop: true
+      }
     });
 
     // if none of the above states are matched, use this as the fallback

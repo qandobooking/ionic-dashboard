@@ -50,6 +50,7 @@ function DataService(DataServiceRestangular, Preferences){
     
     svc.me = DataServiceRestangular.oneUrl("me");
     svc.shops = DataServiceRestangular.service("shops");
+    svc.bookings = DataServiceRestangular.service("bookings");
 
     svc.getResourceTypes = function(shopId){
         return DataServiceRestangular.service("resourcetypes", DataServiceRestangular.one('shops', shopId));
@@ -61,6 +62,11 @@ function DataService(DataServiceRestangular, Preferences){
 
     svc.getServices = function(shopId){
         return DataServiceRestangular.service("services", DataServiceRestangular.one('shops', shopId));
+    }
+
+    //#TODO rename to getShopBookings .. 
+    svc.getBookings = function(shopId){
+        return DataServiceRestangular.service("bookings", DataServiceRestangular.one('shops', shopId));
     }
 
     svc.getSimpleServices = function(shopId){
@@ -79,9 +85,6 @@ function DataService(DataServiceRestangular, Preferences){
         return DataServiceRestangular.service("closingdays", DataServiceRestangular.one('shops', shopId));
     }
 
-
-    
-    
 
     return svc;
 }
