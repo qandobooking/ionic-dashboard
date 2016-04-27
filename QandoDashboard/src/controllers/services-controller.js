@@ -1,25 +1,23 @@
 angular.module('app')
 .controller('ServicesCtrl', ServicesCtrl);
 
-function ServicesCtrl (Entities, DataService, $ionicPopup, initialLoaderManager) {
+function ServicesCtrl (Entities, DataService, $ionicPopup, initialLoaderManager, $timeout) {
 
-  initialLoaderManager.start('services', () => 
+  this.loader = initialLoaderManager.getLoader(() => 
     (
       Entities
-      .getShop()
-      .then(s => {
-        this.shop=s;
-        DataService
-        .getServices(s.id)
-        .getList()
-        .then(response => {
-          this.services = response;//.plain();
+        .getShop()
+        .then(s => {
+          this.shop=s;
+          return DataService
+          .getServices(s.id)
+          .getList()
+          .then(response => {
+            this.services = response;
+          })
         })
-      })
-    )
-  )
-
-
+      });
+  );
 
 
   this.dropService = service => {

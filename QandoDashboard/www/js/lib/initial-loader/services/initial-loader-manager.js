@@ -1,78 +1,55 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 (function () {
-    'use strict';
+  'use strict';
 
-    angular.module('initial-loader').factory('initialLoaderManager', initialLoaderManager);
+  angular.module('initial-loader').factory('initialLoaderManager', initialLoaderManager);
 
-    function initialLoaderManager($q, $timeout) {
-        var svc = {};
+  function initialLoaderManager($q, $timeout) {
+    var svc = {};
 
-        var loaderFunctions = {};
-        var reg = {};
-
-        svc.start = function (key, f) {
-
-            loaderFunctions[key] = f;
-            svc.performLoading(key);
-        };
-
-        var qs = {};
-
-        svc.performLoading = function (key) {
-            //#TODO CHECK FUNCTION
-            svc.onStartLoading(key);
-            qs[key] = loaderFunctions[key]();
-
-            qs[key].then(function () {
-                return svc.onSuccess(key);
-            }).catch(function () {
-                return svc.onFail(key);
-            }).finally(function () {
-                qs[key] = null;
-            });
-        };
-
-        svc.onStartLoading = function (key) {
-            if (!reg[key]) {
-                return;
-            }
-            reg[key].map(function (dir) {
-                return dir.hi();
-            });
-        };
-
-        svc.onSuccess = function (key) {};
-
-        svc.onFail = function (key) {};
-
-        svc.register = function (key, dir) {
-
-            reg[key] = reg[key] || [];
-            reg[key].push(dir);
-
-            if (qs[key]) {
-                //pending
-                if (qs[key].$$state.status === 0) {
-                    svc.onStartLoading(key);
-                }
-                //resolved
-                else if (qs[key].$$state.status === 1) {
-                        svc.onStartLoading(key);
-                        svc.onSuccess(key);
-                    }
-                    //rejected
-                    else if (qs[key].$$state.status === 1) {
-                            svc.onStartLoading(key);
-                            svc.onFail(key);
-                        }
-            }
-        };
-
-        svc.unregister = function (key, dir) {
-            reg[key] = _.reject(reg[key], dir);
-        };
-
-        return svc;
+    svc.getLoader = function (f) {
+      var loader = new Loader(f);
+      loader.load();
+      return loader;
     };
+
+    return svc;
+  };
+
+  var Loader = function () {
+    function Loader(loadingFunction) {
+      _classCallCheck(this, Loader);
+
+      this.loadingFunction = loadingFunction;
+      this.loading = false;
+      this.error = null;
+    }
+
+    _createClass(Loader, [{
+      key: 'load',
+      value: function load() {
+        var _this = this;
+
+        if (this.loading) {
+          return;
+        }
+        this.error = null;
+        this.loading = true;
+        this.loadingFunction()
+        //.then()
+        .catch(function (err) {
+          _this.error = err;
+        }).finally(function () {
+          _this.loading = false;
+        });
+      }
+    }]);
+
+    return Loader;
+  }();
 })();

@@ -5,31 +5,37 @@
 
   angular.module('initial-loader').directive('initialLoader', initialLoader);
 
-  function initialLoader(initialLoaderManager) {
+  function initialLoader($templateRequest, $compile) {
 
     var directive = {
-      controller: controller
-
+      link: link,
+      scope: { loader: "=initialLoader" }
     };
-    function controller($scope, $element, $attrs) {
-      var _this = this;
 
-      console.log("initial loader directive");
+    function link(scope, element, iAttrs) {
+      var children = element.children();
+      var tpl = iAttrs.loadingTemplate ? iAttrs.loadingTemplate : "templates/directives/initial_loader.html";
+      var content;
+      console.log(scope.loader);
 
-      if (!$attrs.initialLoader) {
-        console.error("pass in a key!!!");
-        return;
-      }
+      children.addClass('hide');
 
-      $scope.$on('$destroy', function () {
-        initialLoaderManager.unregister($attrs.initialLoader, _this);
+      $templateRequest(tpl).then(function (template) {
+        var compiler = $compile(template);
+        content = compiler(scope);
+        content.addClass("hide");
+        element.append(content);
+        init();
       });
 
-      this.hi = function () {
-        alert('hi');
-      };
-
-      initialLoaderManager.register($attrs.initialLoader, this);
+      function init() {
+        scope.$watch('loader.loading', function (nv) {
+          children.toggleClass('hide', nv);
+          if (content) {
+            content.toggleClass('hide', !nv);
+          }
+        });
+      }
     }
 
     return directive;
