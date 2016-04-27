@@ -5,45 +5,44 @@
   .directive('initialLoader', initialLoader);
 
   function initialLoader($templateRequest, $compile){
-
-    var directive  = {
+    var directive = {
       link,
-      scope : { loader : "=initialLoader"}
-    }
-    
-    function link(scope, element, iAttrs){
-      var children = element.children();
-      var tpl = iAttrs.loadingTemplate ? iAttrs.loadingTemplate : "templates/directives/initial_loader.html";
-      var content;
-      console.log(scope.loader)
+      scope: { loader: '=initialLoader' }
+    };
 
-      children.addClass('hide');
+    function link(scope, element, iAttrs) {
+      var content;
+      var children = element.children();
+      var tpl = typeof iAttrs.loadingTemplate !== 'undefined'
+        ? iAttrs.loadingTemplate
+        : 'templates/directives/initial_loader.html';
 
       $templateRequest(tpl)
       .then(function(template){
         var compiler = $compile(template);
         content = compiler(scope);
-        content.addClass("hide");
-        element.append(content)
-        init()
+        init();
       });
 
+      function init() {
+        scope.$watch('loader.loading', function(loading) {
 
-      function init(){
-        scope.$watch('loader.loading', function(nv){
-          children.toggleClass('hide', nv); 
-          if(content){
-            content.toggleClass('hide', !nv); 
+          const showLoadingContent = loading || !!scope.loader.error;
+          children.toggleClass('hide', showLoadingContent);
+
+          if (loading && !scope.loader.isRetry) {
+            element.append(content);
+          }
+
+          if (!loading && !scope.loader.error) {
+            content.remove();
           }
         });
       }
-    
     }
-    
-    
+
     return directive;
-    
   };
-  
+
 
 })();

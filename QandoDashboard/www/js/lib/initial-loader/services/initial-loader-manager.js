@@ -12,7 +12,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   function initialLoaderManager($q, $timeout) {
     var svc = {};
 
-    svc.getLoader = function (f) {
+    svc.makeLoader = function (f) {
       var loader = new Loader(f);
       loader.load();
       return loader;
@@ -28,6 +28,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.loadingFunction = loadingFunction;
       this.loading = false;
       this.error = null;
+      this.isRetry = false;
     }
 
     _createClass(Loader, [{
@@ -38,11 +39,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (this.loading) {
           return;
         }
+        // Was error so is retry the loading
+        this.isRetry = this.error !== null;
+
+        // Reset
         this.error = null;
         this.loading = true;
-        this.loadingFunction()
-        //.then()
-        .catch(function (err) {
+
+        // Perform loading actions
+        this.loadingFunction().catch(function (err) {
           _this.error = err;
         }).finally(function () {
           _this.loading = false;

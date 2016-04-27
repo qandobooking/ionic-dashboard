@@ -5,13 +5,11 @@ angular.module('app').controller('ServicesCtrl', ServicesCtrl);
 function ServicesCtrl(Entities, DataService, $ionicPopup, initialLoaderManager, $timeout) {
   var _this = this;
 
-  this.loader = initialLoaderManager.getLoader(function () {
-    return $timeout(function () {
-      return Entities.getShop().then(function (s) {
-        _this.shop = s;
-        return DataService.getServices(s.id).getList().then(function (response) {
-          _this.services = response;
-        });
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      return DataService.getServices(s.id).getList().then(function (response) {
+        _this.services = response;
       });
     });
   });

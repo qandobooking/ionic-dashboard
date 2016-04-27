@@ -3,28 +3,25 @@ angular.module('app')
 
 function ServicesCtrl (Entities, DataService, $ionicPopup, initialLoaderManager, $timeout) {
 
-  this.loader = initialLoaderManager.getLoader(() => 
-    (
-      Entities
-        .getShop()
-        .then(s => {
-          this.shop=s;
-          return DataService
-          .getServices(s.id)
-          .getList()
-          .then(response => {
-            this.services = response;
-          })
-        })
-      });
-  );
-
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop()
+    .then(s => {
+      this.shop = s;
+      return DataService
+      .getServices(s.id)
+      .getList()
+      .then(response => {
+        this.services = response;
+      })
+    })
+  ));
 
   this.dropService = service => {
 
     const confirmPopup = $ionicPopup.confirm({
       title: 'Elimina servizio',
-      template: `Sicuro di voler eliminare il servizio ${service.name}` 
+      template: `Sicuro di voler eliminare il servizio ${service.name}`
     });
 
     confirmPopup.then(res => {
@@ -38,7 +35,7 @@ function ServicesCtrl (Entities, DataService, $ionicPopup, initialLoaderManager,
       }
    });
 
-    
+
 
   }
 }
