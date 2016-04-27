@@ -20,7 +20,7 @@ function BookingCtrl (Entities, DataService, $stateParams, $state) {
   });
 
 
-  this.action = (actionName => {
+  this.action = actionName => {
     DataService
     .bookings
     .one(this.bookingId)

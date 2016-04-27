@@ -16,7 +16,7 @@ function BookingCtrl(Entities, DataService, $stateParams, $state) {
 
   this.action = function (actionName) {
     DataService.bookings.one(_this.bookingId).oneUrl(actionName).post().then(function (response) {
-      $state.go('app.logged.bookings');
+      $state.go('app.logged.bookings', { bookingStatus: $stateParams.bookingStatus });
     });
   };
 }

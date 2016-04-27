@@ -16,6 +16,7 @@ angular.module('app',
     'app.routing',
     'app.network',
     'ion-datetime-picker',
+    'initial-loader',
   ]
 
 )

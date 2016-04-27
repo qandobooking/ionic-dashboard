@@ -2,13 +2,15 @@
 
 angular.module('app').controller('ServicesCtrl', ServicesCtrl);
 
-function ServicesCtrl(Entities, DataService, $ionicPopup) {
+function ServicesCtrl(Entities, DataService, $ionicPopup, initialLoaderManager) {
   var _this = this;
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
-    DataService.getServices(s.id).getList().then(function (response) {
-      _this.services = response; //.plain();
+  initialLoaderManager.start('services', function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      DataService.getServices(s.id).getList().then(function (response) {
+        _this.services = response; //.plain();
+      });
     });
   });
 
