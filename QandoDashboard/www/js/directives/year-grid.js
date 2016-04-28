@@ -37,6 +37,10 @@
           }
           // Map into UI util objects
           allDaysOfMonth = allDaysOfMonth.map(function (date) {
+            // No map the shifted null cells
+            if (date === null) {
+              return null;
+            }
             var m = moment({ year: year, month: month, date: date });
             var selected = _.findIndex(scope.closingDays, function (d) {
               return m.isSame(d, 'day');

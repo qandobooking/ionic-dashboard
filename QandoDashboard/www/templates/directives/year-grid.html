@@ -35,8 +35,13 @@
       <div class="" ng-repeat="days in daysAndMonth.daysChunked">
         <div class="year-grid-month-box" ng-repeat="dayCell in days track by $index">
           <div class="year-grid-day-cell"
-                ng-click="onDayCellToggled(dayCell)"
-                ng-class="{ 'year-grid-day-cell-selected': dayCell.selected }">{{ dayCell.date }}</div>
+               ng-if="dayCell"
+               ng-click="onDayCellToggled(dayCell)"
+               ng-class="{ 'year-grid-day-cell-selected': dayCell.selected }">{{ dayCell.date }}</div>
+
+          <!-- Empty cell placeholder -->
+          <div class="year-grid-day-cell" ng-if="!dayCell"></div>
+
         </div>
         <div class="clearfix"></div>
       </div>
