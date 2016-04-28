@@ -2,32 +2,31 @@
 
 angular.module('app').controller('ShopSpecialHoursCtrl', ShopSpecialHoursCtrl);
 
-function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $timeout, $ionicPopup) {
+function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager) {
   var _this = this;
 
   var restangularItems = {};
-  var vm = this;
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
-    DataService.getShopSpecialWeekWorkingHours(s.id).getList({ 'date__gte': moment().format('YYYY-MM-DD') }).then(function (response) {
-
-      var asMoments = response.map(function (item) {
-        restangularItems[item.id] = item;
-
-        return {
-          start: moment(item.start_time, "HH:mm"),
-          end: moment(item.end_time, "HH:mm"),
-          id: item.id,
-          date: item.date
-        };
-      });
-      var byMonth = _.groupBy(asMoments, function (_ref) {
-        var date = _ref.date;
-        return moment(date).format("MMMM YYYY");
-      });
-      _this.byMonthAndDate = _.mapValues(byMonth, function (swhs) {
-        return _.groupBy(swhs, 'date');
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      return DataService.getShopSpecialWeekWorkingHours(s.id).getList({ 'date__gte': moment().format('YYYY-MM-DD') }).then(function (response) {
+        var asMoments = response.map(function (item) {
+          restangularItems[item.id] = item;
+          return {
+            start: moment(item.start_time, "HH:mm"),
+            end: moment(item.end_time, "HH:mm"),
+            id: item.id,
+            date: item.date
+          };
+        });
+        var byMonth = _.groupBy(asMoments, function (_ref) {
+          var date = _ref.date;
+          return moment(date).format("MMMM YYYY");
+        });
+        _this.byMonthAndDate = _.mapValues(byMonth, function (swhs) {
+          return _.groupBy(swhs, 'date');
+        });
       });
     });
   });

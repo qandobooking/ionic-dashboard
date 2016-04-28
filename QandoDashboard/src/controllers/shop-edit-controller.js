@@ -1,14 +1,15 @@
 angular.module('app')
 .controller('ShopEditCtrl', ShopEditCtrl);
 
-function ShopEditCtrl ($scope, Entities, DataService, $timeout, $state) {
-
-  Entities
-  .getShop().then(s => {
-    this.shop=s.clone();
-  });
+function ShopEditCtrl ($scope, Entities, DataService, $timeout, $state, initialLoaderManager) {
 
   this.serverErrors = {};
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop().then(s => {
+      this.shop = s.clone();
+    })
+  ));
 
   this.updateShop = () => {
     this.shop.save().then( savedShop => {
@@ -18,7 +19,6 @@ function ShopEditCtrl ($scope, Entities, DataService, $timeout, $state) {
     })
     .catch((error) => {
       this.serverErrors.params = error.data;
-      console.log(this.serverErrors);
     });
   };
 }

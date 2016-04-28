@@ -1,28 +1,28 @@
-<ion-view view-title="Tipi risorse" >
+<ion-view view-title="Tipi risorse" initial-loader="ResourceTypesCtrl.loader">
 
   <ion-nav-buttons side="right">
     <button class="button button-clear"
-      ng-click="ResourceTypesCtrl.editResourceType()">Aggiungi</button>    
+      ng-click="ResourceTypesCtrl.editResourceType()">Aggiungi</button>
   </ion-nav-buttons>
 
   <ion-content class="">
     <ion-list>
       <ion-item ng-repeat="resourceType in ResourceTypesCtrl.resourceTypes" ui-sref="app.logged.resource-type({ resourceTypeId:resourceType.id })">
         {{ resourceType.name }}
-        
+
         <!--<button class="button button-positive button-clear" ui-sref="app.logged.service-detail({ serviceId:service.id })">
           <i class="icon ion-chevron-right"></i>
         </button>
       -->
           <span class="badge badge-positive">{{ resourceType.resource_count }}</span>
 
-      
+
       <ion-option-button class="button-assertive" ng-click="ResourceTypesCtrl.dropResourceType(resourceType)">Elimina</ion-option-button>
 
       <ion-option-button class="button-positive" ng-click="ResourceTypesCtrl.editResourceType(resourceType)">Modifica</ion-option-button>
 
-      
-      
+
+
 
       </ion-item>
     </ion-list>

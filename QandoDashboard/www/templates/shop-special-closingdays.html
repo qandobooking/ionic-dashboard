@@ -11,7 +11,9 @@
           next
       </button>
   </div>
-  <ion-content class="has-header has-subheader">
-    <year-grid closing-days="ShopSpecialClosingDaysCtrl.closingDays" on-day-toggled="ShopSpecialClosingDaysCtrl.onDayToggled" year="ShopSpecialClosingDaysCtrl.year" ng-if="ShopSpecialClosingDaysCtrl.closingDays"></year-grid>
-  </ion-content>
+  <div initial-loader="ShopSpecialClosingDaysCtrl.loader" content-classes="has-subheader">
+    <ion-content class="has-header has-subheader">
+      <year-grid closing-days="ShopSpecialClosingDaysCtrl.closingDays" on-day-toggled="ShopSpecialClosingDaysCtrl.onDayToggled" year="ShopSpecialClosingDaysCtrl.year" ng-if="ShopSpecialClosingDaysCtrl.closingDays"></year-grid>
+    </ion-content>
+  </div>
 </ion-view>

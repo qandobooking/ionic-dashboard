@@ -1,40 +1,35 @@
 angular.module('app')
 .controller('ShopSpecialHoursCtrl', ShopSpecialHoursCtrl);
 
-function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $timeout, $ionicPopup) {
+function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager) {
 
-  let restangularItems={};
-  var vm = this;
- 
+  let restangularItems = {};
 
-  Entities
-  .getShop().then(s => { 
-    this.shop=s; 
-    DataService
-    .getShopSpecialWeekWorkingHours(s.id)
-    .getList({'date__gte':moment().format('YYYY-MM-DD')})
-    .then(response => {
-      
-      const asMoments = response.map(item => {
-        restangularItems[item.id] = item;
-        
-        return {
-          start : moment(item.start_time, "HH:mm"),
-          end : moment(item.end_time, "HH:mm"),
-          id : item.id,
-          date : item.date,
-        }
-
-      })
-      const byMonth = _.groupBy(asMoments, ({date}) => moment(date).format("MMMM YYYY"));
-      this.byMonthAndDate = _.mapValues(byMonth, swhs =>  _.groupBy(swhs, 'date'));
-
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop().then(s => {
+      this.shop = s;
+      return DataService
+      .getShopSpecialWeekWorkingHours(s.id)
+      .getList({'date__gte':moment().format('YYYY-MM-DD')})
+      .then(response => {
+        const asMoments = response.map(item => {
+          restangularItems[item.id] = item;
+          return {
+            start: moment(item.start_time, "HH:mm"),
+            end: moment(item.end_time, "HH:mm"),
+            id: item.id,
+            date: item.date,
+          };
+        });
+        const byMonth = _.groupBy(asMoments, ({date}) => moment(date).format("MMMM YYYY"));
+        this.byMonthAndDate = _.mapValues(byMonth, swhs =>  _.groupBy(swhs, 'date'));
+      });
     })
-  });
-
+  ));
 
   $scope.g = {};
-  
+
   $ionicModal.fromTemplateUrl('templates/specialhours-modal.html', {
     scope : $scope
   }).then(modal => {
@@ -55,18 +50,18 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
     }
     if (!this.byMonthAndDate[yearmonth]){
       this.byMonthAndDate[yearmonth] = {};
-    }  
+    }
     if (!this.byMonthAndDate[yearmonth][day]){
       this.byMonthAndDate[yearmonth][day] = [];
       this.byMonthAndDate[yearmonth][day].push(o);
-    }  
-    
+    }
 
-       
+
+
   }
 
   $scope.onRangeUpdate = range => {
-    
+
 
 
     //$scope.$apply() allows to see the change in template under the modal
@@ -75,10 +70,10 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
       let r = restangularItems[range.id]
       r.start_time = range.start.format("HH:mm");
       r.end_time = range.end.format("HH:mm");
-      
+
       r.save()
       .then((savedRange)=>{
-        
+
       });
     } else {
       DataService.getShopSpecialWeekWorkingHours(this.shop.id)
@@ -100,13 +95,13 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
 
   $scope.onDoubleTap = (el,  r, idx) => {
     var date = r.date;
-    
+
     var confirmPopup = $ionicPopup.confirm({
      title: 'Rimuovi intervallo',
      template: `${moment(date).format("DD MMMM YYYY")} dalle ${r.start.format("HH:mm")} alle ${r.end.format("HH:mm")}`
    });
     confirmPopup.then(res => {
-      
+
      if(res) {
 
        restangularItems[r.id].remove()
@@ -118,7 +113,7 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
 
         if (!this.byMonthAndDate[yearmonth][r.date].length){
           delete this.byMonthAndDate[yearmonth][r.date];
-        }  
+        }
         if (! _.keys(this.byMonthAndDate[yearmonth]).length){
           delete this.byMonthAndDate[yearmonth];
         }
@@ -129,7 +124,7 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
 
        })
 
-       
+
      } else {
        console.log('You are not sure');
      }
@@ -159,7 +154,7 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
     if(!this.byMonthAndDate[yearmonth]) {
       this.byMonthAndDate[yearmonth] = {}
     }
-    
+
     let ranges = []
     if(this.byMonthAndDate[yearmonth] && this.byMonthAndDate[yearmonth][day]) {
       ranges = this.byMonthAndDate[yearmonth][day]
@@ -201,13 +196,13 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $time
     .setRanges(ranges);
   }
 
-  
-
-  
 
 
 
-  
+
+
+
+
 
 }
 

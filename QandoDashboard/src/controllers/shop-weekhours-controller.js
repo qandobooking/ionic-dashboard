@@ -1,42 +1,42 @@
 angular.module('app')
 .controller('ShopWeekHoursCtrl', ShopWeekHoursCtrl);
 
-function ShopWeekHoursCtrl ($scope, Preferences, $state, $ionicHistory, DataService, Entities, TimeUtils, $ionicPopup, $timeout) {
+function ShopWeekHoursCtrl (DataService, Entities, TimeUtils, $ionicPopup, initialLoaderManager) {
 
-  var restangularItems;
+  var restangularItems = {};
   this.weekDays = TimeUtils.getWeekDays();
   this.weekDaysNames = TimeUtils.getWeekDaysNames();
   this.readOnly = true;
   this.redrawFunctions = {};
-
-  Entities
-  .getShop().then(s => { 
-    this.shop=s; 
-    DataService.getShopWeekWorkingHours(s.id)
-    .getList()
-    .then(weekWorkingHours => {
-        
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop().then(s => {
+      this.shop = s;
+      return DataService.getShopWeekWorkingHours(s.id)
+      .getList()
+      .then(weekWorkingHours => {
         restangularItems = _.keyBy(weekWorkingHours, 'id');
 
         const moments = _.map(weekWorkingHours.plain(), w => {
-            return {
-                id : w.id,
-                start : moment(w.start_time, "HH:mm"),
-                end : moment(w.end_time, "HH:mm"),
-                weekday : w.weekday,
-            }
-        }) 
+          return {
+            id: w.id,
+            start: moment(w.start_time, "HH:mm"),
+            end: moment(w.end_time, "HH:mm"),
+            weekday: w.weekday,
+          };
+        });
+
         var byWeekDay = _.groupBy(moments, 'weekday')
         _.each(this.weekDays, d => {
-            if(!byWeekDay[d]){
-                byWeekDay[d] = [];
-            }
-        })
-        this.byWeekDay = byWeekDay;
-        
-    });
+          if (!byWeekDay[d]) {
+            byWeekDay[d] = [];
+          }
+        });
 
-  });
+        this.byWeekDay = byWeekDay;
+      });
+    })
+  ));
 
 
   this.onRangeUpdate = (range) => {
@@ -49,7 +49,7 @@ function ShopWeekHoursCtrl ($scope, Preferences, $state, $ionicHistory, DataServ
         restangularItem.save();
     } else {
 
-        
+
         DataService.getShopWeekWorkingHours(this.shop.id)
         .post({
             start_time : range.start.format("HH:mm"),
@@ -82,16 +82,16 @@ function ShopWeekHoursCtrl ($scope, Preferences, $state, $ionicHistory, DataServ
   }
 
   this.toggleEdit = function(){
-    this.readOnly = !this.readOnly;    
+    this.readOnly = !this.readOnly;
     _.each(this.redrawFunctions, it => {
-        it.setReadonly(this.readOnly);   
+        it.setReadonly(this.readOnly);
     })
   }
 
-  
+
   this.onDoubleTap = (el,  r, idx) => {
     var day = r.weekday;
-    
+
     var confirmPopup = $ionicPopup.confirm({
      title: 'Rimuovi intervallo',
      template: `${this.weekDaysNames[r.weekday]} dalle ${r.start.format("HH:mm")} alle ${r.end.format("HH:mm")}`
@@ -109,15 +109,15 @@ function ShopWeekHoursCtrl ($scope, Preferences, $state, $ionicHistory, DataServ
 
        })
 
-       
+
      } else {
        console.log('You are not sure');
      }
    });
   }
 
-  
-  
+
+
 }
 
 

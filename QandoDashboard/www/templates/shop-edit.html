@@ -1,9 +1,7 @@
-<ion-view view-title="{{ ShopEditCtrl.shop.name }}">
-
+<ion-view view-title="{{ ShopEditCtrl.shop.name }}" initial-loader="ShopEditCtrl.loader">
 
   <ion-content class="padding">
 
-  
   <form ng-submit="ShopEditCtrl.updateShop()"
           class="validate-form" name="form" novalidate
           server-errors="ShopEditCtrl.serverErrors" validate-form>
@@ -38,6 +36,6 @@
                   type="submit">Salva</button>
         </div>
     </form>
-    
+
   </ion-content>
 </ion-view>

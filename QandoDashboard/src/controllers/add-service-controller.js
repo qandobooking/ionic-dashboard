@@ -1,24 +1,26 @@
 angular.module('app')
 .controller('AddServiceCtrl', AddServiceCtrl);
 
-function AddServiceCtrl (Entities, DataService, $state) {
+function AddServiceCtrl (Entities, DataService, $state, initialLoaderManager) {
 
   this.newService = {};
   this.serviceTime = moment({hours:1}).toDate();
 
-  Entities
-  .getShop()
-  .then(s => {
-    this.shop=s;
-    DataService.getResourceTypes(s.id)
-    .getList()
-    .then(response => {
-      if (response.length === 1) {
-        this.newService.resource_type = response[0].plain();
-      }
-      this.resourceTypes = response.plain();
-    });
-  });
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop()
+    .then(s => {
+      this.shop=s;
+      return DataService.getResourceTypes(s.id)
+      .getList()
+      .then(response => {
+        if (response.length === 1) {
+          this.newService.resource_type = response[0].plain();
+        }
+        this.resourceTypes = response.plain();
+      });
+    })
+  ));
 
   this.addService = () => {
     const newServiceForPost = Object.assign({},

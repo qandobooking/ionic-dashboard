@@ -180,6 +180,7 @@
       }
     }).state('app.logged.shop-special-closingdays', {
       url: '/shop-special-closingdays?year',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/shop-special-closingdays.html',

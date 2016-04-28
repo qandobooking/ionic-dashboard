@@ -2,17 +2,19 @@
 
 angular.module('app').controller('ResourceTypeCtrl', ResourceTypeCtrl);
 
-function ResourceTypeCtrl(Entities, DataService, $ionicPopup, $stateParams, $scope, $timeout) {
+function ResourceTypeCtrl(Entities, DataService, $ionicPopup, $stateParams, $scope, initialLoaderManager) {
   var _this = this;
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
-    DataService.getResourceTypes(s.id).one($stateParams.resourceTypeId).get().then(function (response) {
-      _this.resourceType = response;
-      return response;
-    }).then(function (response) {
-      DataService.getResources(s.id).getList({ resource_type: $stateParams.resourceTypeId }).then(function (resources) {
-        _this.resources = resources;
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      return DataService.getResourceTypes(s.id).one($stateParams.resourceTypeId).get().then(function (response) {
+        _this.resourceType = response;
+        return response;
+      }).then(function (response) {
+        DataService.getResources(s.id).getList({ resource_type: $stateParams.resourceTypeId }).then(function (resources) {
+          _this.resources = resources;
+        });
       });
     });
   });

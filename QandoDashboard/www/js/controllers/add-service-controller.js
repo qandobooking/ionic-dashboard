@@ -2,19 +2,21 @@
 
 angular.module('app').controller('AddServiceCtrl', AddServiceCtrl);
 
-function AddServiceCtrl(Entities, DataService, $state) {
+function AddServiceCtrl(Entities, DataService, $state, initialLoaderManager) {
   var _this = this;
 
   this.newService = {};
   this.serviceTime = moment({ hours: 1 }).toDate();
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
-    DataService.getResourceTypes(s.id).getList().then(function (response) {
-      if (response.length === 1) {
-        _this.newService.resource_type = response[0].plain();
-      }
-      _this.resourceTypes = response.plain();
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      return DataService.getResourceTypes(s.id).getList().then(function (response) {
+        if (response.length === 1) {
+          _this.newService.resource_type = response[0].plain();
+        }
+        _this.resourceTypes = response.plain();
+      });
     });
   });
 

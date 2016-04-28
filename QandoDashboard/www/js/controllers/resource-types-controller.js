@@ -2,14 +2,15 @@
 
 angular.module('app').controller('ResourceTypesCtrl', ResourceTypesCtrl);
 
-function ResourceTypesCtrl(Entities, DataService, $ionicPopup, $scope, $ionicListDelegate) {
+function ResourceTypesCtrl(Entities, DataService, $ionicPopup, $scope, $ionicListDelegate, initialLoaderManager) {
   var _this = this;
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
-    DataService.getResourceTypes(s.id).getList().then(function (response) {
-      _this.resourceTypes = response;
-      console.log(2);
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+      return DataService.getResourceTypes(s.id).getList().then(function (response) {
+        _this.resourceTypes = response;
+      });
     });
   });
 
@@ -58,7 +59,7 @@ function ResourceTypesCtrl(Entities, DataService, $ionicPopup, $scope, $ionicLis
   this.dropService = service => {
      const confirmPopup = $ionicPopup.confirm({
       title: 'Elimina servizio',
-      template: `Sicuro di voler eliminare il servizio ${service.name}` 
+      template: `Sicuro di voler eliminare il servizio ${service.name}`
     });
      confirmPopup.then(res => {
       if(res) {

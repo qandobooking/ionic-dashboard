@@ -1,4 +1,4 @@
-<ion-view view-title="Giorni Chiusura">
+<ion-view view-title="Giorni Chiusura" initial-loader="ShopClosingDaysCtrl.loader">
 
   <ion-content>
     <year-grid closing-days="ShopClosingDaysCtrl.closingDays" on-day-toggled="ShopClosingDaysCtrl.onDayToggled" ng-if="ShopClosingDaysCtrl.closingDays"></year-grid>

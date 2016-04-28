@@ -1,14 +1,12 @@
 angular.module('app')
 .controller('ShopCtrl', ShopCtrl);
 
-function ShopCtrl ($scope, Entities, $timeout) {
+function ShopCtrl ($scope, Entities, initialLoaderManager) {
 
-  Entities
-  .getShop().then(s => { 
-    this.shop=s; 
-  });
-  
-  
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop().then(s => {
+      this.shop = s;
+    })
+  ));
 }
-
-

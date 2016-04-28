@@ -1,4 +1,4 @@
-<ion-view  >
+<ion-view  initial-loader="ShopCtrl.loader">
     <ion-nav-title>
       {{ ShopCtrl.shop.name }}
     </ion-nav-title>
@@ -6,10 +6,10 @@
       <button class="button" ui-sref="app.logged.choose-shop">
         Cambia shop
       </button>
-    </ion-nav-buttons>  
-    
+    </ion-nav-buttons>
+
   <ion-content>
-    
+
     <div class="list card">
         <div class="item item-positive item-button-right">
             Dati shop
@@ -29,7 +29,7 @@
                 <div class="col">{{ ShopCtrl.shop.domain_name }} </div>
             </div>
         </div>
-        
+
     </div>
 
     <div class="card">
@@ -53,14 +53,14 @@
             Chiusure straordinarie
             <button class="button button-icon ion-chevron-right"></button>
         </div>
-        
+
     </div>
 
-    
-    
-    
-    
-    
+
+
+
+
+
 
   </ion-content>
 </ion-view>

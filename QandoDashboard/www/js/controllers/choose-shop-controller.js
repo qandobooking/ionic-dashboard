@@ -2,12 +2,13 @@
 
 angular.module('app').controller('ChooseShopCtrl', ChooseShopCtrl);
 
-function ChooseShopCtrl(Preferences, $state, $ionicHistory, DataService, Entities) {
+function ChooseShopCtrl(Preferences, $state, $ionicHistory, DataService, Entities, initialLoaderManager) {
   var _this = this;
 
-  DataService.shops.getList().then(function (shops) {
-    console.log(shops);
-    _this.shops = shops;
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return DataService.shops.getList().then(function (shops) {
+      _this.shops = shops;
+    });
   });
 
   this.setCurrentShop = function (shop) {

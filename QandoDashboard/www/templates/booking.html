@@ -1,4 +1,4 @@
-<ion-view view-title="Dettaglio appuntamento" >
+<ion-view view-title="Dettaglio appuntamento" initial-loader="BookingCtrl.loader">
   <ion-content class="">
     <!--{{ BookingCtrl.booking }}-->
     <div class="item">
@@ -12,7 +12,6 @@
         <div class="col col-25">Inizio</div>
         <div class="col">{{ BookingCtrl.booking.start|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }}</div>
       </div>
-      
     </div>
     <div class="item">
       <div class="row">

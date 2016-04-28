@@ -8,7 +8,7 @@
   function initialLoader($templateRequest, $compile) {
     var directive = {
       link: link,
-      scope: { loader: '=initialLoader' }
+      scope: { loader: '=initialLoader', contentClasses: '@' }
     };
 
     function link(scope, element, iAttrs) {

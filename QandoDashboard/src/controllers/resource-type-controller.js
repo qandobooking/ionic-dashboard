@@ -1,30 +1,29 @@
 angular.module('app')
 .controller('ResourceTypeCtrl', ResourceTypeCtrl);
 
-function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $scope, $timeout) {
+function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $scope, initialLoaderManager) {
 
-  Entities
-  .getShop()
-  .then(s => {
-    this.shop=s;
-    DataService.getResourceTypes(s.id)
-    .one($stateParams.resourceTypeId)
-    .get()
-    .then(response => {
-      this.resourceType = response;
-      return response;
-    })
-    .then(response =>{
-      DataService.getResources(s.id)
-      .getList({ resource_type : $stateParams.resourceTypeId })
-      .then(resources => {
-        this.resources = resources;
+  this.loader = initialLoaderManager.makeLoader(() => (
+    Entities
+    .getShop()
+    .then(s => {
+      this.shop = s;
+      return DataService.getResourceTypes(s.id)
+      .one($stateParams.resourceTypeId)
+      .get()
+      .then(response => {
+        this.resourceType = response;
+        return response;
       })
-
+      .then(response => {
+        DataService.getResources(s.id)
+        .getList({ resource_type : $stateParams.resourceTypeId })
+        .then(resources => {
+          this.resources = resources;
+        })
+      });
     })
-    
-  });
-
+  ));
 
   this.editResource = (resource) => {
     $scope.newResource = resource ? resource.clone() : { resource_type : this.resourceType.id };
@@ -72,12 +71,12 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
 
   }
 
-  
+
   this.dropResource = resource => {
 
     const confirmPopup = $ionicPopup.confirm({
       title: 'Elimina risorsa',
-      template: `Sicuro di voler eliminare la risorsa ${resource.name}` 
+      template: `Sicuro di voler eliminare la risorsa ${resource.name}`
     });
 
     confirmPopup.then(res => {
@@ -91,11 +90,11 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
       }
    });
   }
-  
 
-    
 
-  
+
+
+
 }
 
 

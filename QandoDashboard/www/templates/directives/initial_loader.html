@@ -1,16 +1,15 @@
 <div class="initial-loader">
 
-  <ion-content class="has-header grey-view" scroll="false">
+  <ion-content class="has-header" ng-class="contentClasses" scroll="false">
       <div ng-if="loader.loading" class="loader">
           <ion-spinner class="spinner-positive"></ion-spinner>
       </div>
-      
       <div ng-if="loader.error" class="text-center padding">
           <h3>
             Ops, si è verificato un errore
             <i class="assertive ion-alert-circled"></i>
           </h3>
-          <div ng-switch="error.status">
+          <div ng-switch="loader.error.status">
             <p ng-switch-when="500">Servizio non disponibile</p>
             <p ng-switch-when="404">Risorsa non trovata</p>
             <p ng-switch-when="0">Connessione a internet assente</p>
@@ -25,6 +24,5 @@
           </div>
           <button class="button icon-left ion-refresh button-assertive" ng-click="loader.load()">Riprova</button>
       </div>
-      
   </ion-content>
 </div>

@@ -2,10 +2,12 @@
 
 angular.module('app').controller('ShopCtrl', ShopCtrl);
 
-function ShopCtrl($scope, Entities, $timeout) {
+function ShopCtrl($scope, Entities, initialLoaderManager) {
   var _this = this;
 
-  Entities.getShop().then(function (s) {
-    _this.shop = s;
+  this.loader = initialLoaderManager.makeLoader(function () {
+    return Entities.getShop().then(function (s) {
+      _this.shop = s;
+    });
   });
 }
