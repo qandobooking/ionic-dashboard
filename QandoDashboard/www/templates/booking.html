@@ -9,6 +9,18 @@
     </div>
     <div class="item">
       <div class="row">
+        <div class="col col-25">Utente</div>
+        <div class="col">{{ BookingCtrl.booking.user.email }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="row">
+        <div class="col col-25">Stato</div>
+        <div class="col">{{ BookingCtrl.bookingStatusNames[BookingCtrl.booking.status] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="row">
         <div class="col col-25">Inizio</div>
         <div class="col">{{ BookingCtrl.booking.start|momentDateTimeFormat:"YYYY-MM-DD HH:mm" }}</div>
       </div>
@@ -24,7 +36,7 @@
     <div class="item item-divider item-positive">
       Azioni
     </div>
-    <div class="item item-button-right" ng-if="BookingCtrl.booking.reachable_states.indexOf('deny') !== -1">
+    <div class="item item-button-right" ng-if="BookingCtrl.booking.reachable_states.indexOf('confirm') !== -1">
       Conferma
       <p>Conferma l'appuntamento ...</p>
       <button class="button button-balanced" ng-click="BookingCtrl.action('confirm')">Conferma</button>

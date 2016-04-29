@@ -11,6 +11,9 @@ angular.module('app.constants', [])
 .constant('baseServerUrl', "http://localhost:8000/api/manage")
 //.constant('baseServerUrl', "http://192.168.1.127:8000/api/manage")
 
+.constant('bookingStatusNames', {
+  pending: 'In Attesa',
+})
 
 
 

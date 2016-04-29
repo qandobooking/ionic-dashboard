@@ -1,8 +1,9 @@
 angular.module('app')
 .controller('BookingCtrl', BookingCtrl);
 
-function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils) {
+function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils, $ionicPopup, bookingStatusNames) {
 
+  this.bookingStatusNames = bookingStatusNames;
   this.bookingId = $stateParams.bookingId;
 
   this.loader = initialLoaderManager.makeLoader(() => (
@@ -15,27 +16,42 @@ function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoader
       .one(this.bookingId)
       .get()
       .then(response => {
+        console.log(response);
         this.booking = response;
       });
     })
   ));
 
+  // Map action to popup config
+  const popoupActionConfMap = {
+    confirm: {
+      title: 'Conferma appuntamento',
+      template: `Sicuro di voler confermare l'appuntamento?`
+    }
+  };
+
   this.action = actionName => {
-    $ionicLoading.show();
-    DataService
-    .bookings
-    .one(this.bookingId)
-    .oneUrl(actionName)
-    .post()
-    .then(response => {
-      $state.go('app.logged.bookings', {
-        bookingStatus: $stateParams.bookingStatus
-      });
-    })
-    .catch((error) => {
-      notifyManager.error(HttpUtils.makeErrorMessage(error));
-    })
-    .finally(() => { $ionicLoading.hide() });
+    const confirmPopup = $ionicPopup.confirm(popoupActionConfMap[actionName]);
+
+    confirmPopup.then(confirmed => {
+      if (confirmed) {
+        $ionicLoading.show();
+        DataService
+        .bookings
+        .one(this.bookingId)
+        .oneUrl(actionName)
+        .post()
+        .then(response => {
+          $state.go('app.logged.bookings', {
+            bookingStatus: $stateParams.bookingStatus
+          });
+        })
+        .catch((error) => {
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
+        })
+        .finally(() => { $ionicLoading.hide() });
+      }
+    });
   };
 
 }
