@@ -17,6 +17,7 @@ angular.module('app',
     'app.network',
     'ion-datetime-picker',
     'initial-loader',
+    'notify',
   ]
 
 )
