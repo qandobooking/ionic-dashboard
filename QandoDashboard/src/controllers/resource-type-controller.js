@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ResourceTypeCtrl', ResourceTypeCtrl);
 
-function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $scope, initialLoaderManager) {
+function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $scope, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils) {
 
   this.loader = initialLoaderManager.makeLoader(() => (
     Entities
@@ -27,9 +27,13 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
 
   this.editResource = (resource) => {
     $scope.newResource = resource ? resource.clone() : { resource_type : this.resourceType.id };
+    const title = resource
+      ? 'Modifica risorsa'
+      : 'Nuova risorsa';
+
     const myPopup = $ionicPopup.show({
       template: '<input type="text" ng-model="newResource.name">',
-      title: 'Nuova risorsa',
+      title,
       subTitle: 'Inserisci il nome della risorsa',
       scope: $scope,
       buttons: [
@@ -39,7 +43,6 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
           type: 'button-positive',
           onTap: function(e) {
             if (!$scope.newResource.name) {
-              //don't allow the user to close unless he enters wifi password
               e.preventDefault();
             } else {
               return $scope.newResource;
@@ -50,30 +53,37 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
     });
 
     myPopup.then(res => {
-      if(!res){
-        return
+      if (!res) {
+        return;
       }
 
-      if(res.id){
-        res.save()
+      $ionicLoading.show();
+
+      var savePromise;
+      if (res.id) {
+        savePromise = res.save()
         .then(response => {
-            this.resources = _.map(this.resources, r => r.id == response.id ? response : r );
+          this.resources = _.map(this.resources, r => r.id == response.id ? response : r );
         })
       } else {
-        DataService.getResources(this.shop.id)
+        savePromise = DataService.getResources(this.shop.id)
         .post(res)
         .then(response => {
-          this.resources.push(response)
+          this.resources.push(response);
         })
       }
+
+      // Handle error and hide loader
+      savePromise
+      .catch((error) => {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      })
+      .finally(() => { $ionicLoading.hide() });
     });
-
-
   }
 
 
   this.dropResource = resource => {
-
     const confirmPopup = $ionicPopup.confirm({
       title: 'Elimina risorsa',
       template: `Sicuro di voler eliminare la risorsa ${resource.name}`
@@ -81,10 +91,15 @@ function ResourceTypeCtrl (Entities, DataService, $ionicPopup, $stateParams, $sc
 
     confirmPopup.then(res => {
       if(res) {
+        $ionicLoading.show();
         resource.remove()
-        .then(()=>{
+        .then(() => {
           this.resources = _.reject(this.resources, r => r.id == resource.id)
         })
+        .catch((error) => {
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
+        })
+        .finally(() => { $ionicLoading.hide() });
       } else {
         console.log('You are not sure');
       }

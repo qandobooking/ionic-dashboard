@@ -2,7 +2,7 @@
 
 angular.module('app').controller('ShopSpecialClosingDaysCtrl', ShopSpecialClosingDaysCtrl);
 
-function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entities, DataService, initialLoaderManager) {
+function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entities, DataService, initialLoaderManager, notifyManager, HttpUtils) {
   var _this = this;
 
   var restangularItems = {};
@@ -37,14 +37,18 @@ function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entitie
     var date = d.format("YYYY-MM-DD");
 
     if (selected) {
-      var item = { fixed: false, date: date };
+      var item = { date: date, fixed: false };
       DataService.getShopClosingDays(_this.shop.id).post(item).then(function (savedItem) {
         restangularItems[date] = savedItem;
+      }).catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     } else {
       var oldItem = restangularItems[date];
       oldItem.remove().then(function () {
         delete restangularItems[date];
+      }).catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }
   };

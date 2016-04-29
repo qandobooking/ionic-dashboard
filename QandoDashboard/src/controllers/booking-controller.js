@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('BookingCtrl', BookingCtrl);
 
-function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoaderManager) {
+function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils) {
 
   this.bookingId = $stateParams.bookingId;
 
@@ -21,6 +21,7 @@ function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoader
   ));
 
   this.action = actionName => {
+    $ionicLoading.show();
     DataService
     .bookings
     .one(this.bookingId)
@@ -31,6 +32,10 @@ function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoader
         bookingStatus: $stateParams.bookingStatus
       });
     })
+    .catch((error) => {
+      notifyManager.error(HttpUtils.makeErrorMessage(error));
+    })
+    .finally(() => { $ionicLoading.hide() });
   };
 
 }

@@ -2,7 +2,7 @@
 
 angular.module('app').controller('ShopWeekHoursCtrl', ShopWeekHoursCtrl);
 
-function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initialLoaderManager) {
+function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initialLoaderManager, notifyManager, HttpUtils) {
   var _this = this;
 
   var restangularItems = {};
@@ -42,9 +42,9 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
     if (range.id) {
       restangularItem.start_time = range.start.format("HH:mm");
       restangularItem.end_time = range.end.format("HH:mm");
-      console.log(restangularItem.start_time);
-      console.log(restangularItem.end_time);
-      restangularItem.save();
+      restangularItem.save().catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      });
     } else {
 
       DataService.getShopWeekWorkingHours(_this.shop.id).post({
@@ -55,6 +55,8 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
         restangularItems[savedRange.id] = savedRange;
         range.id = savedRange.id;
         _this.redrawFunctions[range.weekday].setId(range, range.id);
+      }).catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }
   };
@@ -90,9 +92,10 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
       if (res) {
         var candidate = _this.byWeekDay[day][idx];
         DataService.getShopWeekWorkingHours(_this.shop.id).one(candidate.id).remove().then(function () {
-
           _this.byWeekDay[day].splice(idx, 1);
           _this.redrawFunctions[day].setRanges(_this.byWeekDay[day]);
+        }).catch(function (error) {
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
         });
       } else {
         console.log('You are not sure');

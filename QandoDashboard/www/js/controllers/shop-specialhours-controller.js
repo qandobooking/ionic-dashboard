@@ -2,7 +2,7 @@
 
 angular.module('app').controller('ShopSpecialHoursCtrl', ShopSpecialHoursCtrl);
 
-function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager) {
+function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager, notifyManager, HttpUtils) {
   var _this = this;
 
   var restangularItems = {};
@@ -68,7 +68,9 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
       r.start_time = range.start.format("HH:mm");
       r.end_time = range.end.format("HH:mm");
 
-      r.save().then(function (savedRange) {});
+      r.save().then(function (savedRange) {}).catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      });
     } else {
       DataService.getShopSpecialWeekWorkingHours(_this.shop.id).post({
         start_time: range.start.format("HH:mm"),
@@ -79,6 +81,8 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
         range.id = savedRange.id;
         $scope.g.redrawFunction.setId(range, range.id);
         addRangeToController(savedRange);
+      }).catch(function (error) {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }
   };
@@ -108,6 +112,8 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
           }
 
           $scope.g.redrawFunction.setRanges((_this.byMonthAndDate[yearmonth] || {})[r.date] || []);
+        }).catch(function (error) {
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
         });
       } else {
         console.log('You are not sure');

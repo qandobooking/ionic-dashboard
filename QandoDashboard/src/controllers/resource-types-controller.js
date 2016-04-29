@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ResourceTypesCtrl', ResourceTypesCtrl);
 
-function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicListDelegate, initialLoaderManager) {
+function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicListDelegate, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils) {
 
   this.loader = initialLoaderManager.makeLoader(() => (
     Entities
@@ -20,9 +20,13 @@ function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicLi
   this.editResourceType = (resourceType) => {
     $ionicListDelegate.closeOptionButtons();
     $scope.newResource = resourceType ? resourceType.clone() : {};
+    const title = resourceType
+      ? 'Modifica tipo risorsa'
+      : 'Nuovo tipo risorsa';
+
     const myPopup = $ionicPopup.show({
       template: '<input type="text" ng-model="newResource.name">',
-      title: 'Nuova risorsa',
+      title,
       subTitle: 'Inserisci il nome del tipo di risorsa',
       scope: $scope,
       buttons: [
@@ -32,7 +36,6 @@ function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicLi
           type: 'button-positive',
           onTap: function(e) {
             if (!$scope.newResource.name) {
-              //don't allow the user to close unless he enters wifi password
               e.preventDefault();
             } else {
               return $scope.newResource;
@@ -43,28 +46,33 @@ function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicLi
     });
 
     myPopup.then(res => {
-      if(!res){
-        return
+      if (!res) {
+        return;
       }
 
+      $ionicLoading.show();
+      var savePromise;
       if(res.id){
-        res.save()
+        savePromise = res.save()
         .then(response => {
             this.resourceTypes = _.map(this.resourceTypes, r => r.id == response.id ? response : r );
-        })
+        });
       } else {
-        DataService.getResourceTypes(this.shop.id)
+        savePromise = DataService.getResourceTypes(this.shop.id)
         .post(res)
         .then(response => {
           this.resourceTypes.push(response)
-        })
+        });
       }
+
+      // Handle error and hide loader
+      savePromise
+      .catch((error) => {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      })
+      .finally(() => { $ionicLoading.hide() });
     });
-
-
   }
-
-
 
   /*
   this.dropService = service => {
@@ -86,10 +94,6 @@ function ResourceTypesCtrl (Entities, DataService, $ionicPopup, $scope, $ionicLi
    });
   }
   */
-
-
-
-
 }
 
 

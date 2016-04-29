@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ShopSpecialHoursCtrl', ShopSpecialHoursCtrl);
 
-function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager) {
+function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ionicPopup, initialLoaderManager, notifyManager, HttpUtils) {
 
   let restangularItems = {};
 
@@ -74,7 +74,11 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
       r.save()
       .then((savedRange)=>{
 
+      })
+      .catch((error) => {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
+
     } else {
       DataService.getShopSpecialWeekWorkingHours(this.shop.id)
         .post({
@@ -90,6 +94,9 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
             addRangeToController(savedRange);
 
         })
+        .catch((error) => {
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
+        });
     }
   }
 
@@ -123,6 +130,9 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
         .setRanges((this.byMonthAndDate[yearmonth] || {}) [r.date] || []);
 
        })
+       .catch((error) => {
+         notifyManager.error(HttpUtils.makeErrorMessage(error));
+       });
 
 
      } else {

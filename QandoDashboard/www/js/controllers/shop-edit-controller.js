@@ -2,7 +2,7 @@
 
 angular.module('app').controller('ShopEditCtrl', ShopEditCtrl);
 
-function ShopEditCtrl($scope, Entities, DataService, $timeout, $state, initialLoaderManager) {
+function ShopEditCtrl($scope, Entities, DataService, $state, $ionicLoading, initialLoaderManager, notifyManager, HttpUtils) {
   var _this = this;
 
   this.serverErrors = {};
@@ -13,12 +13,19 @@ function ShopEditCtrl($scope, Entities, DataService, $timeout, $state, initialLo
   });
 
   this.updateShop = function () {
+    $ionicLoading.show();
     _this.shop.save().then(function (savedShop) {
       _this.serverErrors = {};
       Entities.setCurrentShop(savedShop);
-      $state.go("app.logged.shop", { shopId: savedShop.id });
+      $state.go('app.logged.shop', { shopId: savedShop.id });
     }).catch(function (error) {
-      _this.serverErrors.params = error.data;
+      if (error.status === 400) {
+        _this.serverErrors.params = error.data;
+      } else {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      }
+    }).finally(function () {
+      $ionicLoading.hide();
     });
   };
 }

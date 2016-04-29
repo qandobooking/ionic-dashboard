@@ -1,7 +1,7 @@
 angular.module('app')
 .controller('ShopClosingDaysCtrl', ShopClosingDaysCtrl);
 
-function ShopClosingDaysCtrl (Entities, DataService, initialLoaderManager) {
+function ShopClosingDaysCtrl (Entities, DataService, initialLoaderManager, notifyManager, HttpUtils) {
 
   var restangularItems = {};
 
@@ -23,21 +23,27 @@ function ShopClosingDaysCtrl (Entities, DataService, initialLoaderManager) {
   ));
 
   this.onDayToggled = (d, selected) => {
-    let date = d.format("YYYY-MM-DD");
+    let date = d.format('YYYY-MM-DD');
     if (selected) {
-      const item = { fixed : true, date : date }
+      const item = { date, fixed: true };
       DataService
       .getShopClosingDays(this.shop.id)
       .post(item)
       .then(savedItem => {
         restangularItems[date] = savedItem;
       })
+      .catch((error) => {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      });
     } else {
       const oldItem = restangularItems[date];
       oldItem
       .remove()
       .then(() => {
-        delete restangularItems[date]
+        delete restangularItems[date];
+      })
+      .catch((error) => {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }
   };

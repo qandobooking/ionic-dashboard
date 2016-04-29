@@ -2,9 +2,10 @@
 
 angular.module('app').controller('ServiceCtrl', ServiceCtrl);
 
-function ServiceCtrl(Entities, DataService, $stateParams, initialLoaderManager, $timeout) {
+function ServiceCtrl(Entities, DataService, $state, $stateParams, initialLoaderManager, $ionicLoading, notifyManager, HttpUtils) {
   var _this = this;
 
+  this.serverErrors = {};
   this.loader = initialLoaderManager.makeLoader(function () {
     return Entities.getShop().then(function (s) {
       _this.shop = s;
@@ -32,8 +33,18 @@ function ServiceCtrl(Entities, DataService, $stateParams, initialLoaderManager, 
   this.saveService = function () {
     var newServiceForPut = Object.assign({}, _this.service, { resource_type: _this.service.resource_type.id });
 
+    $ionicLoading.show();
     DataService.getSimpleServices(_this.shop.id).one($stateParams.serviceId).customPUT(newServiceForPut).then(function () {
-      //$state.go('app.logged.services');
+      _this.serverErrors = {};
+      $state.go('app.logged.services');
+    }).catch(function (error) {
+      if (error.status === 400) {
+        _this.serverErrors.params = error.data;
+      } else {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      }
+    }).finally(function () {
+      $ionicLoading.hide();
     });
   };
 
