@@ -2,7 +2,7 @@
 
   <ion-nav-buttons side="right">
     <button class="button button-clear"
-      ui-sref="app.logged.add-service">Aggiungi</button>    
+      ui-sref="app.logged.add-service">Aggiungi</button>
   </ion-nav-buttons>
 
   <ion-content class="">
@@ -11,6 +11,12 @@
         {{ service.name }}
         <p>
         <span class="positive">Durata</span>: {{ service.calculated_duration }}
+        </p>
+        <p>
+        <span class="positive">Preavviso di prenotazione</span>: {{ service.min_booking_time }}
+        </p>
+        <p>
+        <span class="positive">Anticipo minimo di conferma</span>: {{ service.min_confirm_time }}
         </p>
         <!--<button class="button button-positive button-clear" ui-sref="app.logged.service-detail({ serviceId:service.id })">
           <i class="icon ion-chevron-right"></i>

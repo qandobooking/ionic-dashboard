@@ -32,29 +32,73 @@
         </validate-errors>
         </span>
 
-        
-
         <span validate-field="service_duration">
-        
         <validate-label label-as-div class="item item-input item-button-right">
-          
           <span class="input-label">Durata</span>
           <input type="text"  style="background-color:#fff"
-                 name="service_duration" 
+                 name="service_duration"
+                 input-time
                  ng-model="ServiceCtrl.service.service_duration"
                  required readonly/>
-          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker 
-                 time ng-model="ServiceCtrl.serviceTime" ng-change="ServiceCtrl.setServiceDuration()"
-                 >
+          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker
+                 time ng-model="ServiceCtrl.service.service_duration">
           </button>
-          
         </validate-label>
         <validate-errors >
         </validate-errors>
-        
         </span>
 
-        
+       <div class="item item-toggle">
+         Eredita preavviso di prenotazione da shop
+        <label class="toggle">
+           <input type="checkbox" ng-model="ServiceCtrl.inheritMinBookingTime">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+        </label>
+       </div>
+
+        <span validate-field="min_booking_time" ng-if="!ServiceCtrl.inheritMinBookingTime">
+        <validate-label label-as-div class="item item-input item-button-right">
+          <span class="input-label">Preavviso di prenotazione</span>
+          <input type="text"  style="background-color:#fff"
+                 name="min_booking_time"
+                 input-time
+                 ng-model="ServiceCtrl.service.min_booking_time"
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker
+                 time ng-model="ServiceCtrl.service.min_booking_time">
+          </button>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+       <div class="item item-toggle">
+         Eredita anticipo minimo di conferma da shop
+        <label class="toggle">
+           <input type="checkbox" ng-model="ServiceCtrl.inheritMinConfirmTime">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+        </label>
+       </div>
+
+        <span validate-field="min_confirm_time" ng-if="!ServiceCtrl.inheritMinConfirmTime">
+        <validate-label label-as-div class="item item-input item-button-right">
+          <span class="input-label">Anticipo minimo di conferma</span>
+          <input type="text"  style="background-color:#fff"
+                 name="min_confirm_time"
+                 input-time
+                 ng-model="ServiceCtrl.service.min_confirm_time"
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker
+                 time ng-model="ServiceCtrl.service.min_confirm_time">
+          </button>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
 
         <div class="item item-with-button">
           <button class="button button-block icon button-balanced"
