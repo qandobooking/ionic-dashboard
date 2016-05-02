@@ -8,13 +8,19 @@ function ShopEditCtrl($scope, Entities, DataService, $state, $ionicLoading, init
   this.serverErrors = {};
   this.loader = initialLoaderManager.makeLoader(function () {
     return Entities.getShop().then(function (s) {
-      _this.shop = s.clone();
+      var shop = s.clone();
+      shop.min_booking_time = moment(shop.min_booking_time, 'HH:mm:ss').toDate();
+      shop.min_confirm_time = moment(shop.min_confirm_time, 'HH:mm:ss').toDate();
+      _this.shop = shop;
     });
   });
 
   this.updateShop = function () {
+    var shop = _this.shop.clone();
+    shop.min_booking_time = moment(new Date(_this.shop.min_booking_time)).format('HH:mm:ss');
+    shop.min_confirm_time = moment(new Date(_this.shop.min_confirm_time)).format('HH:mm:ss');
     $ionicLoading.show();
-    _this.shop.save().then(function (savedShop) {
+    shop.save().then(function (savedShop) {
       _this.serverErrors = {};
       Entities.setCurrentShop(savedShop);
       $state.go('app.logged.shop', { shopId: savedShop.id });

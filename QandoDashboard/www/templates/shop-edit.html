@@ -30,6 +30,41 @@
         </validate-errors>
         </span>
 
+
+        <span validate-field="min_booking_time">
+        <validate-label label-as-div class="item item-input item-button-right">
+          <span class="input-label">Preavviso di prenotazione</span>
+          <input type="text"  style="background-color:#fff"
+                 name="min_booking_time"
+                 input-time
+                 ng-model="ShopEditCtrl.shop.min_booking_time"
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button"
+                  ion-datetime-picker time
+                  ng-model="ShopEditCtrl.shop.min_booking_time">
+          </button>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
+        <span validate-field="min_confirm_time">
+        <validate-label label-as-div class="item item-input item-button-right">
+          <span class="input-label">Anticipo minimo di conferma</span>
+          <input type="text"  style="background-color:#fff"
+                 name="min_confirm_time"
+                 input-time
+                 ng-model="ShopEditCtrl.shop.min_confirm_time"
+                 required readonly/>
+          <button class="button button-positive ion-ios-clock" type="button"
+                  ion-datetime-picker time
+                  ng-model="ShopEditCtrl.shop.min_confirm_time">
+          </button>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
+
         <div class="item item-with-button">
           <button class="button button-block icon button-balanced"
                   ng-disabled="form.$invalid"
