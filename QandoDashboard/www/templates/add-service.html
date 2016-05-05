@@ -55,6 +55,17 @@
         </span>
 
         
+        <span validate-field="service_description">
+        <validate-label class="item item-input">
+          <span class="input-label">Descrizione</span>
+          <textarea name="service_description"
+            rows="3"
+            ng-model="AddServiceCtrl.newService.service_description">
+          </textarea>
+        </validate-label>
+        <validate-errors >
+        </validate-errors>
+        </span>
 
         <div class="item item-with-button">
           <button class="button button-block icon button-balanced"

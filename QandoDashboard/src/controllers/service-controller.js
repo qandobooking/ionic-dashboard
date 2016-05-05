@@ -25,6 +25,7 @@ function ServiceCtrl (Entities, DataService, $state, $stateParams, initialLoader
         .then(service => {
           this.service = {
             service_name: service.name,
+            service_description: service.description,
             resource_type: _.find(this.resourceTypes, resource => resource.id == service.recipe_items[0].resource_type),
             service_duration: moment(service.calculated_duration, 'HH:mm:ss').toDate(),
             min_booking_time: service.service_min_booking_time

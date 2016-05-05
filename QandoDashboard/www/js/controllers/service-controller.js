@@ -19,6 +19,7 @@ function ServiceCtrl(Entities, DataService, $state, $stateParams, initialLoaderM
         return DataService.getServices(s.id).one($stateParams.serviceId).get().then(function (service) {
           _this.service = {
             service_name: service.name,
+            service_description: service.description,
             resource_type: _.find(_this.resourceTypes, function (resource) {
               return resource.id == service.recipe_items[0].resource_type;
             }),
