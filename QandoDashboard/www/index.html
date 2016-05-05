@@ -92,7 +92,16 @@
     
   </head>
 
-  <body ng-app="app">
-    <ion-nav-view></ion-nav-view>
+  <body ng-app="app" ng-controller="AppCtrl as AppCtrl">
+    <div ng-if="!entitiesBootstrapError">
+        <ion-nav-view></ion-nav-view>
+    </div>
+    <div ng-if="entitiesBootstrapError">
+        <div class="item item-body text-center">
+            <h2>Error</h2>
+            <br>
+            <button class="button button-assertive" ng-click="AppCtrl.retryBootstrap()">Retry</button>
+        </div>
+    </div>
   </body>
 </html>

@@ -102,7 +102,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
       url: '/app',
       abstract: true,
       templateUrl : 'templates/app.html',
-      controller: 'AppCtrl as AppCtrl',
+      //controller: 'AppCtrl as AppCtrl',
     })
 
     .state('app.login', {

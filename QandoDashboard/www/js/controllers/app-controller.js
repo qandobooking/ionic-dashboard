@@ -9,6 +9,7 @@ function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, 
   this.logged = function () {
     return $auth.isAuthenticated();
   };
+  //$rootScope.entitiesBootstrapError = true;
 
   $rootScope.$on('Entities:shopChanged', function (evt, shop) {
     _this.shop = shop;
@@ -17,6 +18,23 @@ function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, 
   $rootScope.$on('Entities:userChanged', function (evt, user) {
     _this.user = user;
   });
+
+  $rootScope.$on('Entities:loadUserError', function (evt, error) {
+    $rootScope.entitiesBootstrapError = error;
+    console.error(1, error);
+  });
+
+  $rootScope.$on('Entities:loadShopError', function (evt, error) {
+    $rootScope.entitiesBootstrapError = error;
+  });
+
+  $rootScope.$on('Entities:bootstrapStart', function (evt) {
+    $rootScope.entitiesBootstrapError = null;
+  });
+
+  this.retryBootstrap = function () {
+    Entities.bootstrap();
+  };
 
   this.logout = function () {
     $auth.logout();

@@ -28,8 +28,13 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
       DataService.me
       .get()
       .then(u => {
-          user.resolve(u);
-          $rootScope.$broadcast('Entities:userChanged', u)
+        user.resolve(u);
+        $rootScope.$broadcast('Entities:userChanged', u);
+      })
+      .catch(err => {
+        if(err.status === 500 || err.status <= 0){
+          $rootScope.$broadcast('Entities:loadUserError', err);
+        }
       })
     }
 
@@ -38,8 +43,14 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
       DataService.shops.one(shopId)
       .get()
       .then(s => {
-          shop.resolve(s);
-          $rootScope.$broadcast('Entities:shopChanged', s)
+        shop.resolve(s);
+        $rootScope.$broadcast('Entities:shopChanged', s);
+      })
+      .catch(err => {
+        if(err.status === 404){
+          //$rootScope.$broadcast('Entities:loadShopError', err);
+          shop = $q.defer();
+        }
       })
     };
 
@@ -51,6 +62,8 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
 
     
     svc.bootstrap = () => {
+        $rootScope.$broadcast('Entities:bootstrapStart') 
+        
         if ($auth.isAuthenticated()) {
             svc.loadCurrentUser()
         }
@@ -60,8 +73,7 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
             svc.loadCurrentShop(shopId)
         }
         
-    }
- 
+    };
     
 
 

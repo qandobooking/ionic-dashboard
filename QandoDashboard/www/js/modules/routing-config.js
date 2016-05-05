@@ -89,9 +89,9 @@
     $stateProvider.state('app', {
       url: '/app',
       abstract: true,
-      templateUrl: 'templates/app.html',
-      controller: 'AppCtrl as AppCtrl'
-    }).state('app.login', {
+      templateUrl: 'templates/app.html'
+    }). //controller: 'AppCtrl as AppCtrl',
+    state('app.login', {
       url: '/login',
       templateUrl: 'templates/login.html',
       controller: 'LoginCtrl as LoginCtrl',
