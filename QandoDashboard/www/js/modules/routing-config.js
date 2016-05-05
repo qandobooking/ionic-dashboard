@@ -21,15 +21,22 @@
       $state.go("app.logged.home");
     }
 
+    $rootScope.$on("Entities:invalidShop", function () {
+      $state.go("app.logged.choose-shop");
+    });
+
+    $rootScope.$on("unauthorized", function () {
+      $state.go("app.login");
+    });
+
     /*
     function userLogged(){
-        
-        $ionicHistory.nextViewOptions({
+         $ionicHistory.nextViewOptions({
             historyRoot : true,
             disableBack : true
         })
         if($rootScope.lastDeniedState){
-             $state.go($rootScope.lastDeniedState.name, 
+             $state.go($rootScope.lastDeniedState.name,
                 $rootScope.lastDeniedStateParams);
              $rootScope.lastDeniedState = null;
             $rootScope.lastDeniedStateParams = null;
@@ -46,7 +53,6 @@
     */
 
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams, options) {
-      console.log($auth.isAuthenticated());
       if (toState.data) {
         if (toState.data.auth && !$auth.isAuthenticated()) {
           event.preventDefault();
@@ -73,8 +79,8 @@
         $rootScope.currentState = toState;
         $rootScope.currentStateParams = toParams;
     });
-     $rootScope.$on('$stateChangePermissionDenied', 
-        function(event, toState, toParams, options) { 
+     $rootScope.$on('$stateChangePermissionDenied',
+        function(event, toState, toParams, options) {
             $rootScope.lastDeniedState = toState;
             $rootScope.lastDeniedStateParams = toParams;
             $rootScope.lastDeniedStateOptions = options;

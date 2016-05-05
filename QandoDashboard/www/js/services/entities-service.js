@@ -45,8 +45,10 @@
         shop.resolve(s);
         $rootScope.$broadcast('Entities:shopChanged', s);
       }).catch(function (err) {
-        if (err.status === 404) {
-          //$rootScope.$broadcast('Entities:loadShopError', err);
+        if (err.status === 500 || err.status <= 0) {
+          $rootScope.$broadcast('Entities:loadShopError', err);
+        } else if (err.status === 404) {
+          $rootScope.$broadcast('Entities:invalidShop', err);
           shop = $q.defer();
         }
       });

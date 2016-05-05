@@ -7,7 +7,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 .run(function($rootScope, $state, $ionicHistory, Preferences, $auth){
 
     //perform redirects based on login/logout here
-    
+
     $rootScope.$on("app:logoutSuccess", function(){
         $state.go("app.login");
     })
@@ -21,16 +21,24 @@ angular.module('app.routing', ['ionic', 'satellizer'])
       $state.go("app.logged.home")
     }
 
+    $rootScope.$on("Entities:invalidShop", function(){
+      $state.go("app.logged.choose-shop");
+    });
+
+    $rootScope.$on("unauthorized", function(){
+      $state.go("app.login");
+    });
+
     /*
     function userLogged(){
-        
+
         $ionicHistory.nextViewOptions({
             historyRoot : true,
             disableBack : true
         })
         if($rootScope.lastDeniedState){
 
-            $state.go($rootScope.lastDeniedState.name, 
+            $state.go($rootScope.lastDeniedState.name,
                 $rootScope.lastDeniedStateParams);
 
             $rootScope.lastDeniedState = null;
@@ -47,31 +55,30 @@ angular.module('app.routing', ['ionic', 'satellizer'])
         $rootScope.lastDeniedStateOptions = options;
     };
     */
-    
+
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams, options){
-        console.log($auth.isAuthenticated())
         if(toState.data){
           if(toState.data.auth && !$auth.isAuthenticated()){
-            event.preventDefault(); 
+            event.preventDefault();
             $state.go("app.login");
             return;
           }
 
           if(toState.data.guest && $auth.isAuthenticated()){
-            event.preventDefault(); 
+            event.preventDefault();
             $state.go("app.logged.home");
             return;
           }
 
           if(toState.data.requiresShop && !Preferences.getCurrentShopId()){
-            event.preventDefault(); 
+            event.preventDefault();
             $state.go("app.logged.choose-shop");
             return;
           }
 
         }
     });
-    
+
     /*
 
     $rootScope.$on("$stateChangeSuccess", function(evt, toState, toParams){
@@ -79,8 +86,8 @@ angular.module('app.routing', ['ionic', 'satellizer'])
         $rootScope.currentStateParams = toParams;
     });
 
-    $rootScope.$on('$stateChangePermissionDenied', 
-        function(event, toState, toParams, options) { 
+    $rootScope.$on('$stateChangePermissionDenied',
+        function(event, toState, toParams, options) {
             $rootScope.lastDeniedState = toState;
             $rootScope.lastDeniedStateParams = toParams;
             $rootScope.lastDeniedStateOptions = options;
@@ -97,7 +104,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 .config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-    
+
     .state('app', {
       url: '/app',
       abstract: true,
@@ -113,7 +120,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
         guest : true
       }
     })
-    
+
     .state('app.logged', {
       url: '/logged',
       templateUrl: 'templates/menu.html',
@@ -330,7 +337,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
         var $state = $injector.get('$state');
         $state.go('app.logged.home');
     });
-     
+
 
 })
 

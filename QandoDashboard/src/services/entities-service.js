@@ -13,7 +13,7 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
     svc.getShop = () => shop.promise;
 
     $rootScope.$on("app:loginSuccess", (evt, data) => {
-      svc.loadCurrentUser();  
+      svc.loadCurrentUser();
     });
 
     $rootScope.$on("app:logoutSuccess", (evt, data) => {
@@ -23,7 +23,7 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
       $rootScope.$broadcast('Entities:shopChanged', null)
     });
 
-    
+
     svc.loadCurrentUser = function() {
       DataService.me
       .get()
@@ -32,7 +32,7 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
         $rootScope.$broadcast('Entities:userChanged', u);
       })
       .catch(err => {
-        if(err.status === 500 || err.status <= 0){
+        if (err.status === 500 || err.status <= 0) {
           $rootScope.$broadcast('Entities:loadUserError', err);
         }
       })
@@ -47,8 +47,10 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
         $rootScope.$broadcast('Entities:shopChanged', s);
       })
       .catch(err => {
-        if(err.status === 404){
-          //$rootScope.$broadcast('Entities:loadShopError', err);
+        if (err.status === 500 || err.status <= 0) {
+          $rootScope.$broadcast('Entities:loadShopError', err);
+        } else if (err.status === 404) {
+          $rootScope.$broadcast('Entities:invalidShop', err);
           shop = $q.defer();
         }
       })
@@ -60,25 +62,25 @@ function Entities(baseServerUrl, Preferences, $q, store, $auth, DataService, $ro
       $rootScope.$broadcast('Entities:shopChanged', s)
     }
 
-    
+
     svc.bootstrap = () => {
-        $rootScope.$broadcast('Entities:bootstrapStart') 
-        
+        $rootScope.$broadcast('Entities:bootstrapStart')
+
         if ($auth.isAuthenticated()) {
             svc.loadCurrentUser()
         }
-        
+
         const shopId = Preferences.getCurrentShopId();
         if (shopId) {
             svc.loadCurrentShop(shopId)
         }
-        
+
     };
-    
 
 
 
-    return svc;    
+
+    return svc;
 }
 
 

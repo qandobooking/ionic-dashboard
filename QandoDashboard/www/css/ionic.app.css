@@ -9789,6 +9789,9 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important; }
+
 g.period .range {
   fill: #387ef5;
   opacity: 1;

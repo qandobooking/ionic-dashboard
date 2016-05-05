@@ -21,6 +21,10 @@ $ionicons-font-path: "../lib/ionic/release/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 g.period .range{
     fill: $positive;
     opacity : 1;

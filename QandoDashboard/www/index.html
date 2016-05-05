@@ -5,24 +5,24 @@
 
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
-    
+
     <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
-    
+
     <link href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css" rel="stylesheet">
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/notify.css" rel="stylesheet">
 
     <script src="lib/babel-polyfill/browser-polyfill.js"></script>
-    
+
     <!-- ionic/angularjs js -->
-    
+
     <script src="lib/ionic/release/js/ionic.bundle.js"></script>
     <script src="lib/angular-messages/angular-messages.min.js"></script>
     <script src="lib/lodash/dist/lodash.min.js"></script>
     <script src="lib/restangular/dist/restangular.min.js"></script>
     <script src="lib/a0-angular-storage/dist/angular-storage.min.js"></script>
-    
+
     <script src="lib/satellizer/satellizer.min.js"></script>
     <script src="lib/d3/d3.min.js"></script>
     <script src="lib/moment/min/moment.min.js"></script>
@@ -35,24 +35,24 @@
 
     <!-- config -->
     <script src="js/modules/routing-config.js"></script>
-    
+
     <script src="js/modules/constants-config.js"></script>
     <script src="js/modules/network-config.js"></script>
-    
+
     <script src="js/modules/satellizer-config.js"></script>
-    
+
 
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/services/preferences-service.js"></script>
-    <script src="js/services/entities-service.js"></script>  
+    <script src="js/services/entities-service.js"></script>
     <script src="js/services/time-utils-service.js"></script>
     <script src="js/services/http-utils-service.js"></script>
     <script src="js/services/data-service.js"></script>
     <script src="js/controllers/app-controller.js"></script>
     <script src="js/controllers/login-controller.js"></script>
-    
+
     <script src="js/controllers/shop-controller.js"></script>
     <script src="js/controllers/shop-edit-controller.js"></script>
     <script src="js/controllers/shop-weekhours-controller.js"></script>
@@ -79,7 +79,7 @@
     <script src="js/lib/validate-form/directives/validate-label.js"></script>
     <script src="js/lib/validate-form/directives/validate-field.js"></script>
     <script src="js/lib/validate-form/directives/validate-errors.js"></script>
-    
+
     <script src="js/directives/year-grid.js"></script>
 
     <script src="js/lib/initial-loader/initial-loader.js"></script>
@@ -89,18 +89,18 @@
     <script src="js/lib/notify/notify.js"></script>
     <script src="js/lib/notify/services/notify-manager.js"></script>
 
-    
+
   </head>
 
-  <body ng-app="app" ng-controller="AppCtrl as AppCtrl">
+  <body ng-app="app" ng-controller="AppCtrl as AppCtrl" ng-cloak>
     <div ng-if="!entitiesBootstrapError">
         <ion-nav-view></ion-nav-view>
     </div>
     <div ng-if="entitiesBootstrapError">
         <div class="item item-body text-center">
-            <h2>Error</h2>
-            <br>
-            <button class="button button-assertive" ng-click="AppCtrl.retryBootstrap()">Retry</button>
+            <h2>{{ entitiesBootstrapError }}</h2>
+            <br />
+            <button class="button button-assertive" ng-click="AppCtrl.retryBootstrap()">Riprova</button>
         </div>
     </div>
   </body>

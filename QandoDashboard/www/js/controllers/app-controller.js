@@ -2,14 +2,14 @@
 
 angular.module('app').controller('AppCtrl', AppCtrl);
 
-function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, Entities, Preferences) {
+function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, Entities, Preferences, HttpUtils, $state) {
   var _this = this;
 
   this.something = "Hello world";
   this.logged = function () {
     return $auth.isAuthenticated();
   };
-  //$rootScope.entitiesBootstrapError = true;
+  $rootScope.entitiesBootstrapError = null;
 
   $rootScope.$on('Entities:shopChanged', function (evt, shop) {
     _this.shop = shop;
@@ -20,12 +20,20 @@ function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, 
   });
 
   $rootScope.$on('Entities:loadUserError', function (evt, error) {
-    $rootScope.entitiesBootstrapError = error;
-    console.error(1, error);
+    $rootScope.entitiesBootstrapError = HttpUtils.makeErrorMessage(error);
   });
 
   $rootScope.$on('Entities:loadShopError', function (evt, error) {
-    $rootScope.entitiesBootstrapError = error;
+    $rootScope.entitiesBootstrapError = HttpUtils.makeErrorMessage(error);
+  });
+
+  $rootScope.$on('Entities:invalidShop', function (evt, error) {
+    Preferences.clearPreferences();
+  });
+
+  $rootScope.$on('unauthorized', function (evt, error) {
+    $auth.logout();
+    Preferences.clearPreferences();
   });
 
   $rootScope.$on('Entities:bootstrapStart', function (evt) {
@@ -33,7 +41,7 @@ function AppCtrl($scope, $ionicModal, $timeout, DataService, $auth, $rootScope, 
   });
 
   this.retryBootstrap = function () {
-    Entities.bootstrap();
+    return Entities.bootstrap();
   };
 
   this.logout = function () {
