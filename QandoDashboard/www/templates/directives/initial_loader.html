@@ -2,7 +2,9 @@
 
   <ion-content class="has-header" ng-class="contentClasses" scroll="false">
       <div ng-if="loader.loading" class="loader">
-          <ion-spinner class="spinner-positive"></ion-spinner>
+          <div class="item text-center">
+            <ion-spinner class="spinner-positive"></ion-spinner>
+          </div>
       </div>
       <div ng-if="loader.error" class="text-center padding">
           <h3>

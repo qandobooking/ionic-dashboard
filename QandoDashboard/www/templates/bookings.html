@@ -18,7 +18,7 @@
   <div initial-loader="BookingsCtrl.loader" content-classes="has-subheader">
     <ion-content class="has-header has-subheader">
       <ion-list>
-        <ion-item class="item" ng-repeat="booking in BookingsCtrl.bookings" ui-sref="app.logged.booking-detail({ bookingId:booking.id, bookingStatus:BookingsCtrl. bookingStatus })">
+        <ion-item class="item" ng-repeat="booking in BookingsCtrl.bookings" ui-sref="app.logged.booking-detail({ bookingId:booking.id, bookingStatus:BookingsCtrl.bookingStatus })">
           {{ booking.service.name }}
           <p>
             {{ booking.user.email }} <br>

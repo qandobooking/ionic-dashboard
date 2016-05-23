@@ -112,9 +112,11 @@
       }
     }).state('app.logged.home', {
       url: '/home',
+      cached: false,
       views: {
         'menuContent': {
-          templateUrl: 'templates/home.html'
+          templateUrl: 'templates/home.html',
+          controller: 'HomeCtrl as HomeCtrl'
         }
       },
       data: {
