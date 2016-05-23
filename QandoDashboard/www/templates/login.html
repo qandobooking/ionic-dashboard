@@ -1,12 +1,9 @@
 <form ng-submit="LoginCtrl.login()">
 <ion-view view-title="Login" hide-nav-bar="true" class="dark-view">
   <ion-content>
-    
-    
   <div class="item item-positive text-center">
     Qando
   </div>
-      
   <label class="item item-input">
       <span class="input-label">Email</span>
       <input type="email" ng-model="LoginCtrl.credentials.email" class="white-text">
@@ -15,13 +12,16 @@
     <span class="input-label">Password</span>
     <input type="password" ng-model="LoginCtrl.credentials.password" class="white-text">
   </label>
-  
+
   <div class="item item-body">
     <button class="button button-block button-positive" type="submit" style="margin:0">Log in</button>
   </div>
-    
-    
+
+  <div class="item item-body assertive" ng-if="LoginCtrl.invalidCredentials">
+    Credenziali errate
+  </div>
+
   </ion-content>
-  
+
 </ion-view>
 </form>

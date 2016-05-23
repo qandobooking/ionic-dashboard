@@ -1,30 +1,36 @@
 angular.module('app')
 .controller('LoginCtrl', LoginCtrl);
 
-function LoginCtrl ($auth, $rootScope) {
+function LoginCtrl ($auth, $rootScope, notifyManager, HttpUtils, $ionicLoading) {
 
+  this.credentials = {
+    email: null,
+    password: null
+  };
 
-    this.credentials = { email:'bianchimro@gmail.com', password:'admin123'};
-    this.login = () => {
-        $auth.login(this.credentials)
-        .then(function(response) {
-            // Redirect user here after a successful log in.
-            $rootScope.$broadcast("app:loginSuccess", response);
-            console.log("login success", response);
-            
-        })
-        .catch(function(response) {
-            // Handle errors here, such as displaying a notification
-            // for invalid email and/or password.
-            $rootScope.$broadcast("app:loginError", response);
-            console.error("login error", response);
-            
-        });
+  // Showing user error
+  this.invalidCredentials = false;
 
-    }
+  this.login = () => {
+    // Show loader and hide the credentials error
+    this.invalidCredentials = false;
+    $ionicLoading.show();
 
-  
-  
+    $auth.login(this.credentials)
+    .then((response) => {
+      $rootScope.$broadcast("app:loginSuccess", response);
+    })
+    .catch((error) => {
+      if (error.status === 400) {
+        this.invalidCredentials = true;
+      } else {
+        notifyManager.error(HttpUtils.makeErrorMessage(error));
+      }
+      $rootScope.$broadcast("app:loginError", error);
+    })
+    .finally(() => {
+      $ionicLoading.hide();
+    });
+  };
+
 }
-
-
