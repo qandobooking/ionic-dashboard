@@ -131,7 +131,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.home', {
       url: '/home',
-      cached : false,
+      cache : false,
       views: {
         'menuContent': {
           templateUrl: 'templates/home.html',

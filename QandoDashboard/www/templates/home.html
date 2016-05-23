@@ -1,5 +1,9 @@
 <ion-view view-title="Qando" initial-loader="HomeCtrl.loader">
   <ion-content>
+  <ion-refresher
+    pulling-text="Aggiorna statistiche shop..."
+    on-refresh="HomeCtrl.refresh()">
+  </ion-refresher>
     <div class="row responsive-sm">
         <div class="col">
             <div class="item item-dark text-center">
