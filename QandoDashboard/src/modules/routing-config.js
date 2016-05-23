@@ -145,6 +145,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.choose-shop', {
       url: '/choose-shop',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/choose-shop.html',
@@ -248,6 +249,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
     })
 
     .state('app.logged.add-service', {
+      cache: false,
       url: '/services/add',
       views: {
         'menuContent': {

@@ -1,77 +1,86 @@
 <ion-view view-title="Servizi" initial-loader="AddServiceCtrl.loader">
 
   <ion-content class="">
-    <form ng-submit="AddServiceCtrl.addService()"
-          class="validate-form" name="form" novalidate
-          server-errors="AddServiceCtrl.serverErrors" validate-form>
+    <div ng-if="AddServiceCtrl.resourceTypes .length > 0">
+      <form ng-submit="AddServiceCtrl.addService()"
+            class="validate-form" name="form" novalidate
+            server-errors="AddServiceCtrl.serverErrors" validate-form>
 
-        <span validate-field="service_name">
-        <validate-label class="item item-input">
-          <span class="input-label">Nome</span>
-          <input type="text"
-                 name="service_name"
-                 ng-model="AddServiceCtrl.newService.service_name"
-                 required />
-        </validate-label>
-        <validate-errors >
-        </validate-errors>
-        </span>
+          <span validate-field="service_name">
+          <validate-label class="item item-input">
+            <span class="input-label">Nome</span>
+            <input type="text"
+                   name="service_name"
+                   ng-model="AddServiceCtrl.newService.service_name"
+                   required />
+          </validate-label>
+          <validate-errors >
+          </validate-errors>
+          </span>
 
-        <span validate-field="resource_type">
-        <validate-label class="item item-input item-select">
-           <div class="input-label">
-            Tipo Risorsa
+          <span validate-field="resource_type">
+          <validate-label class="item item-input item-select">
+             <div class="input-label">
+              Tipo Risorsa
+            </div>
+            <select name="resource_type"
+                   ng-options="item as item.name for item in AddServiceCtrl.resourceTypes track by item.id"
+                   ng-model="AddServiceCtrl.newService.resource_type"
+                   required>
+            </select>
+          </validate-label>
+          <validate-errors >
+          </validate-errors>
+          </span>
+
+          <span validate-field="service_duration">
+
+          <validate-label label-as-div class="item item-input item-button-right">
+
+            <span class="input-label">Durata</span>
+            <input type="text"  style="background-color:#fff"
+                   name="service_duration"
+                   ng-model="AddServiceCtrl.newService.service_duration"
+                   required readonly/>
+            <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker
+                   time ng-model="AddServiceCtrl.serviceTime" ng-change="AddServiceCtrl.setServiceDuration()"
+                   >
+            </button>
+
+          </validate-label>
+          <validate-errors >
+          </validate-errors>
+
+          </span>
+
+
+          <span validate-field="service_description">
+          <validate-label class="item item-input">
+            <span class="input-label">Descrizione</span>
+            <textarea name="service_description"
+              rows="3"
+              ng-model="AddServiceCtrl.newService.service_description">
+            </textarea>
+          </validate-label>
+          <validate-errors >
+          </validate-errors>
+          </span>
+
+          <div class="item item-with-button">
+            <button class="button button-block icon button-balanced"
+                    ng-disabled="form.$invalid"
+                    type="submit">Salva</button>
           </div>
-          <select name="resource_type"
-                 ng-options="item as item.name for item in AddServiceCtrl.resourceTypes track by item.id"
-                 ng-model="AddServiceCtrl.newService.resource_type"
-                 required>
-          </select>
-        </validate-label>
-        <validate-errors >
-        </validate-errors>
-        </span>
-
-        
-
-        <span validate-field="service_duration">
-        
-        <validate-label label-as-div class="item item-input item-button-right">
-          
-          <span class="input-label">Durata</span>
-          <input type="text"  style="background-color:#fff"
-                 name="service_duration" 
-                 ng-model="AddServiceCtrl.newService.service_duration"
-                 required readonly/>
-          <button class="button button-positive ion-ios-clock" type="button" ion-datetime-picker 
-                 time ng-model="AddServiceCtrl.serviceTime" ng-change="AddServiceCtrl.setServiceDuration()"
-                 >
-          </button>
-          
-        </validate-label>
-        <validate-errors >
-        </validate-errors>
-        
-        </span>
-
-        
-        <span validate-field="service_description">
-        <validate-label class="item item-input">
-          <span class="input-label">Descrizione</span>
-          <textarea name="service_description"
-            rows="3"
-            ng-model="AddServiceCtrl.newService.service_description">
-          </textarea>
-        </validate-label>
-        <validate-errors >
-        </validate-errors>
-        </span>
-
-        <div class="item item-with-button">
-          <button class="button button-block icon button-balanced"
-                  ng-disabled="form.$invalid"
-                  type="submit">Salva</button>
-        </div>
-    </form>
+      </form>
+    </div>
+    <div class="text-center padding"
+         ng-if="AddServiceCtrl.resourceTypes .length == 0">
+        <h3>
+          Prima di aggiungere un serizio è necessario configurare i tipi
+          risorse
+          <i class="energized ion-alert-circled"></i>
+        </h3>
+        <button class="button button-stable" ui-sref="app.logged.resource-types">Tipi Risorse</button>
+    </div>
   </ion-content>
 </ion-view>

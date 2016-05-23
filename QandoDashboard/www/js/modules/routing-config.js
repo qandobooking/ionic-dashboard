@@ -124,6 +124,7 @@
       }
     }).state('app.logged.choose-shop', {
       url: '/choose-shop',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/choose-shop.html',
@@ -211,6 +212,7 @@
         requiresShop: true
       }
     }).state('app.logged.add-service', {
+      cache: false,
       url: '/services/add',
       views: {
         'menuContent': {
