@@ -33,18 +33,28 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
         });
 
         _this.byWeekDay = byWeekDay;
+        console.info(_this.byWeekDay);
+        _this.byWeekDayBackup = _.cloneDeep(_this.byWeekDay);
       });
     });
   });
 
   this.onRangeUpdate = function (range) {
     var restangularItem = restangularItems[range.id];
+
     if (range.id) {
-      restangularItem.start_time = range.start.format("HH:mm");
-      restangularItem.end_time = range.end.format("HH:mm");
-      restangularItem.save().catch(function (error) {
-        notifyManager.error(HttpUtils.makeErrorMessage(error));
-      });
+      (function () {
+        restangularItem.start_time = range.start.format("HH:mm");
+        restangularItem.end_time = range.end.format("HH:mm");
+        var currentByWeekDay = _.cloneDeep(_this.byWeekDay);
+        restangularItem.save().then(function (resp) {
+          _this.byWeekDayBackup = currentByWeekDay;
+        }).catch(function (error) {
+          _this.byWeekDay[range.weekday] = _.cloneDeep(_this.byWeekDayBackup[range.weekday]);
+          _this.redrawFunctions[range.weekday].setRanges(_this.byWeekDay[range.weekday]);
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
+        });
+      })();
     } else {
 
       DataService.getShopWeekWorkingHours(_this.shop.id).post({
@@ -91,6 +101,12 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
     confirmPopup.then(function (res) {
       if (res) {
         var candidate = _this.byWeekDay[day][idx];
+        if (!candidate.id) {
+          _this.byWeekDay[day].splice(idx, 1);
+          _this.redrawFunctions[day].setRanges(_this.byWeekDay[day]);
+          return;
+        }
+
         DataService.getShopWeekWorkingHours(_this.shop.id).one(candidate.id).remove().then(function () {
           _this.byWeekDay[day].splice(idx, 1);
           _this.redrawFunctions[day].setRanges(_this.byWeekDay[day]);
