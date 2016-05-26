@@ -19,13 +19,14 @@ function ShopClosingDaysCtrl(Entities, DataService, initialLoaderManager, notify
     });
   });
 
-  this.onDayToggled = function (d, selected) {
+  this.onDayToggled = function (d, selected, resetCallback) {
     var date = d.format('YYYY-MM-DD');
     if (selected) {
       var item = { date: date, fixed: true };
       DataService.getShopClosingDays(_this.shop.id).post(item).then(function (savedItem) {
         restangularItems[date] = savedItem;
       }).catch(function (error) {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     } else {
@@ -33,6 +34,7 @@ function ShopClosingDaysCtrl(Entities, DataService, initialLoaderManager, notify
       oldItem.remove().then(function () {
         delete restangularItems[date];
       }).catch(function (error) {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }

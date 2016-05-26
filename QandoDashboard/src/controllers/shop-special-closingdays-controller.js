@@ -36,7 +36,7 @@ function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entiti
     }, { location:'replace'})
   };
 
-  this.onDayToggled = (d, selected) => {
+  this.onDayToggled = (d, selected, resetCallback) => {
     let date = d.format("YYYY-MM-DD");
 
     if (selected) {
@@ -48,6 +48,7 @@ function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entiti
         restangularItems[date] = savedItem;
       })
       .catch((error) => {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     } else {
@@ -58,6 +59,7 @@ function ShopSpecialClosingDaysCtrl ($stateParams, $ionicHistory, $state, Entiti
         delete restangularItems[date]
       })
       .catch((error) => {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }

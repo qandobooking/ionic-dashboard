@@ -64,7 +64,9 @@
         var selected = dayCell.selected;
 
         var m = moment({ year: year, month: month, date: date });
-        scope.onDayToggled(m, !selected);
+        scope.onDayToggled(m, !selected, function () {
+          dayCell.selected = selected;
+        });
         // Update UI object
         dayCell.selected = !dayCell.selected;
       };

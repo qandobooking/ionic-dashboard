@@ -33,7 +33,7 @@ function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entitie
     }, { location: 'replace' });
   };
 
-  this.onDayToggled = function (d, selected) {
+  this.onDayToggled = function (d, selected, resetCallback) {
     var date = d.format("YYYY-MM-DD");
 
     if (selected) {
@@ -41,6 +41,7 @@ function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entitie
       DataService.getShopClosingDays(_this.shop.id).post(item).then(function (savedItem) {
         restangularItems[date] = savedItem;
       }).catch(function (error) {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     } else {
@@ -48,6 +49,7 @@ function ShopSpecialClosingDaysCtrl($stateParams, $ionicHistory, $state, Entitie
       oldItem.remove().then(function () {
         delete restangularItems[date];
       }).catch(function (error) {
+        resetCallback();
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     }

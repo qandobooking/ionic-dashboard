@@ -59,7 +59,9 @@
       scope.onDayCellToggled = function(dayCell) {
         const { date, month, selected } = dayCell;
         const m = moment({ year, month, date });
-        scope.onDayToggled(m, !selected);
+        scope.onDayToggled(m, !selected, ()=>{
+          dayCell.selected = selected;  
+        });
         // Update UI object
         dayCell.selected = !dayCell.selected;
       };
