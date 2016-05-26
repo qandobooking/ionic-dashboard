@@ -2,8 +2,11 @@
 
 var defaultOptions = {
   onUpdate: function onUpdate() {}, onDoubleTap: function onDoubleTap() {},
+  onEmptyClick: function onEmptyClick(r) {},
   readOnly: true,
-  minStep: 10
+  minStep: 10,
+  minDuration: 120,
+  extraArgs: {}
 };
 
 var handleWidth = 20;
@@ -20,8 +23,6 @@ function timeTableIt(el) {
       options[k] = defaultOptions[k];
     }
   });
-  console.log("opts", options);
-  //options = Object.assign({}, defaultOptions, options);
 
   var d3el = d3.select(el);
   var svg = d3el.append("svg").style("transform", "translate3d(0,0,0)");
@@ -129,12 +130,18 @@ function timeTableIt(el) {
     var dragDate = moment(xScale.invert(x));
     var mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
     var xx = moment({ hour: dragDate.hour(), minute: mins });
+
     var newx = xScale(xx);
 
     var t = d3.select(this);
     var num = t.attr('num');
 
-    var stop = false;
+    //#TODO: use this
+    //let minDelta = xScale(moment({minute:options.minDuration}));
+    if (newx > d.x + d.width) {
+      newx = d.x + d.width;
+    }
+
     _.each(computedRanges, function (rr, i2) {
       if (newx <= rr.x + rr.width && i2 != i && computedRanges[i].x >= rr.x + rr.width) {
         newx = rr.x + rr.width;
@@ -188,7 +195,10 @@ function timeTableIt(el) {
     var t = d3.select(this);
     var num = t.attr('num');
 
-    var stop = false;
+    if (newx < d.x) {
+      newx = d.x;
+    }
+
     _.each(computedRanges, function (rr, i2) {
       if (newx >= rr.x && i2 != i && computedRanges[i].x <= rr.x) {
         newx = rr.x;
@@ -229,9 +239,7 @@ function timeTableIt(el) {
     xScale.range([xPadding, w - xPadding]);
 
     oneHour = xScale(moment({ minutes: 30 }).toDate());
-
     computedRanges = _.map(options.ranges, prepareRange);
-
     var emptyRanges = [];
 
     timeAxis.call(xAxis);
@@ -263,8 +271,13 @@ function timeTableIt(el) {
         emptyRanges = _.filter(emptyRanges, function (r) {
           return r.end.diff(r.start, 'hours') >= 1;
         });
+        if (computedRanges.length == 0) {
+          emptyRanges.push({
+            start: moment({ hour: 0 }),
+            end: moment({ hour: 24 })
+          });
+        }
         emptyRanges = _.map(emptyRanges, prepareRange);
-        console.debug("wxsss", emptyRanges);
       })();
     }
 
@@ -276,12 +289,12 @@ function timeTableIt(el) {
 
     var enterAddG = periodAddContainer.enter().append('g').attr('class', 'period-add');
 
-    enterAddG.append('rect').style('fill', "green").attr('height', 50).attr("x", function (d, i) {
+    enterAddG.append('rect').attr('height', 50).attr("x", function (d, i) {
       return d.x;
     }).attr('width', function (d, i) {
       return d.width;
     }).on('click', function (d) {
-      console.error("d", d);
+      options.onEmptyClick(d, options.extraArgs);
     });
 
     rangesContainer.selectAll('.period-add').attr("x", function (d, i) {

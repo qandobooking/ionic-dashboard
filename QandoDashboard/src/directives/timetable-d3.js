@@ -1,7 +1,10 @@
 const defaultOptions = { 
   onUpdate : () => {},  onDoubleTap : () => {},
+  onEmptyClick: (r) => { },
   readOnly : true,
-  minStep : 10
+  minStep : 10,
+  minDuration : 120,
+  extraArgs : {}
 }
 
 const handleWidth = 20;
@@ -19,9 +22,6 @@ function timeTableIt(el, options={}){
       options[k] = defaultOptions[k]
     }
   })
-  console.log("opts", options)
-  //options = Object.assign({}, defaultOptions, options);
-  
   
   const d3el = d3.select(el)
   const svg = d3el
@@ -153,15 +153,23 @@ function timeTableIt(el, options={}){
     x = Math.max(x, xPadding);
     x = Math.min(x, w - xPadding);
 
+    
+
     let dragDate = moment(xScale.invert(x))
     let mins = Math.round(dragDate.minute() / options.minStep) * options.minStep;
     let xx = moment({hour:dragDate.hour(), minute:mins})
+
     let newx = xScale(xx);
     
     const t = d3.select(this);
     const num = t.attr('num');
-
-    let stop = false;
+    
+    //#TODO: use this
+    //let minDelta = xScale(moment({minute:options.minDuration}));
+    if(newx > d.x + d.width) {
+      newx = d.x + d.width;
+    }
+    
     _.each(computedRanges, (rr, i2) => {
       if((newx <= rr.x + rr.width && i2 != i && computedRanges[i].x >= rr.x + rr.width)){
         newx = rr.x + rr.width;
@@ -227,8 +235,12 @@ function timeTableIt(el, options={}){
     
     const t = d3.select(this);
     const num = t.attr('num');
+
+    if(newx < d.x) {
+      newx = d.x;
+    }
     
-    let stop = false;
+    
     _.each(computedRanges, (rr, i2) => {
       if(newx >= rr.x && i2 != i && computedRanges[i].x <= rr.x){
         newx = rr.x;
@@ -279,12 +291,8 @@ function timeTableIt(el, options={}){
     xScale 
     .range([ xPadding, w-xPadding ]);
 
-    oneHour = xScale(moment({minutes:30}).toDate())
-
-    
-
-    computedRanges = _.map(options.ranges, prepareRange)
-
+    oneHour = xScale(moment({minutes:30}).toDate());
+    computedRanges = _.map(options.ranges, prepareRange);
     let emptyRanges = [];
     
     timeAxis
@@ -305,26 +313,30 @@ function timeTableIt(el, options={}){
 
     if(!options.readOnly){
       let sortedComputedRanges = _.sortBy(computedRanges, item => item.start.toDate()) ;
-    _.each(sortedComputedRanges, (r, idx) => {
-      if (idx == 0){
-        emptyRanges.push({ start : moment({hour:0}), end:r.start });
-        
+      _.each(sortedComputedRanges, (r, idx) => {
+        if (idx == 0){
+          emptyRanges.push({ start : moment({hour:0}), end:r.start });
+          
+        }
+
+        if(idx > 0 ) {
+          emptyRanges.push({ start:sortedComputedRanges[idx-1].end,  end:r.start })
+        }
+
+        if (idx == sortedComputedRanges.length -1){
+         emptyRanges.push({ start:r.end, end:moment({hour:24})}) 
+        }
+
+      })
+
+      emptyRanges = _.filter(emptyRanges, r =>  r.end.diff(r.start, 'hours') >= 1);
+      if(computedRanges.length == 0){
+        emptyRanges.push({
+          start:moment({ hour:0 }),
+          end:moment({ hour:24})
+        })
       }
-
-      if(idx > 0 ) {
-        emptyRanges.push({ start:sortedComputedRanges[idx-1].end,  end:r.start })
-      }
-
-      if (idx == sortedComputedRanges.length -1){
-       emptyRanges.push({ start:r.end, end:moment({hour:24})}) 
-      }
-
-    })
-
-    emptyRanges = _.filter(emptyRanges, r =>  r.end.diff(r.start, 'hours') >= 1);
-    emptyRanges = _.map(emptyRanges, prepareRange);
-    console.debug("wxsss", emptyRanges)
-
+      emptyRanges = _.map(emptyRanges, prepareRange);
 
     }
 
@@ -344,7 +356,6 @@ function timeTableIt(el, options={}){
 
     enterAddG
     .append('rect')
-    .style('fill', "green")
     .attr('height', 50)
     .attr("x", function(d, i){
        return d.x;
@@ -353,7 +364,7 @@ function timeTableIt(el, options={}){
       return d.width;
     })
     .on('click', function(d){
-      console.error("d", d)
+      options.onEmptyClick(d, options.extraArgs);
     })
 
 

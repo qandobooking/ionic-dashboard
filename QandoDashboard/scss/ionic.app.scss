@@ -49,6 +49,11 @@ g.period .handle{
     opacity :1;
 }
 
+
+.period-add{
+  fill: lighten($balanced, 20%);
+}
+
 .timeAxis line,
 .timeAxis path {
   fill: none;

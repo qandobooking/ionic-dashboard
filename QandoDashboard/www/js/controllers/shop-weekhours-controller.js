@@ -71,15 +71,17 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
     }
   };
 
-  this.addToDay = function (day) {
+  this.addNewRange = function (range, extraArgs) {
+    var day = extraArgs.day;
+
     var newRange = {
       weekday: day,
-      start: moment({ hour: 0 }),
-      end: moment({ hour: 1 })
+      start: range.start,
+      end: range.start.clone().add(1, 'hour')
     };
 
-    this.byWeekDay[day].push(newRange);
-    this.redrawFunctions[day].setRanges(this.byWeekDay[day]);
+    _this.byWeekDay[day].push(newRange);
+    _this.redrawFunctions[day].setRanges(_this.byWeekDay[day]);
   };
 
   this.toggleEdit = function () {

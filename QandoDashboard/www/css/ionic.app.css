@@ -9808,6 +9808,9 @@ g.period .handle {
   fill: #222;
   opacity: 1; }
 
+.period-add {
+  fill: #85e19f; }
+
 .timeAxis line,
 .timeAxis path {
   fill: none;

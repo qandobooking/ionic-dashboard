@@ -80,18 +80,18 @@ function ShopWeekHoursCtrl (DataService, Entities, TimeUtils, $ionicPopup, initi
 
   }
 
-  this.addToDay = function(day){
+  this.addNewRange = (range, extraArgs) => {
+    const day = extraArgs.day;
+    
     var newRange = {
         weekday:day,
-        start:moment({hour:0}),
-        end:moment({hour:1}),
+        start:range.start,
+        end:range.start.clone().add(1, 'hour'),
     }
 
     this.byWeekDay[day].push(newRange);
     this.redrawFunctions[day]
     .setRanges(this.byWeekDay[day]);
-
-
   }
 
   this.toggleEdit = function(){

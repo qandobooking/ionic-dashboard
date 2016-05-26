@@ -5,7 +5,8 @@ angular.module('app')
 function timeTable($window) {
     return {
         restrict: 'A',
-        scope : { ranges : "=", onUpdate : "=", onDoubleTap : "=",  redraw:"="},
+        scope : { ranges : "=", onUpdate : "=", onDoubleTap : "=",
+          redraw:"=", onEmptyClick:"=", extraArgs:"=" },
         link: function (scope, iElement, iAttrs) {
             
             var el = iElement[0];
@@ -13,8 +14,13 @@ function timeTable($window) {
             scope.redraw = null;
             
             function update(){
-                scope.redraw = timeTableIt(el, { ranges : scope.ranges, onUpdate : scope.onUpdate,
-                onDoubleTap : scope.onDoubleTap, readOnly : scope.$eval(iAttrs.readOnly) });    
+                scope.redraw = timeTableIt(el, 
+                  { ranges : scope.ranges, onUpdate:scope.onUpdate,
+                    onDoubleTap : scope.onDoubleTap, 
+                    readOnly : scope.$eval(iAttrs.readOnly),
+                    onEmptyClick : scope.onEmptyClick, 
+                    extraArgs : scope.extraArgs,
+                });    
             }
 
             //redraw on window resize
