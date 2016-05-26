@@ -23,7 +23,6 @@
     "cordova-plugin-device",
     "cordova-plugin-statusbar",
     "cordova-plugin-splashscreen",
-    "cordova-plugin-keyboard",
     "ionic-plugin-keyboard",
     "cordova-plugin-whitelist"
   ],

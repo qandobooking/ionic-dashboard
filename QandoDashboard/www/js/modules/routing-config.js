@@ -144,6 +144,7 @@
         requiresShop: true
       }
     }).state('app.logged.shop-edit', {
+      cache: false,
       url: '/shop-edit',
       views: {
         'menuContent': {
@@ -156,6 +157,7 @@
       }
     }).state('app.logged.shop-weekhours', {
       url: '/shop-weekhours',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/shop-weekhours.html',
@@ -166,6 +168,7 @@
         requiresShop: true
       }
     }).state('app.logged.shop-specialhours', {
+      cache: false,
       url: '/shop-specialhours',
       views: {
         'menuContent': {
@@ -177,6 +180,7 @@
         requiresShop: true
       }
     }).state('app.logged.shop-closingdays', {
+      cache: false,
       url: '/shop-closingdays',
       views: {
         'menuContent': {

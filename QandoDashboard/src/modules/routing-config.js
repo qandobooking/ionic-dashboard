@@ -169,6 +169,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
     })
 
     .state('app.logged.shop-edit', {
+      cache : false,
       url: '/shop-edit',
       views: {
         'menuContent': {
@@ -183,6 +184,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
 
     .state('app.logged.shop-weekhours', {
       url: '/shop-weekhours',
+      cache : false,
       views: {
         'menuContent': {
           templateUrl: 'templates/shop-weekhours.html',
@@ -195,6 +197,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
     })
 
     .state('app.logged.shop-specialhours', {
+      cache : false,
       url: '/shop-specialhours',
       views: {
         'menuContent': {
@@ -208,6 +211,7 @@ angular.module('app.routing', ['ionic', 'satellizer'])
     })
 
     .state('app.logged.shop-closingdays', {
+      cache : false,
       url: '/shop-closingdays',
       views: {
         'menuContent': {
