@@ -156,6 +156,14 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
   }
 
   this.modalDate = null;
+
+  $scope.$watch('ShopSpecialHoursCtrl.modalDate', (nv, ov) => {
+    if (nv) {
+      this.openDate();
+    }
+  });
+
+
   this.openDate = () => {
     let dt = moment(this.modalDate);
     const yearmonth = dt.format("MMMM YYYY");
