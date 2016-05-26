@@ -4,6 +4,11 @@ const defaultOptions = {
   minStep : 10
 }
 
+const handleWidth = 20;
+
+
+
+
 function timeTableIt(el, options={}){
 
   const formatter = d3.time.format("%H:%M");
@@ -45,9 +50,23 @@ function timeTableIt(el, options={}){
       return "translate(0, 30)";
   });
 
+
+  //utility function for preparing ranges for d3 viz
+  const prepareRange = d => {
+      d.x = xScale(d.start.toDate());
+      d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
+      //#TODO: this is a fix for negative widths, these data should not exist
+      d.width = d.width < 0 ? 0 : d.width;  
+      return d
+    }
+
   //drag handler for translate handle
   const dragTranslate = d3.behavior.drag()
   .on("drag", function(d,i) {
+
+    rangesContainer
+    .selectAll('.period-add')
+    .style("opacity", .2)
 
     const delta = d3.event.dx;
     
@@ -96,8 +115,14 @@ function timeTableIt(el, options={}){
       .attr('x', newX);
     });
 
+    
+
   })
   .on("dragend", function(d, i){
+      rangesContainer
+      .selectAll('.period-add')
+      .style("opacity", 1)
+
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
@@ -113,11 +138,16 @@ function timeTableIt(el, options={}){
       //redraw() updates labels, etc. #TODO: check performance
       redraw()
       options.onUpdate(range);
+      
   });
 
   //drag handler for left handle
   const dragLeftHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
+
+    rangesContainer
+    .selectAll('.period-add')
+    .style("opacity", .2)
     
     let x = d3.event.x;
     x = Math.max(x, xPadding);
@@ -159,6 +189,11 @@ function timeTableIt(el, options={}){
     
   })
   .on("dragend", function(d, i){
+
+    rangesContainer
+    .selectAll('.period-add')
+    .style("opacity", 1)
+
     const t = d3.select(this);
     const num = t.attr('num');
     const range = options.ranges[num];
@@ -172,6 +207,10 @@ function timeTableIt(el, options={}){
   //drag handler for right handle
   const dragRightHandle = d3.behavior.drag()
   .on("drag", function(d,i) {
+
+    rangesContainer
+    .selectAll('.period-add')
+    .style("opacity", .2)
 
     let x = d3.event.x;
     x = Math.max(x, xPadding);
@@ -211,6 +250,11 @@ function timeTableIt(el, options={}){
     
   })
   .on("dragend", function(d, i){
+
+      rangesContainer
+      .selectAll('.period-add')
+      .style("opacity", 1);
+
       const t = d3.select(this);
       const num = t.attr('num');
       const range = options.ranges[num];
@@ -227,7 +271,6 @@ function timeTableIt(el, options={}){
     
     w = el.clientWidth;
 
-
     svg
     .attr("width", w)
     .attr("height", 100);
@@ -238,14 +281,12 @@ function timeTableIt(el, options={}){
 
     oneHour = xScale(moment({minutes:30}).toDate())
 
-    computedRanges = _.map(options.ranges, d => {
-      d.x = xScale(d.start.toDate());
-      d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
-      //#TODO: this is a fix for negative widths, these data should not exist
-      d.width = d.width < 0 ? 0 : d.width;  
-      return d
-    })
+    
 
+    computedRanges = _.map(options.ranges, prepareRange)
+
+    let emptyRanges = [];
+    
     timeAxis
     .call(xAxis);
 
@@ -255,9 +296,83 @@ function timeTableIt(el, options={}){
     .selectAll('g.period')
     .data(options.ranges);
 
+
     const periodControlContainer = rangesContainer
     .selectAll('g.handlex')
     .data(options.ranges);
+
+
+
+    if(!options.readOnly){
+      let sortedComputedRanges = _.sortBy(computedRanges, item => item.start.toDate()) ;
+    _.each(sortedComputedRanges, (r, idx) => {
+      if (idx == 0){
+        emptyRanges.push({ start : moment({hour:0}), end:r.start });
+        
+      }
+
+      if(idx > 0 ) {
+        emptyRanges.push({ start:sortedComputedRanges[idx-1].end,  end:r.start })
+      }
+
+      if (idx == sortedComputedRanges.length -1){
+       emptyRanges.push({ start:r.end, end:moment({hour:24})}) 
+      }
+
+    })
+
+    emptyRanges = _.filter(emptyRanges, r =>  r.end.diff(r.start, 'hours') >= 1);
+    emptyRanges = _.map(emptyRanges, prepareRange);
+    console.debug("wxsss", emptyRanges)
+
+
+    }
+
+    //add rectangle
+
+    const periodAddContainer = rangesContainer
+    .selectAll('g.period-add')
+    .data(emptyRanges, function(d, i){
+      return d.x + "-" + d.width
+    });
+
+    
+    const enterAddG = periodAddContainer
+    .enter()
+    .append('g')
+    .attr('class', 'period-add');
+
+    enterAddG
+    .append('rect')
+    .style('fill', "green")
+    .attr('height', 50)
+    .attr("x", function(d, i){
+       return d.x;
+    })
+    .attr('width', function(d, i){
+      return d.width;
+    })
+    .on('click', function(d){
+      console.error("d", d)
+    })
+
+
+    
+
+    rangesContainer
+    .selectAll('.period-add')
+    .attr("x", function(d, i){
+       return d.x;
+    })
+    .attr('width', function(d, i){
+      return d.width;
+    })
+
+    periodAddContainer.exit().remove()
+    
+    
+
+
 
     //enter logic
     const enterG = periodContainer
@@ -299,7 +414,8 @@ function timeTableIt(el, options={}){
         let out = `label label-right group-${i}`;
         return out
     })
-    
+
+
     //update logic
      
     periodContainer
@@ -349,8 +465,9 @@ function timeTableIt(el, options={}){
     periodContainer
     .exit()
     .remove()
+
+
     
-  
     
 
     if (!options.readOnly) {
@@ -402,7 +519,7 @@ function timeTableIt(el, options={}){
           return "handle left-handle group-"+i;
       })
       .attr('height', 60)
-      .attr('width', 12)
+      .attr('width', handleWidth)
       .attr('opacity', 0)
       .attr("x", function(d, i){
         //return xScale(d.start.toDate());
@@ -425,11 +542,11 @@ function timeTableIt(el, options={}){
           return "handle right-handle group-"+i;
       })
       .attr('height', 60)
-      .attr('width', 12)
+      .attr('width', handleWidth)
       .attr('opacity', 0)
       .attr('x', function(d, i){
         //return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4 
-        return computedRanges[i].x + computedRanges[i].width - 12;
+        return computedRanges[i].x + computedRanges[i].width - handleWidth;
       })
       .attr('y', -5)
       .call(dragRightHandle)
@@ -456,7 +573,7 @@ function timeTableIt(el, options={}){
       periodControlContainer
       .select('.right-handle')
       .attr('x', function(d, i){
-        return computedRanges[i].x + computedRanges[i].width - 12;
+        return computedRanges[i].x + computedRanges[i].width - handleWidth;
       });
       
       //remove logic
@@ -465,6 +582,7 @@ function timeTableIt(el, options={}){
     } else {
       periodControlContainer.remove()
     }
+
     
   
   }

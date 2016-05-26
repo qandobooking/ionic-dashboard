@@ -6,6 +6,8 @@ var defaultOptions = {
   minStep: 10
 };
 
+var handleWidth = 20;
+
 function timeTableIt(el) {
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -37,8 +39,19 @@ function timeTableIt(el) {
     return "translate(0, 30)";
   });
 
+  //utility function for preparing ranges for d3 viz
+  var prepareRange = function prepareRange(d) {
+    d.x = xScale(d.start.toDate());
+    d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
+    //#TODO: this is a fix for negative widths, these data should not exist
+    d.width = d.width < 0 ? 0 : d.width;
+    return d;
+  };
+
   //drag handler for translate handle
   var dragTranslate = d3.behavior.drag().on("drag", function (d, i) {
+
+    rangesContainer.selectAll('.period-add').style("opacity", .2);
 
     var delta = d3.event.dx;
 
@@ -86,6 +99,8 @@ function timeTableIt(el) {
       .attr('x', newX);
     });
   }).on("dragend", function (d, i) {
+    rangesContainer.selectAll('.period-add').style("opacity", 1);
+
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
@@ -104,6 +119,8 @@ function timeTableIt(el) {
 
   //drag handler for left handle
   var dragLeftHandle = d3.behavior.drag().on("drag", function (d, i) {
+
+    rangesContainer.selectAll('.period-add').style("opacity", .2);
 
     var x = d3.event.x;
     x = Math.max(x, xPadding);
@@ -140,6 +157,9 @@ function timeTableIt(el) {
       .attr('x', computedRanges[i].x).attr('width', computedRanges[i].width);
     });
   }).on("dragend", function (d, i) {
+
+    rangesContainer.selectAll('.period-add').style("opacity", 1);
+
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
@@ -151,6 +171,8 @@ function timeTableIt(el) {
 
   //drag handler for right handle
   var dragRightHandle = d3.behavior.drag().on("drag", function (d, i) {
+
+    rangesContainer.selectAll('.period-add').style("opacity", .2);
 
     var x = d3.event.x;
     x = Math.max(x, xPadding);
@@ -185,6 +207,9 @@ function timeTableIt(el) {
       .attr('width', computedRanges[i].width);
     });
   }).on("dragend", function (d, i) {
+
+    rangesContainer.selectAll('.period-add').style("opacity", 1);
+
     var t = d3.select(this);
     var num = t.attr('num');
     var range = options.ranges[num];
@@ -205,13 +230,9 @@ function timeTableIt(el) {
 
     oneHour = xScale(moment({ minutes: 30 }).toDate());
 
-    computedRanges = _.map(options.ranges, function (d) {
-      d.x = xScale(d.start.toDate());
-      d.width = xScale(d.end.toDate()) - xScale(d.start.toDate());
-      //#TODO: this is a fix for negative widths, these data should not exist
-      d.width = d.width < 0 ? 0 : d.width;
-      return d;
-    });
+    computedRanges = _.map(options.ranges, prepareRange);
+
+    var emptyRanges = [];
 
     timeAxis.call(xAxis);
 
@@ -219,6 +240,57 @@ function timeTableIt(el) {
     var periodContainer = rangesContainer.selectAll('g.period').data(options.ranges);
 
     var periodControlContainer = rangesContainer.selectAll('g.handlex').data(options.ranges);
+
+    if (!options.readOnly) {
+      (function () {
+        var sortedComputedRanges = _.sortBy(computedRanges, function (item) {
+          return item.start.toDate();
+        });
+        _.each(sortedComputedRanges, function (r, idx) {
+          if (idx == 0) {
+            emptyRanges.push({ start: moment({ hour: 0 }), end: r.start });
+          }
+
+          if (idx > 0) {
+            emptyRanges.push({ start: sortedComputedRanges[idx - 1].end, end: r.start });
+          }
+
+          if (idx == sortedComputedRanges.length - 1) {
+            emptyRanges.push({ start: r.end, end: moment({ hour: 24 }) });
+          }
+        });
+
+        emptyRanges = _.filter(emptyRanges, function (r) {
+          return r.end.diff(r.start, 'hours') >= 1;
+        });
+        emptyRanges = _.map(emptyRanges, prepareRange);
+        console.debug("wxsss", emptyRanges);
+      })();
+    }
+
+    //add rectangle
+
+    var periodAddContainer = rangesContainer.selectAll('g.period-add').data(emptyRanges, function (d, i) {
+      return d.x + "-" + d.width;
+    });
+
+    var enterAddG = periodAddContainer.enter().append('g').attr('class', 'period-add');
+
+    enterAddG.append('rect').style('fill', "green").attr('height', 50).attr("x", function (d, i) {
+      return d.x;
+    }).attr('width', function (d, i) {
+      return d.width;
+    }).on('click', function (d) {
+      console.error("d", d);
+    });
+
+    rangesContainer.selectAll('.period-add').attr("x", function (d, i) {
+      return d.x;
+    }).attr('width', function (d, i) {
+      return d.width;
+    });
+
+    periodAddContainer.exit().remove();
 
     //enter logic
     var enterG = periodContainer.enter().append('g').attr('class', 'period');
@@ -315,7 +387,7 @@ function timeTableIt(el) {
         return i;
       }).attr("class", function (d, i) {
         return "handle left-handle group-" + i;
-      }).attr('height', 60).attr('width', 12).attr('opacity', 0).attr("x", function (d, i) {
+      }).attr('height', 60).attr('width', handleWidth).attr('opacity', 0).attr("x", function (d, i) {
         //return xScale(d.start.toDate());
         return computedRanges[i].x;
       }).attr('y', -5).call(dragLeftHandle).transition().attr('opacity', 1);
@@ -326,9 +398,9 @@ function timeTableIt(el) {
         return i;
       }).attr("class", function (d, i) {
         return "handle right-handle group-" + i;
-      }).attr('height', 60).attr('width', 12).attr('opacity', 0).attr('x', function (d, i) {
+      }).attr('height', 60).attr('width', handleWidth).attr('opacity', 0).attr('x', function (d, i) {
         //return xScale(d.start.toDate()) + xScale(d.end.toDate()) - xScale(d.start.toDate()) - 4
-        return computedRanges[i].x + computedRanges[i].width - 12;
+        return computedRanges[i].x + computedRanges[i].width - handleWidth;
       }).attr('y', -5).call(dragRightHandle).transition().attr('opacity', 1);
 
       //update logic
@@ -344,7 +416,7 @@ function timeTableIt(el) {
       });
 
       periodControlContainer.select('.right-handle').attr('x', function (d, i) {
-        return computedRanges[i].x + computedRanges[i].width - 12;
+        return computedRanges[i].x + computedRanges[i].width - handleWidth;
       });
 
       //remove logic
