@@ -92,7 +92,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
 
     var confirmPopup = $ionicPopup.confirm({
       title: 'Rimuovi intervallo',
-      template: moment(date).format("DD MMMM YYYY") + ' dalle ' + r.start.format("HH:mm") + ' alle ' + r.end.format("HH:mm")
+      template: moment(date).format("DD MMMM YYYY") + ' dalle ' + r.start.format("HH:mm") + ' alle ' + r.end.format("HH:mm") + ' ' + r.id
     });
     confirmPopup.then(function (res) {
 
@@ -104,14 +104,14 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
           var idx = _.findIndex(arr, { 'id': r.id });
           _this.byMonthAndDate[yearmonth][r.date].splice(idx, 1);
 
-          if (!_this.byMonthAndDate[yearmonth][r.date].length) {
-            delete _this.byMonthAndDate[yearmonth][r.date];
-          }
-          if (!_.keys(_this.byMonthAndDate[yearmonth]).length) {
-            delete _this.byMonthAndDate[yearmonth];
-          }
+          //if (!this.byMonthAndDate[yearmonth][r.date].length){
+          //delete this.byMonthAndDate[yearmonth][r.date];
+          //}
+          //if (! _.keys(this.byMonthAndDate[yearmonth]).length){
+          //delete this.byMonthAndDate[yearmonth];
+          //}
 
-          $scope.g.redrawFunction.setRanges((_this.byMonthAndDate[yearmonth] || {})[r.date] || []);
+          $scope.g.redrawFunction.setRanges(_this.byMonthAndDate[yearmonth]);
         }).catch(function (error) {
 
           notifyManager.error(HttpUtils.makeErrorMessage(error));
@@ -153,11 +153,11 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
       _this.byMonthAndDate[yearmonth] = {};
     }
 
-    var ranges = [];
-    if (_this.byMonthAndDate[yearmonth] && _this.byMonthAndDate[yearmonth][day]) {
-      ranges = _this.byMonthAndDate[yearmonth][day];
+    if (!_this.byMonthAndDate[yearmonth][day]) {
+      _this.byMonthAndDate[yearmonth][day] = [];
     }
-    _this.openModal(day, ranges);
+
+    _this.openModal(day, _this.byMonthAndDate[yearmonth][day]);
   };
 
   $scope.hideModal = function () {
@@ -185,7 +185,20 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
       start: moment({ hour: 0 }),
       end: moment({ hour: 1 })
     };
-    var yearmonth = moment(day).format("MMMM YYYY");
+    //const yearmonth = moment(day).format("MMMM YYYY");
+    var intervalSelector = $scope.g.redrawFunction;
+    var ranges = intervalSelector.getRanges();
+    ranges.push(newRange);
+    intervalSelector.setRanges(ranges);
+  };
+
+  $scope.addNewRange = function (range, extraArgs) {
+    var day = _.clone($scope.day);
+    var newRange = {
+      date: day,
+      start: range.start,
+      end: range.start.clone().add(1, 'hour')
+    };
     var intervalSelector = $scope.g.redrawFunction;
     var ranges = intervalSelector.getRanges();
     ranges.push(newRange);

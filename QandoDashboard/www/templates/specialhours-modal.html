@@ -4,16 +4,15 @@
   </ion-header-bar>
   <ion-content >
 
-    <div class="item item-stable item-button-right">
-        &nbsp;
-        <span class="buttons">
-            <button  class="button button-clear" ng-click="addToDay(day)">Aggiungi</button>
-        </span>
-            
-            
-        </div>
-    
-    <div ng-if="ranges" on-update="onRangeUpdate" time-table ranges="ranges"  data-tap-disabled="true" on-double-tap="onDoubleTap" read-only="false" redraw="g.redrawFunction"></div>
+
+    <div ng-if="ranges"
+         on-update="onRangeUpdate"
+         time-table ranges="ranges"
+         data-tap-disabled="true"
+         on-empty-click="addNewRange"
+         on-double-tap="onDoubleTap"
+         read-only="false"
+         redraw="g.redrawFunction"></div>
 
   </ion-content>
   <ion-footer-bar class="bar-dark">
