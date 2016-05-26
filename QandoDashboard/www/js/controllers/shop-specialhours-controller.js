@@ -60,7 +60,6 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
   };
 
   $scope.onRangeUpdate = function (range) {
-
     //$scope.$apply() allows to see the change in template under the modal
     $scope.$apply();
     if (range.id) {
@@ -69,6 +68,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
       r.end_time = range.end.format("HH:mm");
 
       r.save().then(function (savedRange) {}).catch(function (error) {
+
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
     } else {
@@ -113,6 +113,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
 
           $scope.g.redrawFunction.setRanges((_this.byMonthAndDate[yearmonth] || {})[r.date] || []);
         }).catch(function (error) {
+
           notifyManager.error(HttpUtils.makeErrorMessage(error));
         });
       } else {

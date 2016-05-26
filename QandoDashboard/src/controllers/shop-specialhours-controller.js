@@ -61,9 +61,6 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
   }
 
   $scope.onRangeUpdate = range => {
-
-
-
     //$scope.$apply() allows to see the change in template under the modal
     $scope.$apply();
     if(range.id){
@@ -76,6 +73,7 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
 
       })
       .catch((error) => {
+
         notifyManager.error(HttpUtils.makeErrorMessage(error));
       });
 
@@ -131,7 +129,8 @@ function ShopSpecialHoursCtrl ($scope, DataService, Entities, $ionicModal, $ioni
 
        })
        .catch((error) => {
-         notifyManager.error(HttpUtils.makeErrorMessage(error));
+
+          notifyManager.error(HttpUtils.makeErrorMessage(error));
        });
 
 
