@@ -9,7 +9,7 @@ var defaultOptions = {
   extraArgs: {}
 };
 
-var handleWidth = 20;
+var handleWidth = 18;
 
 function timeTableIt(el) {
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];

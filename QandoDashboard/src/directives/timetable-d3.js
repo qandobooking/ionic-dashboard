@@ -7,7 +7,7 @@ const defaultOptions = {
   extraArgs : {}
 }
 
-const handleWidth = 20;
+const handleWidth = 18;
 
 
 

@@ -18,9 +18,10 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
+    "cordova-plugin-statusbar",
+    "cordova-plugin-transport-security",
     "cordova-plugin-device",
     "cordova-plugin-console",
-    "cordova-plugin-statusbar",
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
