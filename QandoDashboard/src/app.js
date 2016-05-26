@@ -44,7 +44,7 @@ angular.module('app',
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $logProvider, $compileProvider, validateFormProvider) {
+.config(function($ionicConfigProvider, $stateProvider, $urlRouterProvider, $logProvider, $compileProvider, validateFormProvider) {
   //$logProvider.debugEnabled(false);
   //$compileProvider.debugInfoEnabled(false);
   console.log(validateFormProvider);
@@ -52,6 +52,7 @@ angular.module('app',
     errorsTemplateUrl: 'templates/default-forms-errors.html',
     serverErrorsTemplateUrl: 'templates/server-errors.html',
   });
+  $ionicConfigProvider.views.swipeBackEnabled(false);
   //const tpl = <div class="form-error" ng-message="required">Il campo è richiesto</div>
   
 });
