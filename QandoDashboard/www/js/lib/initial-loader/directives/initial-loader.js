@@ -27,8 +27,8 @@
 
           var showLoadingContent = loading || !!scope.loader.error;
           //children.toggleClass('hide', showLoadingContent);
-
-          if (showLoadingContent) {
+          console.log(showLoadingContent);
+          if (!showLoadingContent) {
             children.toggleClass('fadein', true);
           } else {
             children.toggleClass('faded', true);
