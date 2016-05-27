@@ -16,7 +16,7 @@
         <div class="item tem-body" ng-repeat="(day, ranges) in v" ng-click="ShopSpecialHoursCtrl.openModal(day, ranges)">
             <h2 class="title positive">{{ day|momentDateFormat : 'DD MMMM' }}</h2>
 
-            <span ng-repeat="range in ranges" xng-if="range.id">
+            <span ng-repeat="range in ranges" ng-if="range.id">
                 {{ range.start.format('HH:mm') }} - {{ range.end.format('HH:mm') }}<br ng-if="!$last"></span>
 
         </div>
