@@ -6,12 +6,13 @@
 
 
     <div ng-if="ranges"
+         time-table
+         ranges="ranges"
          on-update="onRangeUpdate"
-         time-table ranges="ranges"
-         data-tap-disabled="true"
          on-empty-click="addNewRange"
          on-double-tap="onDoubleTap"
          read-only="false"
+         data-tap-disabled="true"
          redraw="g.redrawFunction"></div>
 
   </ion-content>
