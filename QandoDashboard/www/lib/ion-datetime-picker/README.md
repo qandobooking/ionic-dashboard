@@ -1,7 +1,7 @@
 # ion-datetime-picker
 ![GitHub version](https://img.shields.io/github/release/katemihalikova/ion-datetime-picker.svg?style=flat-square)
 ![Bower version](https://img.shields.io/bower/v/ion-datetime-picker.svg?style=flat-square)
-![Ionic version](https://img.shields.io/badge/ionic-%3E%3D1.0.0--beta.9-yellow.svg?style=flat-square)
+![Ionic version](https://img.shields.io/badge/ionic-%5E1.0.0--beta.9-yellow.svg?style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/katemihalikova/ion-datetime-picker.svg?style=flat-square)
 ![License](https://img.shields.io/github/license/katemihalikova/ion-datetime-picker.svg?style=flat-square)
 
@@ -20,6 +20,7 @@ The ion-datetime-picker component has these features:
 - Pick time with or without seconds
 - Configure popup title and button labels
 - Configure i18n to get weekdays and months in your language
+- Configure size of a step
 
 # Demo
 
@@ -35,18 +36,23 @@ Live demo is available on [Codepen](http://codepen.io/katemihalikova/full/dYvjzP
 # Installation
 
 1. Use bower to install the new module:
-```bash
-bower install ion-datetime-picker --save
-```
+
+    ```bash
+    bower install ion-datetime-picker --save
+    ```
+    
 2. Import the `ion-datetime-picker` javascript and css file into your HTML file (or use [wiredep](https://github.com/taptapship/wiredep)):
-```html
-<script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
-<link href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css" rel="stylesheet">
-```
+
+   ```html
+   <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
+   <link href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css" rel="stylesheet">
+   ```
+   
 3. Add `ion-datetime-picker` as a dependency on your Ionic app:
-```javascript
-angular.module("myApp", ["ionic", "ion-datetime-picker"]);
-```
+
+   ```javascript
+   angular.module("myApp", ["ionic", "ion-datetime-picker"]);
+   ```
 
 # Usage
 
@@ -76,6 +82,10 @@ By default, in the time picker, I allow to change only hours and minutes. Set th
 ### `am-pm` attribute
 
 By default, in the time picker, I use 24-hour clock. Set this attribute to change it to 12-hour clock.
+
+### `month-step`, `hour-step`, `minute-step` and `second-step` attributes
+
+By default, when any caret button is tapped, I add or subtract 1 particular unit. Set these attributes to change it to anything you want.
 
 ### `title` and `sub-title` attributes
 

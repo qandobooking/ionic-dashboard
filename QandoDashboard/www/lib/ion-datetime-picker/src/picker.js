@@ -5,10 +5,14 @@ angular.module("ion-datetime-picker", ["ionic"])
             require: "ngModel",
             scope: {
                 modelDate: "=ngModel",
-                title: "=",
-                subTitle: "=",
-                buttonOk: "=",
-                buttonCancel: "="
+                title: "=?",
+                subTitle: "=?",
+                buttonOk: "=?",
+                buttonCancel: "=?",
+                monthStep: "=?",
+                hourStep: "=?",
+                minuteStep: "=?",
+                secondStep: "=?"
             },
             controller: function($scope, $ionicPopup, $ionicPickerI18n, $timeout) {
                 $scope.i18n = $ionicPickerI18n;
@@ -164,8 +168,10 @@ angular.module("ion-datetime-picker", ["ionic"])
                 $scope.secondsEnabled = $scope.timeEnabled && "seconds" in $attrs && $attrs.seconds !== "false";
                 $scope.meridiemEnabled = $scope.timeEnabled && "amPm" in $attrs && $attrs.amPm !== "false";
 
-
-
+                $scope.monthStep = +$scope.monthStep || 1;
+                $scope.hourStep = +$scope.hourStep || 1;
+                $scope.minuteStep = +$scope.minuteStep || 1;
+                $scope.secondStep = +$scope.secondStep || 1;
 
                 $scope.prepare();
 

@@ -1,17 +1,12 @@
 <ion-view view-title="Orari straordinari" initial-loader="ShopSpecialHoursCtrl.loader">
-    
-    
-  <ion-content>
-    <label class="item item-input item-button-right">
-      <span class="input-label">Nuovo giorno</span>
-      <input type="date" ng-model="ShopSpecialHoursCtrl.modalDate"/>
-      
-    </label>
-    <button class="button button-positive" ng-disabled="!ShopSpecialHoursCtrl.modalDate" ng-click="ShopSpecialHoursCtrl.openDate()">
-            OK
-        </button>
-    
 
+
+  <ion-content>
+    <div class="item item-icon-left" ion-datetime-picker date ng-model="ShopSpecialHoursCtrl.modalDate">
+       <i class="icon ion-ios-calendar positive"></i>
+       <span ng-if="!ShopSpecialHoursCtrl.modalDate">Scegli una data</span>
+      {{ ShopSpecialHoursCtrl.modalDate | date: "dd-MM-yyyy"}}
+    </div>
 
     <div ng-repeat="(month, v) in ShopSpecialHoursCtrl.byMonthAndDate">
         <div class="item item-divider item-positive">
@@ -20,14 +15,14 @@
         </div>
         <div class="item tem-body" ng-repeat="(day, ranges) in v" ng-click="ShopSpecialHoursCtrl.openModal(day, ranges)">
             <h2 class="title positive">{{ day|momentDateFormat : 'DD MMMM' }}</h2>
-            
+
             <span ng-repeat="range in ranges" xng-if="range.id">
-                {{ range.start.format('HH:mm') }} - {{ range.end.format('HH:mm') }}<br ng-if="!$last"></span> 
-            
+                {{ range.start.format('HH:mm') }} - {{ range.end.format('HH:mm') }}<br ng-if="!$last"></span>
+
         </div>
     </div>
-    
-    
+
+
 
   </ion-content>
 </ion-view>

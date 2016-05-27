@@ -31,13 +31,61 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
     });
   });
 
-  $scope.g = {};
+  // Date for add new special hours
+  this.modalDate = null;
 
+  // Open modal on date when date picker value change
+  $scope.$watch('ShopSpecialHoursCtrl.modalDate', function (nv, ov) {
+    if (nv) {
+      var dt = moment(_this.modalDate);
+      var yearmonth = dt.format("MMMM YYYY");
+      var day = dt.format("YYYY-MM-DD");
+
+      if (!_this.byMonthAndDate[yearmonth]) {
+        _this.byMonthAndDate[yearmonth] = {};
+      }
+
+      if (!_this.byMonthAndDate[yearmonth][day]) {
+        _this.byMonthAndDate[yearmonth][day] = [];
+      }
+
+      _this.openModal(day, _this.byMonthAndDate[yearmonth][day]);
+    }
+  });
+
+  // Open the modal set day and ranges to scope and redraw ranges
+  this.openModal = function (day, ranges) {
+    $scope.day = day;
+    $scope.ranges = ranges;
+    this.modal.show().then(function () {
+      $scope.g.redrawFunction.setRanges(ranges);
+    });
+  };
+
+  // Modal for edit special hours
   $ionicModal.fromTemplateUrl('templates/specialhours-modal.html', {
     scope: $scope
   }).then(function (modal) {
     _this.modal = modal;
   });
+
+  // Remove modal when controlle dead
+  $scope.$on('$destroy', function () {
+    _this.modal.remove();
+  });
+
+  // When modal hidden clean up ranges
+  $scope.$on('modal.hidden', function () {
+    if ($scope.g) {
+      $scope.g.redrawFunction.setRanges([]);
+    }
+  });
+
+  $scope.g = {};
+
+  $scope.hideModal = function () {
+    _this.modal.hide();
+  };
 
   var addRangeToController = function addRangeToController(savedRange) {
 
@@ -92,7 +140,7 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
 
     var confirmPopup = $ionicPopup.confirm({
       title: 'Rimuovi intervallo',
-      template: moment(date).format("DD MMMM YYYY") + ' dalle ' + r.start.format("HH:mm") + ' alle ' + r.end.format("HH:mm")
+      template: moment(date).format("DD MMMM YYYY") + ' dalle ' + r.start.format("HH:mm") + ' alle ' + r.end.format("HH:mm") + ' ' + r.id
     });
     confirmPopup.then(function (res) {
 
@@ -104,14 +152,14 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
           var idx = _.findIndex(arr, { 'id': r.id });
           _this.byMonthAndDate[yearmonth][r.date].splice(idx, 1);
 
-          if (!_this.byMonthAndDate[yearmonth][r.date].length) {
-            delete _this.byMonthAndDate[yearmonth][r.date];
-          }
-          if (!_.keys(_this.byMonthAndDate[yearmonth]).length) {
-            delete _this.byMonthAndDate[yearmonth];
-          }
+          //if (!this.byMonthAndDate[yearmonth][r.date].length){
+          //delete this.byMonthAndDate[yearmonth][r.date];
+          //}
+          //if (! _.keys(this.byMonthAndDate[yearmonth]).length){
+          //delete this.byMonthAndDate[yearmonth];
+          //}
 
-          $scope.g.redrawFunction.setRanges((_this.byMonthAndDate[yearmonth] || {})[r.date] || []);
+          $scope.g.redrawFunction.setRanges(_this.byMonthAndDate[yearmonth]);
         }).catch(function (error) {
 
           notifyManager.error(HttpUtils.makeErrorMessage(error));
@@ -122,63 +170,26 @@ function ShopSpecialHoursCtrl($scope, DataService, Entities, $ionicModal, $ionic
     });
   };
 
-  $scope.$on('modal.hidden', function () {
-    if ($scope.g) {
-      $scope.g.redrawFunction.setRanges([]);
-    }
-  });
-
-  this.openModal = function (day, ranges) {
-    $scope.day = day;
-    $scope.ranges = ranges;
-    $scope.backupRanges = angular.copy(ranges);
-    this.modal.show().then(function () {
-      $scope.g.redrawFunction.setRanges(ranges);
-    });
-  };
-
-  this.modalDate = null;
-  this.openDate = function () {
-    var dt = moment(_this.modalDate);
-    var yearmonth = dt.format("MMMM YYYY");
-    var day = dt.format("YYYY-MM-DD");
-    if (!_this.byMonthAndDate[yearmonth]) {
-      _this.byMonthAndDate[yearmonth] = {};
-    }
-
-    var ranges = [];
-    if (_this.byMonthAndDate[yearmonth] && _this.byMonthAndDate[yearmonth][day]) {
-      ranges = _this.byMonthAndDate[yearmonth][day];
-    }
-    _this.openModal(day, ranges);
-  };
-
-  $scope.hideModal = function () {
-    _this.modal.hide();
-  };
-
-  //#TODO: this does not work as we don't save the ranges after restoring them
-  /*
-  $scope.cancelEdit = () => {
-    let dt = moment($scope.day);
-    const yearmonth = dt.format("MMMM YYYY");
-    console.log(1, $scope.day, $scope.backupRanges);
-    this.byMonthAndDate[yearmonth][$scope.day] = $scope.backupRanges;
-    this.modal.hide()
-  }
-  */
-
-  $scope.$on('$destroy', function () {
-    _this.modal.remove();
-  });
-
   $scope.addToDay = function (day) {
     var newRange = {
       date: day,
       start: moment({ hour: 0 }),
       end: moment({ hour: 1 })
     };
-    var yearmonth = moment(day).format("MMMM YYYY");
+    //const yearmonth = moment(day).format("MMMM YYYY");
+    var intervalSelector = $scope.g.redrawFunction;
+    var ranges = intervalSelector.getRanges();
+    ranges.push(newRange);
+    intervalSelector.setRanges(ranges);
+  };
+
+  $scope.addNewRange = function (range, extraArgs) {
+    var day = _.clone($scope.day);
+    var newRange = {
+      date: day,
+      start: range.start,
+      end: range.start.clone().add(1, 'hour')
+    };
     var intervalSelector = $scope.g.redrawFunction;
     var ranges = intervalSelector.getRanges();
     ranges.push(newRange);
