@@ -11,6 +11,14 @@ var defaultOptions = {
 
 var handleWidth = 18;
 
+//http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
+//#TODO: see: https://github.com/qandobooking/ionic-dashboard/issues/38
+d3.selection.prototype.moveToFront = function () {
+  return this.each(function () {
+    this.parentNode.appendChild(this);
+  });
+};
+
 function timeTableIt(el) {
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -449,6 +457,12 @@ function timeTableIt(el) {
       periodControlContainer.exit().remove();
     } else {
       periodControlContainer.remove();
+    }
+
+    //#TODO: see: https://github.com/qandobooking/ionic-dashboard/issues/38
+    if (ionic.Platform.isIOS()) {
+      svg.selectAll("g.period").moveToFront();
+      svg.selectAll("g.handlex").moveToFront();
     }
   }
 

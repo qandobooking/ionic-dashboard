@@ -9,7 +9,13 @@ const defaultOptions = {
 
 const handleWidth = 18;
 
-
+//http://stackoverflow.com/questions/14167863/how-can-i-bring-a-circle-to-the-front-with-d3
+//#TODO: see: https://github.com/qandobooking/ionic-dashboard/issues/38
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
 
 
 function timeTableIt(el, options={}){
@@ -486,8 +492,6 @@ function timeTableIt(el, options={}){
     .exit()
     .remove()
 
-
-    
     
 
     if (!options.readOnly) {
@@ -610,8 +614,12 @@ function timeTableIt(el, options={}){
       periodControlContainer.remove()
     }
 
+    //#TODO: see: https://github.com/qandobooking/ionic-dashboard/issues/38
+    if(ionic.Platform.isIOS()){
+      svg.selectAll("g.period").moveToFront();             
+      svg.selectAll("g.handlex").moveToFront();
+    }
     
-  
   }
 
   redraw();
