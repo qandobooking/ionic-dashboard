@@ -4,13 +4,14 @@ angular.module('app')
 function HomeCtrl (Entities, DataService, $q, initialLoaderManager, notifyManager, HttpUtils, $scope) {
 
   const loadHomeData = () => {
+    const now = moment().subtract(1, 'hours');
     const qPending = DataService
     .getBookings(this.shop.id)
-    .getList({ status : 'pending', 'start__gte':moment().format('YYYY-MM-DD') })
+    .getList({ status : 'pending', 'start__gte':now.format('YYYY-MM-DDTHH:MM:SS') })
 
     const qConfirmed = DataService
     .getBookings(this.shop.id)
-    .getList({ status : 'confirmed', 'start__gte':moment().format('YYYY-MM-DD') })
+    .getList({ status : 'confirmed', 'start__gte':now.format('YYYY-MM-DDTHH:MM:SS') })
 
     return $q.all([qPending, qConfirmed])
     .then(results => {

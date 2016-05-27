@@ -6,9 +6,10 @@ function HomeCtrl(Entities, DataService, $q, initialLoaderManager, notifyManager
   var _this = this;
 
   var loadHomeData = function loadHomeData() {
-    var qPending = DataService.getBookings(_this.shop.id).getList({ status: 'pending', 'start__gte': moment().format('YYYY-MM-DD') });
+    var now = moment().subtract(1, 'hours');
+    var qPending = DataService.getBookings(_this.shop.id).getList({ status: 'pending', 'start__gte': now.format('YYYY-MM-DDTHH:MM:SS') });
 
-    var qConfirmed = DataService.getBookings(_this.shop.id).getList({ status: 'confirmed', 'start__gte': moment().format('YYYY-MM-DD') });
+    var qConfirmed = DataService.getBookings(_this.shop.id).getList({ status: 'confirmed', 'start__gte': now.format('YYYY-MM-DDTHH:MM:SS') });
 
     return $q.all([qPending, qConfirmed]).then(function (results) {
       _this.pending = results[0];
