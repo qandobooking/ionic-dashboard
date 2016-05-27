@@ -6,11 +6,11 @@ function HomeCtrl (Entities, DataService, $q, initialLoaderManager, notifyManage
   const loadHomeData = () => {
     const qPending = DataService
     .getBookings(this.shop.id)
-    .getList({ status : 'pending' })
+    .getList({ status : 'pending', 'start__gte':moment().format('YYYY-MM-DD') })
 
     const qConfirmed = DataService
     .getBookings(this.shop.id)
-    .getList({ status : 'confirmed' })
+    .getList({ status : 'confirmed', 'start__gte':moment().format('YYYY-MM-DD') })
 
     return $q.all([qPending, qConfirmed])
     .then(results => {

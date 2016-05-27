@@ -120,3 +120,34 @@ text.label-right{
 .label-has-error > span{
   color : $assertive !important;
 }
+
+
+.spinner.big svg {
+  width: 56px;
+  height: 56px;
+  margin:28px;
+  
+}
+
+.spinner.huge svg {
+  width: 102px;
+  height: 102px;
+  margin:28px;
+  
+}
+
+.faded{
+  opacity: 0;
+}
+
+.fadein{
+    -webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.fadeout{
+    -webkit-transition: opacity 1s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 1s;
+    opacity: 0;
+}

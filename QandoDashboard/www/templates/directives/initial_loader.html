@@ -1,10 +1,21 @@
 <div class="initial-loader">
 
-  <ion-content class="has-header" ng-class="contentClasses" scroll="false">
+  <ion-content class="has-header" ng-class="contentClasses" scroll="false" style="display:flex; flex-direction:column; align-items: center; z-index:10000">
+      <!--
       <div ng-if="loader.loading" class="loader">
           <div class="item text-center">
             <ion-spinner class="spinner-positive"></ion-spinner>
           </div>
+      </div>
+    -->
+      <div ng-if="!loader.error" class="item item-positive  text-center" style="flex:1; padding-top:20%; width:100%" >
+          <ion-spinner class="spinner-light loader-spinner huge" icon="ripple"></ion-spinner><br>
+          <!--
+          <small class="calm">Caricamento</small>
+          
+          <img src="http://samherbert.net/svg-loaders/svg-loaders/ball-triangle.svg" alt="" style="width:80px;">
+          -->
+
       </div>
       <div ng-if="loader.error" class="text-center padding">
           <h3>

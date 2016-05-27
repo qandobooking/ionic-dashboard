@@ -26,14 +26,25 @@
         scope.$watch('loader.loading', function (loading) {
 
           var showLoadingContent = loading || !!scope.loader.error;
-          children.toggleClass('hide', showLoadingContent);
+          //children.toggleClass('hide', showLoadingContent);
+
+          if (showLoadingContent) {
+            children.toggleClass('fadein', true);
+          } else {
+            children.toggleClass('faded', true);
+          }
 
           if (loading && !scope.loader.isRetry) {
+            content.addClass('faded');
             element.append(content);
+            content.addClass('fadein');
           }
 
           if (!loading && !scope.loader.error) {
-            content.remove();
+            content.addClass('fadeout'); //remove();
+            setTimeout(function () {
+              content.remove();
+            }, 2000);
           }
         });
       }
