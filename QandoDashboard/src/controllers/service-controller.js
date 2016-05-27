@@ -12,9 +12,6 @@ function ServiceCtrl (Entities, DataService, $state, $stateParams, initialLoader
       return DataService.getResourceTypes(s.id)
       .getList()
       .then(response => {
-        if (response.length === 1) {
-          this.newService.resource_type = response[0].plain();
-        }
         this.resourceTypes = response.plain();
         return s;
       })

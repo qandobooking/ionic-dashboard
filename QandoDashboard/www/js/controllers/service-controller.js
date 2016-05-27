@@ -10,9 +10,6 @@ function ServiceCtrl(Entities, DataService, $state, $stateParams, initialLoaderM
     return Entities.getShop().then(function (s) {
       _this.shop = s;
       return DataService.getResourceTypes(s.id).getList().then(function (response) {
-        if (response.length === 1) {
-          _this.newService.resource_type = response[0].plain();
-        }
         _this.resourceTypes = response.plain();
         return s;
       }).then(function (s) {
