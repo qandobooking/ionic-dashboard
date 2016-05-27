@@ -44,7 +44,7 @@
     <div class="item item-button-right" ng-if="BookingCtrl.booking.reachable_states.indexOf('deny') !== -1">
       Nega
       <p>Nega l'appuntamento ...</p>
-      <button class="button button-assertive">Nega</button>
+      <button class="button button-assertive" disabled ng-click="BookingCtrl.action('deny')">Nega</button>
     </div>
   </ion-content>
 </ion-view>

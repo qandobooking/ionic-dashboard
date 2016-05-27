@@ -1,9 +1,9 @@
 <ion-view view-title="Seleziona uno shop" initial-loader="ChooseShopCtrl.loader">
   <ion-content>
     <div class="list">
-        <div class="item item-button-right" ng-repeat="shop in ChooseShopCtrl.shops">
+        <div class="item item-button-right" ng-repeat="shop in ChooseShopCtrl.shops" ng-click="ChooseShopCtrl.setCurrentShop(shop)">
             {{ shop.name }}
-            <button class="button button-positive button-clear" ng-click="ChooseShopCtrl.setCurrentShop(shop)">
+            <button class="button button-positive button-clear" >
             <i class="icon ion-chevron-right"></i>
             </button>
         </div>

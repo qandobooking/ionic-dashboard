@@ -27,7 +27,12 @@ function BookingCtrl (Entities, DataService, $stateParams, $state, initialLoader
     confirm: {
       title: 'Conferma appuntamento',
       template: `Sicuro di voler confermare l'appuntamento?`
-    }
+    },
+    deny: {
+      title: 'Nega appuntamento',
+      template: `Sicuro di voler negare l'appuntamento?`
+    },
+
   };
 
   this.action = actionName => {
