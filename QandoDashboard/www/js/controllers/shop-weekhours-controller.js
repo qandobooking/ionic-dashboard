@@ -33,7 +33,6 @@ function ShopWeekHoursCtrl(DataService, Entities, TimeUtils, $ionicPopup, initia
         });
 
         _this.byWeekDay = byWeekDay;
-        console.info(_this.byWeekDay);
         _this.byWeekDayBackup = _.cloneDeep(_this.byWeekDay);
       });
     });

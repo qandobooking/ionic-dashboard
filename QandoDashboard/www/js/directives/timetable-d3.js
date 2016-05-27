@@ -396,10 +396,14 @@ function timeTableIt(el) {
         //return xScale(d.end.toDate()) - xScale(d.start.toDate()) 
         return computedRanges[i].width;
       }).style('opacity', 0).each(function (d, i) {
+
         var el = d3.select(this);
+
         var ela = angular.element(el[0]);
         ela.on('hold', function (t) {
-          options.onDoubleTap(ela, d, i);
+          //options.onDoubleTap(ela, d, i);
+          var num = ela.attr("num");
+          options.onDoubleTap(ela, options.ranges[num], i);
         });
       }).call(dragTranslate);
 
