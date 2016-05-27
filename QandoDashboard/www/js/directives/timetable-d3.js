@@ -293,9 +293,18 @@ function timeTableIt(el) {
       return d.x;
     }).attr('width', function (d, i) {
       return d.width;
-    }).on('click', function (d) {
-      options.onEmptyClick(d, options.extraArgs);
+    }).each(function (d, i) {
+      var el = d3.select(this);
+      var ela = angular.element(el[0]);
+      ela.on('hold', function (t) {
+        options.onEmptyClick(d, options.extraArgs);
+      });
     });
+    /*
+    .on('click', function(d){
+      options.onEmptyClick(d, options.extraArgs);
+    })
+    */
 
     rangesContainer.selectAll('.period-add').attr("x", function (d, i) {
       return d.x;
