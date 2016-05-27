@@ -13,6 +13,8 @@
         }
         return "http://localhost:8000/api/manage";
     }()).constant('bookingStatusNames', {
-        pending: 'In Attesa'
+        pending: 'In Attesa',
+        confirmed: 'Confermato',
+        canceled: 'Annullato'
     });
 })();

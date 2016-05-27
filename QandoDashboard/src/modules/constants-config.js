@@ -19,6 +19,8 @@ angular.module('app.constants', [])
 
 .constant('bookingStatusNames', {
   pending: 'In Attesa',
+  confirmed: 'Confermato',
+  canceled: 'Annullato',
 })
 
 
